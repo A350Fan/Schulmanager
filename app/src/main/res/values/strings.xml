@@ -7,7 +7,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Einstellungen</string>
 
-    <string name="menu_home">Notenmanager</string>
-    <string name="menu_gallery">Abirechner</string>
-    <string name="menu_slideshow">Stundenplan</string>
+    <string name="menu_notenmanager">Notenmanager</string>
+    <string name="menu_abirechner">Abirechner</string>
+    <string name="menu_stundenplan">Stundenplan</string>
 </resources>

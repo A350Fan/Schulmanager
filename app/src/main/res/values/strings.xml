@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Schulmanager</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Schulmanager</string>
+    <string name="nav_header_subtitle">JuMiLu</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Einstellungen</string>
+
+    <string name="menu_home">Notenmanager</string>
+    <string name="menu_gallery">Abirechner</string>
+    <string name="menu_slideshow">Stundenplan</string>
+</resources>

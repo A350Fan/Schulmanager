@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Für den Spinner -->
+    <style name="SpinnerStyle" parent="Theme.MaterialComponents.Light">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+</resources>

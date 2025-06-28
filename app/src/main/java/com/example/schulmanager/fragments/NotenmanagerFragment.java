@@ -63,6 +63,16 @@ public class NotenmanagerFragment extends Fragment {
         // Dialogfelder
         EditText etName = dialogView.findViewById(R.id.dialog_name);
         Spinner spHalbjahr = dialogView.findViewById(R.id.sp_halbjahr);
+
+        // Adapter mit eigenem Layout für Dropdown
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.halbjahre_array,
+                R.layout.spinner_item // Eigenes Layout für ausgewählten Eintrag
+        );
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item); // Eigenes Layout für Dropdown
+
+        spHalbjahr.setAdapter(adapter);
         CheckBox cbAbitur = dialogView.findViewById(R.id.cb_abitur);
         EditText etSchriftlich = dialogView.findViewById(R.id.dialog_schriftlich);
         EditText etMuendlich = dialogView.findViewById(R.id.dialog_muendlich);

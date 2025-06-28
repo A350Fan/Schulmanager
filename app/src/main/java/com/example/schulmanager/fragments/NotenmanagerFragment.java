@@ -1,5 +1,6 @@
 package com.example.schulmanager.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -105,7 +106,7 @@ public class NotenmanagerFragment extends Fragment {
                     }
 
                     faecher.add(fach);
-                    saveData();
+                    saveAndUpdate(fach);
                     adapter.notifyDataSetChanged();
                 })
                 .setNegativeButton("Abbrechen", null);
@@ -182,6 +183,7 @@ public class NotenmanagerFragment extends Fragment {
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     private void loadData() {
         SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", Context.MODE_PRIVATE);
         String jsonFaecher = prefs.getString("faecher", null);
@@ -197,6 +199,7 @@ public class NotenmanagerFragment extends Fragment {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void saveData() {
         SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -210,5 +213,17 @@ public class NotenmanagerFragment extends Fragment {
             currentDialog.dismiss();
         }
         super.onDestroyView();
+    }
+
+    private void saveAndUpdate(Fach fach) {
+        saveData();
+        adapter.notifyItemInserted(faecher.indexOf(fach));
+        // Oder alternativ:
+        // adapter.notifyDataSetChanged();
+    }
+    private void deleteAndUpdate(int position) {
+        faecher.remove(position);
+        saveData();
+        adapter.notifyItemRemoved(position);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.notenmanager.fragments;
+package com.example.schulmanager.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

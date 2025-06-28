@@ -1,3 +1,9 @@
+import com.example.schulmanager.models.Fach;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class BerechnungUtil {
 
     private static final List<AbiLevel> PUNKTE_TABELLE = Arrays.asList(

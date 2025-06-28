@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Notenmanager</string>
+    <string-array name="halbjahre_array">
+        <item>Halbjahr 1</item>
+        <item>Halbjahr 2</item>
+        <item>Halbjahr 3</item>
+        <item>Halbjahr 4</item>
+    </string-array>
     <!-- Fügen Sie hier alle Texte der App hinzu -->
 </resources>

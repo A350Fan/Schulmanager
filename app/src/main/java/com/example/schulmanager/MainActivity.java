@@ -28,16 +28,44 @@ public class MainActivity extends AppCompatActivity {
         ViewPager2 viewPager = findViewById(R.id.view_pager);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
-        adapter.addFragment(new NotenmanagerFragment(), "Noten");
-        adapter.addFragment(new StundenplanFragment(), "Stundenplan");
-        adapter.addFragment(new PruefungenFragment(), "Prüfungen");
+//        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+//        adapter.addFragment(new NotenmanagerFragment(), "Noten");
+//        adapter.addFragment(new StundenplanFragment(), "Stundenplan");
+//        adapter.addFragment(new PruefungenFragment(), "Prüfungen");
+//
+//        viewPager.setAdapter(adapter);
+//        new TabLayoutMediator(tabLayout, viewPager,
+//                (tab, position) -> tab.setText(adapter.getPageTitle(position))
+//        ).attach();
 
-        viewPager.setAdapter(adapter);
-        new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> tab.setText(adapter.getPageTitle(position))
-        ).attach();
+        // Adapter mit FragmentStateAdapter korrigieren
+        viewPager.setAdapter(new FragmentStateAdapter(this) {
+            @NonNull
+            @Override
+            public Fragment createFragment(int position) {
+                switch(position) {
+                    case 0: return new NotenmanagerFragment();
+                    case 1: return new StundenplanFragment();
+                    case 2: return new PruefungenFragment();
+                    default: return new Fragment();
+                }
+            }
+            @Override
+            public int getItemCount() {
+                return 3;
+            }
+        });
+
+        // TabLayout mit ViewPager verbinden
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            switch(position) {
+                case 0: tab.setText("Noten"); break;
+                case 1: tab.setText("Stundenplan"); break;
+                case 2: tab.setText("Prüfungen"); break;
+            }
+        }).attach();
     }
+
 
     public static class ViewPagerAdapter extends FragmentStateAdapter {
         private final List<Fragment> fragments = new ArrayList<>();

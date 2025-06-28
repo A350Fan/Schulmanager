@@ -10,6 +10,8 @@ public class Fach implements Serializable {
     private double schriftlich;
     private double muendlich;
 
+
+
     public Fach(String name, int halbjahr, boolean isAbiturfach) {
         this.id = System.currentTimeMillis();
         this.name = name;
@@ -28,14 +30,16 @@ public class Fach implements Serializable {
         return Math.max(0, Math.min(15, (int)(15 - ((getDurchschnitt() - 1) * 3))));
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getHalbjahr() {
-        return halbjahr;
-
-    }
-
+    public long getId() { return id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public int getHalbjahr() { return halbjahr; }
+    public void setHalbjahr(int halbjahr) { this.halbjahr = halbjahr; }
+    public boolean isAbiturfach() { return isAbiturfach; }
+    public void setAbiturfach(boolean abitur) { this.isAbiturfach = abitur; }
+    public double getSchriftlich() { return schriftlich; }
+    public void setSchriftlich(double note) { this.schriftlich = note; }
+    public double getMuendlich() { return muendlich; }
+    public void setMuendlich(double note) { this.muendlich = note; }
     // Weitere Getter/Setter...
 }

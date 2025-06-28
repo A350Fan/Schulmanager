@@ -26,6 +26,17 @@ public class Fach implements Serializable {
         return (schriftlich + muendlich) / 2;
     }
 
+    // Getter und Setter - angepasst für Punkte
+    public double getSchriftlich() { return schriftlich; }
+    public void setSchriftlich(int punkte) {
+        this.schriftlich = Math.max(0, Math.min(15, punkte));
+    }
+
+    public double getMuendlich() { return muendlich; }
+    public void setMuendlich(int punkte) {
+        this.muendlich = Math.max(0, Math.min(15, punkte));
+    }
+
     public int getPunkte() {
         return Math.max(0, Math.min(15, (int)(15 - ((getDurchschnitt() - 1) * 3))));
     }
@@ -37,9 +48,9 @@ public class Fach implements Serializable {
     public void setHalbjahr(int halbjahr) { this.halbjahr = halbjahr; }
     public boolean isAbiturfach() { return isAbiturfach; }
     public void setAbiturfach(boolean abitur) { this.isAbiturfach = abitur; }
-    public double getSchriftlich() { return schriftlich; }
-    public void setSchriftlich(double note) { this.schriftlich = note; }
-    public double getMuendlich() { return muendlich; }
-    public void setMuendlich(double note) { this.muendlich = note; }
+
+    public void setSchriftlich(double punkte) { this.schriftlich = punkte; }
+
+    public void setMuendlich(double punkte) { this.muendlich = punkte; }
     // Weitere Getter/Setter...
 }

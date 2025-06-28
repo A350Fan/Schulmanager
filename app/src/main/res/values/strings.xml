@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Notenmanager</string>
+    <string name="todo">TODO</string>
     <string-array name="halbjahre_array">
         <item>Halbjahr 1</item>
         <item>Halbjahr 2</item>

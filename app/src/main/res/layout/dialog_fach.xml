@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/dialog_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fachname"/>
+
+    <Spinner
+        android:id="@+id/sp_halbjahr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+    <CheckBox
+        android:id="@+id/cb_abitur"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Abiturfach"/>
+
+    <EditText
+        android:id="@+id/dialog_schriftlich"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Schriftliche Note"
+        android:inputType="numberDecimal"/>
+
+    <EditText
+        android:id="@+id/dialog_muendlich"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Mündliche Note"
+        android:inputType="numberDecimal"/>
+</LinearLayout>

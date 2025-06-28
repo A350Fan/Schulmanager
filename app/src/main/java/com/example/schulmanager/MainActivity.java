@@ -1,0 +1,66 @@
+package com.example.schulmanager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+import com.example.schulmanager.fragments.NotenmanagerFragment;
+import com.example.schulmanager.fragments.StundenplanFragment;
+import com.example.schulmanager.fragments.PruefungenFragment;
+
+import android.os.Bundle;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ViewPager2 viewPager = findViewById(R.id.view_pager);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+        adapter.addFragment(new NotenmanagerFragment(), "Noten");
+        adapter.addFragment(new StundenplanFragment(), "Stundenplan");
+        adapter.addFragment(new PruefungenFragment(), "Prüfungen");
+
+        viewPager.setAdapter(adapter);
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> tab.setText(adapter.getPageTitle(position))
+        ).attach();
+    }
+
+    public static class ViewPagerAdapter extends FragmentStateAdapter {
+        private final List<Fragment> fragments = new ArrayList<>();
+        private final List<String> fragmentTitles = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentActivity fa) {
+            super(fa);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            fragments.add(fragment);
+            fragmentTitles.add(title);
+        }
+
+        public CharSequence getPageTitle(int position) {
+            return fragmentTitles.get(position);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return fragments.size();
+        }
+    }
+}

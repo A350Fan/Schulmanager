@@ -1,7 +1,10 @@
+package com.example.schulmanager.utils;
+
 import com.example.schulmanager.models.Fach;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class BerechnungUtil {

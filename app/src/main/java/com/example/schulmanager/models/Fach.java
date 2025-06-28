@@ -28,5 +28,14 @@ public class Fach implements Serializable {
         return Math.max(0, Math.min(15, (int)(15 - ((getDurchschnitt() - 1) * 3))));
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getHalbjahr() {
+        return halbjahr;
+
+    }
+
     // Weitere Getter/Setter...
 }

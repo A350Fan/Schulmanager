@@ -1,6 +1,7 @@
 package com.example.schulmanager.models;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public class Fach implements Serializable {
     private long id;
@@ -52,5 +53,20 @@ public class Fach implements Serializable {
     public void setSchriftlich(double punkte) { this.schriftlich = punkte; }
 
     public void setMuendlich(double punkte) { this.muendlich = punkte; }
+
+    // Methode hinzufügen
+    public double getDurchschnittsPunkte() {
+        return (schriftlich + muendlich) / 2;
+    }
+    // toString() aktualisieren
+    @Override
+    public String toString() {
+        return String.format(Locale.GERMAN, "%s (HJ %d) - %d Punkte",
+                name, halbjahr, getDurchschnittsPunkte());
+    }
+    public String getFormattedPunkte() {
+        return String.valueOf(getDurchschnittsPunkte());
+    }
+
     // Weitere Getter/Setter...
 }

@@ -40,6 +40,8 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
     public void onBindViewHolder(@NonNull FachViewHolder holder, int position) {
         Fach fach = faecher.get(position);
         holder.bind(fach, listener);
+        // Punkte anzeigen:
+        holder.tvPunkte.setText(fach.getFormattedPunkte());
     }
 
     @Override
@@ -72,4 +74,5 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
             itemView.setOnClickListener(v -> listener.onFachClick(fach));
         }
     }
+
 }

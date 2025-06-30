@@ -9,6 +9,7 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -33,19 +34,42 @@ import java.util.List;
 
 public class NotenmanagerFragment extends Fragment {
 
-    private List<Fach> faecher = new ArrayList<>();
     private FachAdapter adapter;
     private AlertDialog currentDialog;
+    private List<Fach> alleFaecher = new ArrayList<>();
+    private List<Fach> gefilterteFaecher = new ArrayList<>();
+    private int aktuellesHalbjahr = 1; // Standard: HJ1
+    private Spinner halbjahrSpinner;
+    private ArrayAdapter<CharSequence> spinnerAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notenmanager, container, false);
 
+        // Halbjahres-Auswahl Spinner
+        Spinner halbjahrSpinner = view.findViewById(R.id.halbjahr_filter);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.halbjahre_array,
+                android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        halbjahrSpinner.setAdapter(spinnerAdapter);
+
+        halbjahrSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                aktuellesHalbjahr = position + 1;
+                filterFaecher();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
         // RecyclerView Setup
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new FachAdapter(faecher, this::showEditDialog);
+        adapter = new FachAdapter(alleFaecher, this::showEditDialog);
         recyclerView.setAdapter(adapter);
 
         // FAB Funktionalität
@@ -105,7 +129,7 @@ public class NotenmanagerFragment extends Fragment {
                         return;
                     }
 
-                    faecher.add(fach);
+                    alleFaecher.add(fach);
                     saveAndUpdate(fach);
                     adapter.notifyDataSetChanged();
                 })
@@ -130,7 +154,7 @@ public class NotenmanagerFragment extends Fragment {
     }
 
     private void showEditDialog(Fach fach) {
-        final int position = faecher.indexOf(fach);
+        final int position = alleFaecher.indexOf(fach);
         if (position == -1) return;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -172,7 +196,7 @@ public class NotenmanagerFragment extends Fragment {
                     }
                 })
                 .setNegativeButton("Löschen", (dialog, id) -> {
-                    faecher.remove(position);
+                    alleFaecher.remove(position);
                     saveData();
                     adapter.notifyItemRemoved(position);
                 })
@@ -183,28 +207,20 @@ public class NotenmanagerFragment extends Fragment {
     }
 
 
-    @SuppressLint("NotifyDataSetChanged")
     private void loadData() {
-        SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", Context.MODE_PRIVATE);
+        SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", 0);
         String jsonFaecher = prefs.getString("faecher", null);
-
         if (jsonFaecher != null) {
             Type type = new TypeToken<ArrayList<Fach>>(){}.getType();
-            List<Fach> savedFaecher = new Gson().fromJson(jsonFaecher, type);
-            if (savedFaecher != null) {
-                faecher.clear();
-                faecher.addAll(savedFaecher);
-                adapter.notifyDataSetChanged();
-            }
+            alleFaecher = new Gson().fromJson(jsonFaecher, type);
+            filterFaecher(); // Initialfilter nach Laden
         }
     }
-
-    @SuppressLint("NotifyDataSetChanged")
     private void saveData() {
-        SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("faecher", new Gson().toJson(faecher));
-        editor.apply();
+        SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", 0);
+        prefs.edit()
+                .putString("faecher", new Gson().toJson(alleFaecher))
+                .apply();
     }
 
     @Override
@@ -217,13 +233,23 @@ public class NotenmanagerFragment extends Fragment {
 
     private void saveAndUpdate(Fach fach) {
         saveData();
-        adapter.notifyItemInserted(faecher.indexOf(fach));
+        adapter.notifyItemInserted(alleFaecher.indexOf(fach));
         // Oder alternativ:
         // adapter.notifyDataSetChanged();
     }
     private void deleteAndUpdate(int position) {
-        faecher.remove(position);
+        alleFaecher.remove(position);
         saveData();
         adapter.notifyItemRemoved(position);
+    }
+
+    private void filterFaecher() {
+        gefilterteFaecher.clear();
+        for (Fach fach : alleFaecher) {
+            if (fach.getHalbjahr() == aktuellesHalbjahr) {
+                gefilterteFaecher.add(fach);
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 }

@@ -2,78 +2,97 @@ package com.example.schulmanager.utils;
 
 import com.example.schulmanager.models.Fach;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class BerechnungUtil {
 
-    private static final List<AbiLevel> PUNKTE_TABELLE = Arrays.asList(
-            new AbiLevel(900, 823, "1,0"),
-            new AbiLevel(822, 805, "1,1"),
-            // ... alle Stufen bis
-            new AbiLevel(300, 0, "4,0")
-    );
-
-    public static class AbiLevel {
-        int max;
-        int min;
-        String note;
-
-        AbiLevel(int max, int min, String note) {
-            this.max = max;
-            this.min = min;
-            this.note = note;
-        }
-    }
+    // Punkte-Tabelle für die Abiturnote (Punktebereich → Note)
+    private static final int[][] PUNKTE_TABELLE = {
+            {900, 823, 10}, {822, 805, 11}, {804, 787, 12}, {786, 769, 13},
+            {768, 751, 14}, {750, 733, 15}, {732, 715, 16}, {714, 697, 17},
+            {696, 679, 18}, {678, 661, 19}, {660, 643, 20}, {642, 625, 21},
+            {624, 607, 22}, {606, 589, 23}, {588, 571, 24}, {570, 553, 25},
+            {552, 535, 26}, {534, 517, 27}, {516, 499, 28}, {498, 481, 29},
+            {480, 463, 30}, {462, 445, 31}, {444, 427, 32}, {426, 409, 33},
+            {408, 391, 34}, {390, 373, 35}, {372, 355, 36}, {354, 337, 37},
+            {336, 319, 38}, {318, 301, 39}, {300, 0, 40}
+    };
 
     public static class AbiErgebnis {
-        public int beste40;
+        public int halbjahresPunkte;
+        public int pruefungsPunkte;
         public int gesamtPunkte;
         public String abiSchnitt;
-
-        public AbiErgebnis(int beste40, int gesamtPunkte, String abiSchnitt) {
-            this.beste40 = beste40;
-            this.gesamtPunkte = gesamtPunkte;
-            this.abiSchnitt = abiSchnitt;
-        }
     }
 
-    public static AbiErgebnis berechneAbi(List<Fach> faecher, List<Integer> pruefungsNoten) {
-        // Halbjahresleistungen sammeln
-        List<Integer> leistungen = new ArrayList<>();
+    public static AbiErgebnis berechneAbi(List<Fach> faecher, int[] pruefungsNoten) {
+        AbiErgebnis ergebnis = new AbiErgebnis();
+
+        // 1. Halbjahresleistungen berechnen
+        List<Integer> halbjahresLeistungen = new ArrayList<>();
         for (Fach fach : faecher) {
-            leistungen.add(fach.getPunkte());
+            halbjahresLeistungen.add(fach.getDurchschnittsPunkte());
         }
 
-        // Beste 40 Leistungen (max 600 Punkte)
-        Collections.sort(leistungen, Collections.reverseOrder());
-        int sum = 0;
-        for (int i = 0; i < Math.min(40, leistungen.size()); i++) {
-            sum += leistungen.get(i);
+        // Sortieren (beste zuerst)
+        Collections.sort(halbjahresLeistungen, Collections.reverseOrder());
+
+        // Beste 40 Leistungen (ggf. hochrechnen)
+        ergebnis.halbjahresPunkte = berechneHalbjahresPunkte(halbjahresLeistungen);
+
+        // 2. Prüfungsleistungen (5 Prüfungen à max. 60 Punkte)
+        ergebnis.pruefungsPunkte = 0;
+        for (int note : pruefungsNoten) {
+            ergebnis.pruefungsPunkte += Math.min(60, note * 4); // 15 Punkte * 4 = 60
         }
-        int beste40 = Math.min(sum, 600);
+        ergebnis.pruefungsPunkte = Math.min(300, ergebnis.pruefungsPunkte); // Max. 300
 
-        // Prüfungspunkte (max 300 Punkte)
-        int pruefungSum = 0;
-        for (Integer punkt : pruefungsNoten) {
-            pruefungSum += punkt;
+        // 3. Gesamtpunkte
+        ergebnis.gesamtPunkte = ergebnis.halbjahresPunkte + ergebnis.pruefungsPunkte;
+
+        // 4. Abischnitt ermitteln
+        ergebnis.abiSchnitt = punkteZuNote(ergebnis.gesamtPunkte);
+
+        return ergebnis;
+    }
+
+    private static int berechneHalbjahresPunkte(List<Integer> leistungen) {
+        if (leistungen.isEmpty()) return 0;
+
+        int summe = 0;
+        int anzahl = Math.min(40, leistungen.size());
+
+        // Beste Leistungen summieren
+        for (int i = 0; i < anzahl; i++) {
+            summe += leistungen.get(i);
         }
-        int pruefungPunkte = Math.min(pruefungSum, 300);
 
-        // Gesamtpunkte
-        int gesamt = beste40 + pruefungPunkte;
+        // Falls weniger als 40: Hochrechnen
+        if (anzahl < 40) {
+            double durchschnitt = (double)summe / anzahl;
+            summe = (int)(durchschnitt * 40);
+        }
 
-        // Abischnitt ermitteln
-        String abiSchnitt = "4,0";
-        for (AbiLevel level : PUNKTE_TABELLE) {
-            if (gesamt <= level.max && gesamt >= level.min) {
-                abiSchnitt = level.note;
-                break;
+        return Math.min(600, summe); // Max. 600 Punkte
+    }
+
+    private static String punkteZuNote(int punkte) {
+        for (int[] eintrag : PUNKTE_TABELLE) {
+            if (punkte <= eintrag[0] && punkte >= eintrag[1]) {
+                return noteToString(eintrag[2]);
             }
         }
+        return "4,0";
+    }
 
-        return new AbiErgebnis(beste40, gesamt, abiSchnitt);
+    private static String noteToString(int noteWert) {
+        int ganzzahl = noteWert / 10;
+        int nachkomma = noteWert % 10;
+        return ganzzahl + "," + nachkomma;
     }
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schulmanager.R;
 import com.example.schulmanager.adapters.FachAdapter;
 import com.example.schulmanager.models.Fach;
+import com.example.schulmanager.utils.BerechnungUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -75,6 +77,14 @@ public class NotenmanagerFragment extends Fragment {
         // FAB Funktionalität
         FloatingActionButton fabAdd = view.findViewById(R.id.fab_add);
         fabAdd.setOnClickListener(v -> showAddDialog());
+
+        // Prüfungsnoten-Button
+        Button btnPruefungen = view.findViewById(R.id.btn_pruefungen);
+        btnPruefungen.setOnClickListener(v -> showPruefungenDialog());
+        // Abi-Berechnen-Button
+        Button btnBerechnen = view.findViewById(R.id.btn_berechnen);
+        btnBerechnen.setOnClickListener(v -> berechneUndZeigeAbi());
+
 
         loadData();
 
@@ -248,5 +258,88 @@ public class NotenmanagerFragment extends Fragment {
         }
         adapter.notifyDataSetChanged();
     }
+
+    // Neue Methode hinzufügen
+    private void berechneUndZeigeAbi() {
+        // Prüfungsnoten aus SharedPreferences laden
+        SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", Context.MODE_PRIVATE);
+        String jsonPruefungen = prefs.getString("pruefungen", null);
+        // Erweitern Sie die Abi-Berechnung:
+        int[] pruefungsNoten = loadPruefungsNoten();
+        BerechnungUtil.AbiErgebnis ergebnis = BerechnungUtil.berechneAbi(alleFaecher, pruefungsNoten);
+
+
+
+        if (jsonPruefungen != null) {
+            Type type = new TypeToken<int[]>(){}.getType();
+            pruefungsNoten = new Gson().fromJson(jsonPruefungen, type);
+        }
+        // Berechnung durchführen
+                // Ergebnis anzeigen
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Abiturberechnung")
+                .setMessage(
+                        "Halbjahresleistungen: " + ergebnis.halbjahresPunkte + "/600\n" +
+                                "Prüfungsleistungen: " + ergebnis.pruefungsPunkte + "/300\n" +
+                                "Gesamtpunkte: " + ergebnis.gesamtPunkte + "/900\n\n" +
+                                "Abiturschnitt: " + ergebnis.abiSchnitt)
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+    private void showPruefungenDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_pruefungen, null);
+        EditText[] pruefungFields = {
+                dialogView.findViewById(R.id.pruefung1),
+                dialogView.findViewById(R.id.pruefung2),
+                dialogView.findViewById(R.id.pruefung3),
+                dialogView.findViewById(R.id.mdl_pruefung1),
+                dialogView.findViewById(R.id.mdl_pruefung2)
+        };
+        // Vorbelegung mit gespeicherten Werten
+        int[] gespeicherteNoten = loadPruefungsNoten();
+        for (int i = 0; i < pruefungFields.length; i++) {
+            if (i < gespeicherteNoten.length) {
+                pruefungFields[i].setText(String.valueOf(gespeicherteNoten[i]));
+            }
+        }
+
+        builder.setView(dialogView)
+                .setTitle("Abiturprüfungsnoten eingeben")
+                .setPositiveButton("Speichern", (dialog, which) -> {
+                    int[] neueNoten = new int[5];
+                    try {
+                        for (int i = 0; i < pruefungFields.length; i++) {
+                            String input = pruefungFields[i].getText().toString();
+                            neueNoten[i] = input.isEmpty() ? 0 : Integer.parseInt(input);
+                            if (neueNoten[i] < 0 || neueNoten[i] > 15) {
+                                throw new NumberFormatException();
+                            }
+                        }
+                        savePruefungsNoten(neueNoten);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(requireContext(),
+                                "Bitte nur Werte zwischen 0-15 eingeben!", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton("Abbrechen", null)
+                .show();
+    }
+
+    private int[] loadPruefungsNoten() {
+        SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", Context.MODE_PRIVATE);
+        String json = prefs.getString("pruefungen", null);
+        if (json != null) {
+            return new Gson().fromJson(json, int[].class);
+        }
+        return new int[5]; // Standard: alle 0
+    }
+    private void savePruefungsNoten(int[] noten) {
+        SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", Context.MODE_PRIVATE);
+        prefs.edit().putString("pruefungen", new Gson().toJson(noten)).apply();
+        Toast.makeText(requireContext(), "Prüfungsnoten wurden gespeichert", Toast.LENGTH_SHORT).show();
+    }
+
 }
 

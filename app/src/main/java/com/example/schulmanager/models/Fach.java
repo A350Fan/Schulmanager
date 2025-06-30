@@ -55,8 +55,8 @@ public class Fach implements Serializable {
     public void setMuendlich(double punkte) { this.muendlich = punkte; }
 
     // Methode hinzufügen
-    public double getDurchschnittsPunkte() {
-        return (schriftlich + muendlich) / 2;
+    public int getDurchschnittsPunkte() {
+        return (int) ((schriftlich + muendlich) / 2);
     }
     // toString() aktualisieren
     @Override

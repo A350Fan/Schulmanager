@@ -48,7 +48,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         return noten.size();
     }
 
-    static class NoteViewHolder extends RecyclerView.ViewHolder {
+    static final class NoteViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvNoteWert;
         private final TextView tvNoteTyp;
         private final TextView tvNoteDatum; // Optional: Datum anzeigen
@@ -61,12 +61,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         }
 
         public void bind(Note note, OnNoteClickListener listener, int position) {
-            tvNoteWert.setText(String.format(Locale.GERMAN, "Wert: %.1f", note.getWert()));
-            tvNoteTyp.setText("Typ: " + note.getTyp());
+            //Verwendung von Ressourcen-Strings mit Platzhaltern
+            tvNoteWert.setText(itemView.getContext().getString(R.string.note_value_format, note.getWert()));
+            tvNoteTyp.setText(itemView.getContext().getString(R.string.note_type_format, note.getTyp()));
 
-            // Optional: Datum formatieren und anzeigen
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
-            tvNoteDatum.setText("Datum: " + sdf.format(note.getDatum()));
+            tvNoteDatum.setText(itemView.getContext().getString(R.string.note_date_format, sdf.format(note.getDatum())));
 
             // Optional: Click Listener für Bearbeitung
             itemView.setOnClickListener(v -> {

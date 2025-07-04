@@ -1,7 +1,10 @@
 // models/Note.java
 package com.example.schulmanager.models;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
+import java.util.Locale;
 
 public class Note implements Serializable {
     private double wert; // Der Punktwert der Note (0-15)
@@ -35,7 +38,8 @@ public class Note implements Serializable {
         return datum;
     }
 
-    // Setter (falls Noten bearbeitet werden sollen)
+    // Die drei sind für evtles Notenbearbeiten (not implemented!)
+    /*
     public void setWert(double wert) {
         this.wert = wert;
     }
@@ -47,9 +51,11 @@ public class Note implements Serializable {
     public void setDatum(long datum) {
         this.datum = datum;
     }
+    */
 
+    @NonNull
     @Override
     public String toString() {
-        return String.format("%.1f (%s)", wert, typ);
+        return String.format(Locale.GERMAN, "%.1f (%s)", wert, typ);
     }
 }

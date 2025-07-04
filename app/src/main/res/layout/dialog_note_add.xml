@@ -12,13 +12,13 @@
         android:textStyle="bold"
         android:textSize="18sp"
         android:layout_marginBottom="16dp"
-        android:text="Note für Fachname hinzufügen"/> <EditText
+        android:text="@string/dialog_note_title_format"/> <EditText
     android:id="@+id/et_note_wert"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hint="Punktwert (0-15)"
-    android:inputType="numberDecimal"
-    android:maxLength="4"/> <RadioGroup
+    android:hint="@string/hint_note_value" android:inputType="numberDecimal"
+    android:maxLength="4"
+    android:autofillHints="no" /> <RadioGroup
     android:id="@+id/rg_note_typ"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -29,23 +29,20 @@
         android:id="@+id/rb_schriftlich"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Schriftlich"
-        android:checked="true"
+        android:text="@string/radio_schriftlich" android:checked="true"
         android:layout_weight="1"/>
 
     <RadioButton
         android:id="@+id/rb_muendlich"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mündlich"
-        android:layout_weight="1"/>
+        android:text="@string/radio_muendlich" android:layout_weight="1"/>
 
     <RadioButton
         android:id="@+id/rb_sonstig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sonstig"
-        android:layout_weight="1"/>
+        android:text="@string/radio_sonstig" android:layout_weight="1"/>
 </RadioGroup>
 
     <TextView
@@ -53,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Aktuelle Noten:"
+        android:text="@string/label_current_notes"
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView

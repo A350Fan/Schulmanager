@@ -380,7 +380,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                 gefilterteFaecher.add(fach);
             }
         }
-        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged(); //passt trotz Fehler hier perfekt
     }
 
     // berechneUndZeigeAbi bleibt gleich (nutzt getDurchschnittsPunkte() des Fachs)

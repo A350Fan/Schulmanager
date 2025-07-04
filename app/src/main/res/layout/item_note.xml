@@ -21,23 +21,19 @@
             android:layout_weight="1"
             android:textStyle="bold"
             android:textSize="14sp"
-            android:text="Wert: 12.5"/>
-
-        <TextView
-            android:id="@+id/tv_note_typ"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="14sp"
-            android:text="Typ: Schriftlich"/>
-
-        <TextView
-            android:id="@+id/tv_note_datum"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="14sp"
-            android:text="Datum: 01.01.2023"/>
+            android:text="@string/note_value_format"/> <TextView
+        android:id="@+id/tv_note_typ"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="14sp"
+        android:text="@string/note_type_format"/> <TextView
+        android:id="@+id/tv_note_datum"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="14sp"
+        android:text="@string/note_date_format"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

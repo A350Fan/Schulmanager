@@ -10,4 +10,16 @@
     <string name="hint_fachname">Fachname</string>
     <string name="checkbox_abiturfach">Abiturfach</string>
     <string name="button_manage_notes">Noten verwalten</string>
+    <string name="note_value_format">Wert: %.1f</string>
+    <string name="note_type_format">Typ: %s</string>
+    <string name="note_date_format">Datum: %s</string>
+    <string name="dialog_note_title_format">Note für %s hinzufügen</string>
+    <string name="hint_note_value">Punktwert (0-15)</string>
+    <string name="radio_schriftlich">Schriftlich</string>
+    <string name="radio_muendlich">Mündlich</string>
+    <string name="radio_sonstig">Sonstig</string>
+    <string name="label_current_notes">Aktuelle Noten:</string>
+    <string name="fach_halbjahr_format">HJ %d</string>
+    <string name="fach_avg_note_format">Ø Note: %.2f</string>
+    <string name="fach_avg_punkte_format">Ø Pkt: %d</string>
 </resources>

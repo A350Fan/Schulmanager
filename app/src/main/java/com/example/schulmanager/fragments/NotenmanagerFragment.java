@@ -95,6 +95,8 @@ public class NotenmanagerFragment extends Fragment {
         return view;
     }
 
+    private static final String PREF_LAST_HALBJAHR_ADD = "lastHalbjahrAdd"; // Neuer Schlüssel für SharedPreferences
+
     private void showAddDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_fach, null);
@@ -112,6 +114,13 @@ public class NotenmanagerFragment extends Fragment {
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item); // Eigenes Layout für Dropdown
 
         spHalbjahr.setAdapter(adapter);
+
+        // --- HIER DIE ÄNDERUNG: Letzten Halbjahreswert laden und setzen ---
+        SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", Context.MODE_PRIVATE);
+        int lastSelectedHalbjahrPosition = prefs.getInt(PREF_LAST_HALBJAHR_ADD, 0); // Standard ist 0 (HJ1)
+        spHalbjahr.setSelection(lastSelectedHalbjahrPosition);
+        // --- ENDE DER ÄNDERUNG ---
+
         CheckBox cbAbitur = dialogView.findViewById(R.id.cb_abitur);
         EditText etSchriftlich = dialogView.findViewById(R.id.dialog_schriftlich);
         EditText etMuendlich = dialogView.findViewById(R.id.dialog_muendlich);
@@ -129,9 +138,10 @@ public class NotenmanagerFragment extends Fragment {
                         return;
                     }
 
+                    int selectedHalbjahrPosition = spHalbjahr.getSelectedItemPosition(); // Die ausgewählte Position holen
                     Fach fach = new Fach(
                             name,
-                            spHalbjahr.getSelectedItemPosition() + 1,
+                            selectedHalbjahrPosition + 1, // +1, weil Spinner-Position 0-basiert ist
                             cbAbitur.isChecked()
                     );
 
@@ -145,13 +155,16 @@ public class NotenmanagerFragment extends Fragment {
 
                     alleFaecher.add(fach);
                     saveAndUpdate(fach);
-                    adapter.notifyDataSetChanged();
+
+                    // --- HIER DIE ÄNDERUNG: Letzten Halbjahreswert speichern ---
+                    prefs.edit().putInt(PREF_LAST_HALBJAHR_ADD, selectedHalbjahrPosition).apply();
+                    // --- ENDE DER ÄNDERUNG ---
                 })
                 .setNegativeButton("Abbrechen", null);
 
         currentDialog = builder.create();
         currentDialog.show();
-        saveData();
+        // saveData(); // Dieser Aufruf war hier doppelt und nicht notwendig
     }
 
     private double ensureValidPoints(String input) {
@@ -173,9 +186,18 @@ public class NotenmanagerFragment extends Fragment {
         EditText etSchriftlich = dialogView.findViewById(R.id.dialog_schriftlich);
         EditText etMuendlich = dialogView.findViewById(R.id.dialog_muendlich);
 
+        // Adapter für den Spinner im Dialog
+        ArrayAdapter<CharSequence> dialogSpinnerAdapter = ArrayAdapter.createFromResource( // Eigenständiger Name
+                requireContext(),
+                R.array.halbjahre_array,
+                R.layout.spinner_item
+        );
+        dialogSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spHalbjahr.setAdapter(dialogSpinnerAdapter);
+
         // Vorbelegung
         etName.setText(fach.getName());
-        spHalbjahr.setSelection(fach.getHalbjahr() - 1);
+        spHalbjahr.setSelection(fach.getHalbjahr() - 1); // Korrekte Vorbelegung
         cbAbitur.setChecked(fach.isAbiturfach());
         etSchriftlich.setText(String.valueOf(fach.getSchriftlich()));
         etMuendlich.setText(String.valueOf(fach.getMuendlich()));
@@ -197,6 +219,7 @@ public class NotenmanagerFragment extends Fragment {
                         fach.setMuendlich(ensureValidPoints(etMuendlich.getText().toString()));
 
                         saveData();
+                        // Hier rufen wir den 'adapter' (FachAdapter des RecyclerView) auf
                         adapter.notifyItemChanged(position);
                     } catch (NumberFormatException e) {
                         Toast.makeText(requireContext(), "Nur Zahlen zwischen 0-15 eingeben", Toast.LENGTH_SHORT).show();
@@ -205,13 +228,13 @@ public class NotenmanagerFragment extends Fragment {
                 .setNegativeButton("Löschen", (dialog, id) -> {
                     alleFaecher.remove(position);
                     saveData();
+                    // Hier rufen wir den 'adapter' (FachAdapter des RecyclerView) auf
                     adapter.notifyItemRemoved(position);
                 })
                 .setNeutralButton("Abbrechen", null);
 
         currentDialog = builder.create();
         currentDialog.show();
-        saveData();
     }
 
 

@@ -1,13 +1,15 @@
 // models/Fach.java (Angepasst)
 package com.example.schulmanager.models;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class Fach implements Serializable {
-    private long id;
+    private final long id;
     private String name;
     private int halbjahr;
     private boolean isAbiturfach;
@@ -63,7 +65,7 @@ public class Fach implements Serializable {
             return 0.0;
         }
 
-        double gesamtPunkte = 0.0;
+        //double gesamtPunkte = 0.0; dead code
         int anzahlSchriftlich = 0;
         int anzahlMuendlich = 0;
         double summeSchriftlich = 0.0;
@@ -134,15 +136,16 @@ public class Fach implements Serializable {
     }
 
     // toString() aktualisieren (optional, aber gut für Debugging)
+    @NonNull
     @Override
     public String toString() {
         return String.format(Locale.GERMAN, "%s (HJ %d) - Ø %.1f Punkte",
                 name, halbjahr, getDurchschnitt()); // Zeigt den genauen Durchschnitt an
     }
-    public String getFormattedPunkte() {
-        // Zeigt den gerundeten Durchschnitt als String
-        return String.valueOf(getDurchschnittsPunkte());
-    }
+//    public String getFormattedPunkte() {
+//        // Zeigt den gerundeten Durchschnitt als String
+//        return String.valueOf(getDurchschnittsPunkte());
+//    } dead method
 
     // --- Anpassung der Konstruktoren, falls Noten direkt übergeben werden sollen ---
     // (Für unser Dialog-Flow brauchen wir das im Moment nicht direkt,

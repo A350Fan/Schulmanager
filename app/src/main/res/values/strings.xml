@@ -7,5 +7,7 @@
         <item>Halbjahr 3</item>
         <item>Halbjahr 4</item>
     </string-array>
-    <!-- Fügen Sie hier alle Texte der App hinzu -->
+    <string name="hint_fachname">Fachname</string>
+    <string name="checkbox_abiturfach">Abiturfach</string>
+    <string name="button_manage_notes">Noten verwalten</string>
 </resources>

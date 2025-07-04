@@ -9,7 +9,9 @@
         android:id="@+id/dialog_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Fachname"/>
+        android:hint="@string/hint_fachname"
+        android:inputType="textCapWords"
+        android:autofillHints="name"/>
 
     <Spinner
         android:id="@+id/sp_halbjahr"
@@ -26,13 +28,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Abiturfach"/>
+        android:text="@string/checkbox_abiturfach"/>
 
     <Button
         android:id="@+id/btn_edit_notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Noten verwalten"/>
+        android:text="@string/button_manage_notes"/>
 
 </LinearLayout>

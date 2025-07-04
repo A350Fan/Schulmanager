@@ -2,7 +2,7 @@
 package com.example.schulmanager.utils;
 
 import com.example.schulmanager.models.Fach;
-import com.example.schulmanager.models.Note; // NEU: Import hinzugefügt (nicht direkt verwendet, aber zur Vollständigkeit)
+//import com.example.schulmanager.models.Note;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +74,7 @@ public class BerechnungUtil {
         }
 
         // Sortieren der Leistungen absteigend, um die besten 40 zu finden
-        Collections.sort(halbjahresLeistungen, Collections.reverseOrder());
+        halbjahresLeistungen.sort(Collections.reverseOrder());
 
         // Berechnung der besten 40 Leistungen
         ergebnis.halbjahresPunkte = berechneHalbjahresPunkte(halbjahresLeistungen);

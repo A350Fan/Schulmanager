@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
+//import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton; // NEU
-import android.widget.RadioGroup; // NEU
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView; // NEU
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,9 +27,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schulmanager.R;
 import com.example.schulmanager.adapters.FachAdapter;
-import com.example.schulmanager.adapters.NoteAdapter; // NEU
+import com.example.schulmanager.adapters.NoteAdapter;
 import com.example.schulmanager.models.Fach;
-import com.example.schulmanager.models.Note; // NEU
+import com.example.schulmanager.models.Note;
 import com.example.schulmanager.utils.BerechnungUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -45,7 +45,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
     private FachAdapter adapter;
     private AlertDialog currentDialog;
     private List<Fach> alleFaecher = new ArrayList<>();
-    private List<Fach> gefilterteFaecher = new ArrayList<>();
+    private final List<Fach> gefilterteFaecher = new ArrayList<>();
     private int aktuellesHalbjahr = 1; // Standard: HJ1
     private Spinner halbjahrSpinner;
     // private ArrayAdapter<CharSequence> spinnerAdapter; // Nicht mehr als Klassenfeld nötig, da lokal initialisiert
@@ -288,7 +288,8 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                         fach.addNote(neueNote);
                         saveData(); // Speichern der aktualisierten Fach-Liste
 
-                        noteAdapter.notifyDataSetChanged(); // Aktualisiert die Notenliste im Dialog
+                        noteAdapter.notifyItemInserted(fach.getNoten().size() - 1); // Fügt das zuletzt hinzugefügte Element hinzu
+                        rvCurrentNotes.scrollToPosition(fach.getNoten().size() - 1); // Optional: Zum neuen Eintrag scrollen
                         adapter.notifyItemChanged(alleFaecher.indexOf(fach)); // Aktualisiert das Fach im Haupt-RecyclerView
                         etNoteWert.setText(""); // Feld leeren für nächste Eingabe
                         Toast.makeText(requireContext(), "Note hinzugefügt", Toast.LENGTH_SHORT).show();

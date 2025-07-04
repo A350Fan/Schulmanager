@@ -118,7 +118,7 @@ public class BerechnungUtil {
         // Falls weniger als 40 Leistungen vorhanden sind, wird der Durchschnitt
         // auf 40 Leistungen hochgerechnet.
         if (anzahlDerLeistungen < 40) {
-            double durchschnitt = (double)summe / anzahlDerLeistungen;
+            double durchschnitt = (double)summe / (anzahlDerLeistungen*0.5);
             summe = (int) Math.round(durchschnitt * 40); // Aufrunden auf ganze Punkte
         }
 

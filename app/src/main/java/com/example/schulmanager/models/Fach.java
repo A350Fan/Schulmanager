@@ -22,6 +22,8 @@ public class Fach implements Serializable {
         this.noten = new ArrayList<>();
     }
 
+
+
     public void addNote(Note note) {
         if (this.noten == null) {
             this.noten = new ArrayList<>();
@@ -86,23 +88,27 @@ public class Fach implements Serializable {
         double gesamtGewichtung = 0.0;
 
         // Feste Gewichtungen
-        final int GEWICHTUNG_SCHRIFTLICH = 2;
+        final int GEWICHTUNG_SCHRIFTLICH = 1;
         final int GEWICHTUNG_MUENDLICH = 1;
         final int GEWICHTUNG_SONSTIG = 1;
 
 
-        // Zähle die gewichteten Punkte und die Gesamtgewichtung
-        gesamtPunkteGewichtet += (avgSchriftlich * GEWICHTUNG_SCHRIFTLICH);
-        gesamtGewichtung += GEWICHTUNG_SCHRIFTLICH; // Gewichtung immer hinzufügen, auch wenn avgSchriftlich 0 ist
+        // Nur Gewichtung hinzufügen, wenn Noten dieses Typs vorhanden sind.
+        // Andernfalls fließt 0.0 in gesamtPunkteGewichtet ein, aber nicht in gesamtGewichtung.
+        if (!schriftlicheNoten.isEmpty()) {
+            gesamtPunkteGewichtet += (avgSchriftlich * GEWICHTUNG_SCHRIFTLICH);
+            gesamtGewichtung += GEWICHTUNG_SCHRIFTLICH;
+        }
+        if (!muendlicheNoten.isEmpty()) {
+            gesamtPunkteGewichtet += (avgMuendlich * GEWICHTUNG_MUENDLICH);
+            gesamtGewichtung += GEWICHTUNG_MUENDLICH;
+        }
+        if (!sonstigeNoten.isEmpty()) {
+            gesamtPunkteGewichtet += (avgSonstig * GEWICHTUNG_SONSTIG);
+            gesamtGewichtung += GEWICHTUNG_SONSTIG;
+        }
 
-        gesamtPunkteGewichtet += (avgMuendlich * GEWICHTUNG_MUENDLICH);
-        gesamtGewichtung += GEWICHTUNG_MUENDLICH; // Gewichtung immer hinzufügen
-
-        gesamtPunkteGewichtet += (avgSonstig * GEWICHTUNG_SONSTIG);
-        gesamtGewichtung += GEWICHTUNG_SONSTIG; // Gewichtung immer hinzufügen
-
-        // Falls es überhaupt keine Noten gibt (should be caught by initial check)
-        // oder falls die Gesamtgewichtung 0 ist (z.B. alle Gewichtungen sind 0, was hier nicht der Fall ist)
+        // Falls keine Noten vorhanden waren (wird eigentlich schon oben abgefangen)
         if (gesamtGewichtung == 0) {
             return 0.0;
         } else {

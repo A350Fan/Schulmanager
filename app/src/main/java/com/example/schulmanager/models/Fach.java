@@ -76,14 +76,38 @@ public class Fach implements Serializable {
         double avgMuendlich = muendlicheNoten.isEmpty() ? 0.0 : calculateAverage(muendlicheNoten);
         double avgSonstig = sonstigeNoten.isEmpty() ? 0.0 : calculateAverage(sonstigeNoten);
 
-        // Gewichtung anwenden: schriftlich 2x, mündlich 1x, sonstig 1x
-        // Die Gesamtgewichtung ist 2 + 1 + 1 = 4.
-        // Falls eine Kategorie keine Noten hat, geht ihr Durchschnitt als 0.0 in die Summe ein.
-        double gesamtPunkteGewichtet = (avgSchriftlich * 2) + (avgMuendlich * 1) + (avgSonstig * 1);
-        double gesamtGewichtung = 2 + 1 + 1;
+        // NEUE LOGIK: Die Gesamtgewichtung wird dynamisch basierend auf
+        // den *vorhandenen* (gewichteten) Notenarten bestimmt.
+        // Wenn eine Notenart keine Noten enthält, soll sie mit 0 Punkten gewertet werden,
+        // aber ihre Gewichtung soll trotzdem in die Gesamtgewichtung eingehen,
+        // um den Durchschnitt gemäß der Erwartung zu bilden (z.B. 15 schriftlich, 0 mündlich -> Schnitt von 7.5).
 
-        // Der Gesamtdurchschnitt ist die gewichtete Summe geteilt durch die Summe der Gewichtungen.
-        return gesamtPunkteGewichtet / gesamtGewichtung;
+        double gesamtPunkteGewichtet = 0.0;
+        double gesamtGewichtung = 0.0;
+
+        // Feste Gewichtungen
+        final int GEWICHTUNG_SCHRIFTLICH = 2;
+        final int GEWICHTUNG_MUENDLICH = 1;
+        final int GEWICHTUNG_SONSTIG = 1;
+
+
+        // Zähle die gewichteten Punkte und die Gesamtgewichtung
+        gesamtPunkteGewichtet += (avgSchriftlich * GEWICHTUNG_SCHRIFTLICH);
+        gesamtGewichtung += GEWICHTUNG_SCHRIFTLICH; // Gewichtung immer hinzufügen, auch wenn avgSchriftlich 0 ist
+
+        gesamtPunkteGewichtet += (avgMuendlich * GEWICHTUNG_MUENDLICH);
+        gesamtGewichtung += GEWICHTUNG_MUENDLICH; // Gewichtung immer hinzufügen
+
+        gesamtPunkteGewichtet += (avgSonstig * GEWICHTUNG_SONSTIG);
+        gesamtGewichtung += GEWICHTUNG_SONSTIG; // Gewichtung immer hinzufügen
+
+        // Falls es überhaupt keine Noten gibt (should be caught by initial check)
+        // oder falls die Gesamtgewichtung 0 ist (z.B. alle Gewichtungen sind 0, was hier nicht der Fall ist)
+        if (gesamtGewichtung == 0) {
+            return 0.0;
+        } else {
+            return gesamtPunkteGewichtet / gesamtGewichtung;
+        }
     }
 
     // Hilfsmethode zur Berechnung des Durchschnitts einer Liste von Doubles

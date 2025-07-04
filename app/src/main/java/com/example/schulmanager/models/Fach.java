@@ -1,8 +1,7 @@
-// models/Fach.java (Angepasst)
+// models/Fach.java
 package com.example.schulmanager.models;
 
 import androidx.annotation.NonNull;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,107 +12,91 @@ public class Fach implements Serializable {
     private String name;
     private int halbjahr;
     private boolean isAbiturfach;
-    // Alte Felder entfernen:
-    // private double schriftlich;
-    // private double muendlich;
-
-    // NEU: Listen für Noten
     private List<Note> noten;
-
 
     public Fach(String name, int halbjahr, boolean isAbiturfach) {
         this.id = System.currentTimeMillis();
         this.name = name;
         this.halbjahr = halbjahr;
         this.isAbiturfach = isAbiturfach;
-        this.noten = new ArrayList<>(); // NEU: Initialisiere die Notenliste
+        this.noten = new ArrayList<>();
     }
 
-    // Getter und Setter
-
-    // NEU: Methode zum Hinzufügen einer Note
     public void addNote(Note note) {
-        if (this.noten == null) { // Falls deserialisiert und Liste null ist
+        if (this.noten == null) {
             this.noten = new ArrayList<>();
         }
         this.noten.add(note);
     }
 
-    // NEU: Methode zum Entfernen einer Note
     public void removeNote(Note note) {
         if (this.noten != null) {
             this.noten.remove(note);
         }
     }
 
-    // NEU: Getter für die Notenliste
     public List<Note> getNoten() {
-        if (this.noten == null) { // Sicherstellen, dass die Liste nie null ist
+        if (this.noten == null) {
             this.noten = new ArrayList<>();
         }
         return noten;
     }
 
-    // NEU: Berechnet den gewichteten Durchschnitt aller Noten
-    // Annahme: Schriftliche Noten zählen 2x, mündliche 1x
-    // Oder: Wir können es auch einfacher halten und alle gleich gewichten,
-    // es sei denn, du hast spezifische Gewichtungen für verschiedene Notentypen.
-    // Für den Anfang machen wir es einfach und gewichten schriftlich und mündlich
-    // wie bisher (oder alle Noten gleich, je nach dem wie wir das im Dialog erfassen)
+    /**
+     * Berechnet den gewichteten Durchschnitt aller Noten des Fachs.
+     * Die Gewichtung ist: schriftlich 2x, mündlich 1x, sonstig 1x.
+     * Wenn eine Notenkategorie keine Noten enthält, wird sie mit 0 Punkten
+     * in die gewichtete Gesamtberechnung einbezogen.
+     *
+     * @return Der ungerundete gewichtete Durchschnitt in Punkten (0.0-15.0).
+     */
     public double getDurchschnitt() {
         if (noten == null || noten.isEmpty()) {
             return 0.0;
         }
 
-        //double gesamtPunkte = 0.0; dead code
-        int anzahlSchriftlich = 0;
-        int anzahlMuendlich = 0;
-        double summeSchriftlich = 0.0;
-        double summeMuendlich = 0.0;
+        List<Double> schriftlicheNoten = new ArrayList<>();
+        List<Double> muendlicheNoten = new ArrayList<>();
+        List<Double> sonstigeNoten = new ArrayList<>();
 
         for (Note note : noten) {
-            // Punkte validieren (obwohl schon beim Hinzufügen passieren sollte)
             double punktWert = Math.max(0.0, Math.min(15.0, note.getWert()));
 
             if ("schriftlich".equalsIgnoreCase(note.getTyp())) {
-                summeSchriftlich += punktWert;
-                anzahlSchriftlich++;
+                schriftlicheNoten.add(punktWert);
             } else if ("muendlich".equalsIgnoreCase(note.getTyp())) {
-                summeMuendlich += punktWert;
-                anzahlMuendlich++;
+                muendlicheNoten.add(punktWert);
+            } else if ("sonstig".equalsIgnoreCase(note.getTyp())) {
+                sonstigeNoten.add(punktWert);
             }
-            // Falls es andere Notentypen gibt, müssen wir deren Gewichtung festlegen
         }
 
-        // Beispiel für Gewichtung (schriftlich 2x, mündlich 1x)
-        double gewichteterDurchschnitt = 0.0;
-        if (anzahlSchriftlich > 0 && anzahlMuendlich > 0) {
-            gewichteterDurchschnitt = ( (summeSchriftlich / anzahlSchriftlich) * 2 + (summeMuendlich / anzahlMuendlich) ) / 3;
-        } else if (anzahlSchriftlich > 0) {
-            gewichteterDurchschnitt = summeSchriftlich / anzahlSchriftlich;
-        } else if (anzahlMuendlich > 0) {
-            gewichteterDurchschnitt = summeMuendlich / anzahlMuendlich;
+        // Berechne den Durchschnitt für jeden Notentyp
+        double avgSchriftlich = schriftlicheNoten.isEmpty() ? 0.0 : calculateAverage(schriftlicheNoten);
+        double avgMuendlich = muendlicheNoten.isEmpty() ? 0.0 : calculateAverage(muendlicheNoten);
+        double avgSonstig = sonstigeNoten.isEmpty() ? 0.0 : calculateAverage(sonstigeNoten);
+
+        // Gewichtung anwenden: schriftlich 2x, mündlich 1x, sonstig 1x
+        // Die Gesamtgewichtung ist 2 + 1 + 1 = 4.
+        // Falls eine Kategorie keine Noten hat, geht ihr Durchschnitt als 0.0 in die Summe ein.
+        double gesamtPunkteGewichtet = (avgSchriftlich * 2) + (avgMuendlich * 1) + (avgSonstig * 1);
+        double gesamtGewichtung = 2 + 1 + 1;
+
+        // Der Gesamtdurchschnitt ist die gewichtete Summe geteilt durch die Summe der Gewichtungen.
+        return gesamtPunkteGewichtet / gesamtGewichtung;
+    }
+
+    // Hilfsmethode zur Berechnung des Durchschnitts einer Liste von Doubles
+    private double calculateAverage(List<Double> list) {
+        if (list.isEmpty()) {
+            return 0.0;
         }
-        // Wenn keine schriftlichen oder mündlichen Noten, aber andere Typen,
-        // müsste man hier eine Logik für "sonstige" Noten einfügen
-        // Für den Moment gehen wir davon aus, dass wir schriftlich/mündlich unterscheiden
-
-        return gewichteterDurchschnitt;
+        double sum = 0;
+        for (double d : list) {
+            sum += d;
+        }
+        return sum / list.size();
     }
-
-
-    // Wichtige Änderung: getPunkte() sollte jetzt den Durchschnitt der Noten zurückgeben
-    // und nicht mehr versuchen, von einer Note in Punkte umzurechnen, da die Noten ja schon Punkte sind.
-    // Ich werde stattdessen getDurchschnitt() verwenden, welches Punkte zurückgibt
-    @Deprecated // Diese Methode ist jetzt nicht mehr ganz korrekt im Kontext der Notenlisten
-    public int getPunkte() {
-        // Dies war die Umrechnung von einer 1-6 Skala in 0-15 Punkte.
-        // Da getDurchschnitt() jetzt den Durchschnitt der 0-15 Punkte liefert,
-        // sollte diese Methode eigentlich nicht mehr benötigt werden oder anders benannt werden.
-        // Für die Kompatibilität mit dem Adapter, lassen wir es vorerst auf getDurchschnittsPunkte() verweisen
-        return getDurchschnittsPunkte();
-    }
-
 
     public long getId() { return id; }
     public String getName() { return name; }
@@ -123,31 +106,47 @@ public class Fach implements Serializable {
     public boolean isAbiturfach() { return isAbiturfach; }
     public void setAbiturfach(boolean abitur) { this.isAbiturfach = abitur; }
 
-    // Diese Setter für einzelne Schriftlich/Mündlich-Punkte sind jetzt überflüssig
-    // und sollten entfernt oder angepasst werden, da wir jetzt Listen haben.
-    // public void setSchriftlich(double punkte) { this.schriftlich = punkte; }
-    // public void setMuendlich(double punkte) { this.muendlich = punkte; }
+    /**
+     * Rundet einen double-Wert nach spezifischen Regeln für Notenpunkte:
+     * - Werte unter 1.0 werden auf 0 gerundet.
+     * - Der Nachkommaanteil von 0.0 bis 0.49 wird abgerundet.
+     * - Der Nachkommaanteil von 0.50 bis 0.99 wird aufgerundet.
+     *
+     * @param value Der zu rundende double-Wert (z.B. 7.49, 7.51).
+     * @return Der gerundete Integer-Wert (0-15 Punkte).
+     */
+    private int roundToNearestNotePoint(double value) {
+        if (value < 1.0) {
+            return 0;
+        }
 
-    // NEU: Dies ist die Methode, die den Durchschnitt der Noten in Punkten (0-15) zurückgibt
-    public int getDurchschnittsPunkte() {
-        // Hier rufen wir die neue getDurchschnitt() Methode auf, die den gewichteten
-        // Durchschnitt der Noten (Punkte 0-15) berechnet.
-        return (int) Math.round(getDurchschnitt());
+        int intPart = (int) value;
+        double fractionalPart = value - intPart;
+
+        if (fractionalPart >= 0.5) {
+            return intPart + 1;
+        } else {
+            return intPart;
+        }
     }
 
-    // toString() aktualisieren (optional, aber gut für Debugging)
+    /**
+     * Gibt den gerundeten Durchschnitt der Noten in Punkten (0-15) zurück.
+     * Die Rundung erfolgt nach der spezifischen Regel aus {@link #roundToNearestNotePoint(double)}.
+     *
+     * @return Der gerundete Durchschnittspunktwert.
+     */
+    public int getDurchschnittsPunkte() {
+        double durchschnitt = getDurchschnitt();
+        return roundToNearestNotePoint(durchschnitt);
+    }
+
     @NonNull
     @Override
     public String toString() {
         return String.format(Locale.GERMAN, "%s (HJ %d) - Ø %.1f Punkte",
-                name, halbjahr, getDurchschnitt()); // Zeigt den genauen Durchschnitt an
+                name, halbjahr, getDurchschnitt());
     }
-//    public String getFormattedPunkte() {
-//        // Zeigt den gerundeten Durchschnitt als String
-//        return String.valueOf(getDurchschnittsPunkte());
-//    } dead method
 
-    // --- Anpassung der Konstruktoren, falls Noten direkt übergeben werden sollen ---
-    // (Für unser Dialog-Flow brauchen wir das im Moment nicht direkt,
-    // da Noten später hinzugefügt werden)
+    // Die Methode getFormattedPunkte() wurde entfernt, da sie nicht mehr verwendet wird.
 }

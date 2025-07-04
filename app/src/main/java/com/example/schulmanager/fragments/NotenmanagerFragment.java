@@ -84,6 +84,10 @@ public class NotenmanagerFragment extends Fragment {
         // Abi-Berechnen-Button
         Button btnBerechnen = view.findViewById(R.id.btn_berechnen);
         btnBerechnen.setOnClickListener(v -> berechneUndZeigeAbi());
+        // Halbjahres-Notes berechnen Button
+        Button btnSchnitt = view.findViewById(R.id.btn_halbjahr_schnitt);
+        btnSchnitt.setOnClickListener(v -> zeigeHalbjahrSchnitt());
+
 
 
         loadData();
@@ -340,6 +344,32 @@ public class NotenmanagerFragment extends Fragment {
         prefs.edit().putString("pruefungen", new Gson().toJson(noten)).apply();
         Toast.makeText(requireContext(), "Prüfungsnoten wurden gespeichert", Toast.LENGTH_SHORT).show();
     }
+
+    private void zeigeHalbjahrSchnitt() {
+        // Aktuell ausgewähltes Halbjahr vom Spinner
+        int aktuellesHalbjahr = halbjahrSpinner.getSelectedItemPosition() + 1;
+
+        // Berechnung durchführen
+        BerechnungUtil.HalbjahrErgebnis ergebnis =
+                BerechnungUtil.berechneHalbjahrSchnitt(alleFaecher, aktuellesHalbjahr);
+
+        // Ergebnis anzeigen
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Durchschnitt HJ " + aktuellesHalbjahr)
+                .setMessage(
+                        "Anzahl Fächer: " + ergebnis.anzahlFaecher + "\n" +
+                                "Durchschnittspunktzahl: " + String.format("%.2f", ergebnis.durchschnitt) + "\n" +
+                                "Entspricht Note: " + punkteZuNote(ergebnis.durchschnitt))
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+    private String punkteZuNote(double punkte) {
+        // Umrechnung Punkte (0-15) → Note (1-6)
+        double note = 17.0 / 3.0 - punkte * 2.0 / 9.0;
+        return String.format("%.2f", Math.max(1.0, Math.min(6.0, note)));
+    }
+
 
 }
 

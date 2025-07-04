@@ -95,4 +95,28 @@ public class BerechnungUtil {
         int nachkomma = noteWert % 10;
         return ganzzahl + "," + nachkomma;
     }
+
+    public static class HalbjahrErgebnis {
+        public int halbjahr;
+        public double durchschnitt;
+        public int anzahlFaecher;
+    }
+
+    public static HalbjahrErgebnis berechneHalbjahrSchnitt(List<Fach> alleFaecher, int halbjahr) {
+        HalbjahrErgebnis ergebnis = new HalbjahrErgebnis();
+        ergebnis.halbjahr = halbjahr;
+        ergebnis.anzahlFaecher = 0;
+        double summe = 0;
+
+        for (Fach fach : alleFaecher) {
+            if (fach.getHalbjahr() == halbjahr) {
+                summe += fach.getDurchschnittsPunkte();
+                ergebnis.anzahlFaecher++;
+            }
+        }
+
+        ergebnis.durchschnitt = (ergebnis.anzahlFaecher > 0) ? summe / ergebnis.anzahlFaecher : 0;
+        return ergebnis;
+    }
+
 }

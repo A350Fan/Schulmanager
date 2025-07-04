@@ -7,14 +7,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
+//import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schulmanager.R;
 import com.example.schulmanager.models.Fach;
 
 import java.util.List;
-import java.util.Locale; // NEU
+//import java.util.Locale; // NEU
 
 public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder> {
 

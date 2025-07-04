@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/dialog_note_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"
+        android:text="Note für Fachname hinzufügen"/> <EditText
+    android:id="@+id/et_note_wert"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Punktwert (0-15)"
+    android:inputType="numberDecimal"
+    android:maxLength="4"/> <RadioGroup
+    android:id="@+id/rg_note_typ"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="8dp">
+
+    <RadioButton
+        android:id="@+id/rb_schriftlich"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Schriftlich"
+        android:checked="true"
+        android:layout_weight="1"/>
+
+    <RadioButton
+        android:id="@+id/rb_muendlich"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mündlich"
+        android:layout_weight="1"/>
+
+    <RadioButton
+        android:id="@+id/rb_sonstig"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sonstig"
+        android:layout_weight="1"/>
+</RadioGroup>
+
+    <TextView
+        android:id="@+id/tv_current_notes_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Aktuelle Noten:"
+        android:textStyle="bold"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_current_notes"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="8dp"
+        android:background="#f0f0f0"
+        android:padding="4dp"/>
+
+</LinearLayout>

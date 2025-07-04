@@ -1,3 +1,4 @@
+// adapters/FachAdapter.java (Angepasst)
 package com.example.schulmanager.adapters;
 
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.example.schulmanager.R;
 import com.example.schulmanager.models.Fach;
 
 import java.util.List;
+import java.util.Locale; // NEU
 
 public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder> {
 
@@ -40,8 +42,9 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
     public void onBindViewHolder(@NonNull FachViewHolder holder, int position) {
         Fach fach = faecher.get(position);
         holder.bind(fach, listener);
-        // Punkte anzeigen:
-        holder.tvPunkte.setText(fach.getFormattedPunkte());
+        // ACHTUNG: tvPunkte.setText(fach.getFormattedPunkte()); ist hier in bind() doppelt
+        // Es reicht, wenn es in bind() gesetzt wird.
+        // holder.tvPunkte.setText(fach.getFormattedPunkte()); // DIESE ZEILE KANN ENTFERNT WERDEN
     }
 
     @Override
@@ -52,8 +55,8 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
     static class FachViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvName;
         private final TextView tvHalbjahr;
-        private final TextView tvNote;
-        private final TextView tvPunkte;
+        private final TextView tvNote; // ÄNDERUNG: Jetzt zeigt dies den 0-15 Durchschnitt an
+        private final TextView tvPunkte; // ÄNDERUNG: Dies zeigt auch den 0-15 Durchschnitt an, vielleicht umbenennen?
         private final CardView cardView;
 
         public FachViewHolder(View itemView) {
@@ -68,10 +71,27 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
         public void bind(Fach fach, OnFachClickListener listener) {
             tvName.setText(fach.getName());
             tvHalbjahr.setText("HJ " + fach.getHalbjahr());
-            tvNote.setText(String.format("%.2f", fach.getDurchschnitt()));
-            tvPunkte.setText(String.valueOf(fach.getPunkte()));
+
+            // NEU: Anzeige des Durchschnitts (0-15 Punkte)
+            // Du hast tvNote und tvPunkte. Lasst uns tvNote für den runden Punktedurchschnitt nehmen
+            // und tvPunkte für die umgerechnete klassische Note 1-6, oder umgekehrt.
+            // basierend auf den Namen ist tvNote die klassische Schulnote.
+            // Die Berechnung dafür ist in NotenmanagerFragment, punkteZuNote(double punkte)
+            // oder wir zeigen beides an, wie es jetzt ist.
+            // Ich nehme an, dass tvNote die Note (1.0-6.0) und tvPunkte die Punkte (0-15) anzeigen soll.
+            double durchschnittPunkte = fach.getDurchschnitt();
+            tvNote.setText(String.format(Locale.GERMAN, "Ø Note: %.2f", punkteZuNote(durchschnittPunkte)));
+            tvPunkte.setText(String.format(Locale.GERMAN, "Ø Pkt: %d", fach.getDurchschnittsPunkte()));
+
 
             itemView.setOnClickListener(v -> listener.onFachClick(fach));
+        }
+
+        // NEU: Hilfsmethode, um Punkte (0-15) in Note (1-6) umzurechnen, hier lokal für die Anzeige
+        private double punkteZuNote(double punkte) {
+            // Umrechnung Punkte (0-15) → Note (1-6)
+            double note = 17.0 / 3.0 - punkte * 2.0 / 9.0;
+            return Math.max(1.0, Math.min(6.0, note));
         }
     }
 

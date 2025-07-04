@@ -28,19 +28,11 @@
         android:layout_marginTop="8dp"
         android:text="Abiturfach"/>
 
-    <EditText
-        android:id="@+id/dialog_schriftlich"
+    <Button
+        android:id="@+id/btn_edit_notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Schriftliche Note"
-        android:inputType="numberDecimal"/>
+        android:layout_marginTop="16dp"
+        android:text="Noten verwalten"/>
 
-    <EditText
-        android:id="@+id/dialog_muendlich"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Mündliche Note"
-        android:inputType="numberDecimal"/>
 </LinearLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Notenmanager</string>
+    <string name="app_name">Schulmanager</string>
     <string name="todo">TODO</string>
     <string-array name="halbjahre_array">
         <item>Halbjahr 1</item>

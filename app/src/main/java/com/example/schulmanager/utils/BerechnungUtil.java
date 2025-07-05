@@ -9,9 +9,6 @@ import java.util.Locale;
 
 public class BerechnungUtil {
 
-    // Abitur Noten- und Punkte-Tabelle (Referenz aus Oberstufe / G9 in Bayern, kann variieren)
-    // {Gesamtpunkte min, Gesamtpunkte max, Notenwert (z.B. 10 für 1,0)}
-    // WICHTIG: Die Reihenfolge ist entscheidend (absteigend nach Punkten)
     private static final int[][] PUNKTE_TABELLE = {
             {900, 823, 10}, // 1,0
             {822, 805, 11}, // 1,1
@@ -55,33 +52,65 @@ public class BerechnungUtil {
         public String bestandenNachricht;
     }
 
+    /**
+     * Berechnet den Abischnitt basierend auf Halbjahresleistungen und Prüfungsnoten.
+     * Berücksichtigt auch die Regel der maximalen Unterpunktungen.
+     *
+     * @param faecher Eine Liste aller Fächer.
+     * @param pruefungsNoten Ein Array der 5 Abiturprüfungsnoten (0-15 Punkte).
+     * @return Ein AbiErgebnis-Objekt mit den berechneten Punkten, dem Schnitt und dem Bestehensstatus.
+     */
     public static AbiErgebnis berechneAbi(List<Fach> faecher, int[] pruefungsNoten) {
         AbiErgebnis ergebnis = new AbiErgebnis();
 
+        // 1. Halbjahresleistungen sammeln und sortieren (absteigend)
         List<Integer> halbjahresLeistungen = new ArrayList<>();
         for (Fach fach : faecher) {
             halbjahresLeistungen.add(fach.getDurchschnittsPunkte());
         }
-
         halbjahresLeistungen.sort(Collections.reverseOrder());
+
+        // NEU: Anzahl der Unterpunktungen in den relevanten Halbjahresleistungen zählen
+        int unterpunktungenCount = 0;
+        int anzahlRelevanterLeistungen = Math.min(40, halbjahresLeistungen.size()); // Max 40 Leistungen einbringen
+
+        for (int i = 0; i < anzahlRelevanterLeistungen; i++) {
+            if (halbjahresLeistungen.get(i) <= 4) { // Punkte von 4 oder weniger sind Unterpunktungen
+                unterpunktungenCount++;
+            }
+        }
+
+        // 2. Halbjahresleistungen Punkte berechnen (max. 600 Punkte)
         ergebnis.halbjahresPunkte = berechneHalbjahresPunkte(halbjahresLeistungen);
 
+        // 3. Prüfungsleistungen berechnen (5 Prüfungen à max. 60 Punkte, gesamt max. 300 Punkte)
         ergebnis.pruefungsPunkte = 0;
         for (int note : pruefungsNoten) {
             ergebnis.pruefungsPunkte += Math.min(60, note * 4);
         }
         ergebnis.pruefungsPunkte = Math.min(300, ergebnis.pruefungsPunkte);
 
+        // 4. Gesamtpunkte berechnen (Halbjahresleistungen + Prüfungsleistungen)
         ergebnis.gesamtPunkte = ergebnis.halbjahresPunkte + ergebnis.pruefungsPunkte;
 
-        // Abischnitt ermitteln (gibt jetzt IMMER eine Note zurück, auch wenn 4,0 bei Nichtbestehen)
+        // 5. Abischnitt ermitteln (gibt jetzt IMMER eine Note zurück, auch wenn 4,0 bei Nichtbestehen)
         ergebnis.abiSchnitt = punkteZuNoteGesamt(ergebnis.gesamtPunkte);
 
-        // Die explizite Bestehensnachricht
-        if (ergebnis.gesamtPunkte < 300) {
+        // 6. Bestehensstatus festlegen (Reihenfolge wichtig!)
+        // Zuerst die Unterpunktungen prüfen, da dies oft eine harte Ausschlussregel ist.
+        if (unterpunktungenCount > 8) {
             ergebnis.bestanden = false;
-            ergebnis.bestandenNachricht = "Leider nicht bestanden."; // Hier steht die eigentliche Fehlermeldung
-        } else {
+            ergebnis.bestandenNachricht = String.format(Locale.GERMAN,
+                    "Leider nicht bestanden. Es gibt %d Unterpunktungen (< 5 Punkte) in den 40 Halbjahresleistungen (erlaubt: max. 8).",
+                    unterpunktungenCount);
+        }
+        // Dann die Gesamtpunktzahl prüfen
+        else if (ergebnis.gesamtPunkte < 300) {
+            ergebnis.bestanden = false;
+            ergebnis.bestandenNachricht = "Leider nicht bestanden. Die Gesamtpunktzahl ist zu gering (mind. 300 Punkte benötigt).";
+        }
+        // Wenn keine der Misserfolgsbedingungen zutrifft
+        else {
             ergebnis.bestanden = true;
             ergebnis.bestandenNachricht = "Herzlichen Glückwunsch! Abitur bestanden!";
         }
@@ -89,17 +118,25 @@ public class BerechnungUtil {
         return ergebnis;
     }
 
+    /**
+     * Berechnet die Punkte für die Halbjahresleistungen (beste 40 Leistungen).
+     * Falls weniger als 40 Leistungen vorhanden sind, wird hochgerechnet.
+     * @param leistungen Liste der Halbjahresleistungen (bereits sortiert, 0-15 Punkte).
+     * @return Gesamtpunkte für die Halbjahresleistungen (max. 600).
+     */
     private static int berechneHalbjahresPunkte(List<Integer> leistungen) {
         if (leistungen.isEmpty()) return 0;
 
         int summe = 0;
         int anzahlDerLeistungen = Math.min(40, leistungen.size());
 
+        // Nur die besten 'anzahlDerLeistungen' (max. 40) berücksichtigen
         for (int i = 0; i < anzahlDerLeistungen; i++) {
             summe += leistungen.get(i);
         }
 
-        if (anzahlDerLeistungen < 40) {
+        // Hochrechnung nur, wenn weniger als 40 Leistungen tatsächlich eingebracht wurden
+        if (anzahlDerLeistungen < 40 && anzahlDerLeistungen > 0) { // Muss auch > 0 sein, um Division durch 0 zu vermeiden
             double durchschnitt = (double)summe / anzahlDerLeistungen;
             summe = (int) Math.round(durchschnitt * 40);
         }
@@ -115,10 +152,8 @@ public class BerechnungUtil {
      * @return Der Abischnitt als String ("1,0" bis "4,0").
      */
     private static String punkteZuNoteGesamt(int gesamtPunkte) {
-        // GEÄNDERT: Wenn Punkte unter 300 sind, geben wir 4,0 zurück, nicht "Nicht bestanden".
-        // Die "Nicht bestanden"-Meldung wird über 'bestandenNachricht' gesteuert.
         if (gesamtPunkte < 300) {
-            return "6,0"; // Schlechte Notengrenze für das Bestehen
+            return "4,0";
         }
 
         for (int[] eintrag : PUNKTE_TABELLE) {
@@ -126,9 +161,7 @@ public class BerechnungUtil {
                 return noteToString(eintrag[2]);
             }
         }
-        // Fallback für den Fall, dass Punkte außerhalb der Tabelle liegen, aber >= 300 sind.
-        // Das sollte bei einer vollständigen Tabelle nicht eintreten, aber zur Sicherheit.
-        return "4,0";
+        return "4,0"; // Fallback, sollte nicht erreicht werden bei korrekter Tabelle
     }
 
     private static String noteToString(int noteWert) {
@@ -137,6 +170,12 @@ public class BerechnungUtil {
         return String.format(Locale.GERMAN, "%d,%d", ganzzahl, nachkomma);
     }
 
+    /**
+     * Wandelt eine Punktzahl (0-15) in eine Notenwert (1.0-6.0) um.
+     *
+     * @param punkte Die Punktzahl (0-15).
+     * @return Die umgerechnete Note als double.
+     */
     public static double punkteZuNoteEinzelwert(double punkte) {
         double note = 6.0 - (punkte / 3.0);
         return Math.max(1.0, Math.min(6.0, note));

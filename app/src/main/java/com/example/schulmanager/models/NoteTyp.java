@@ -1,8 +1,6 @@
 package com.example.schulmanager.models;
 
-import androidx.annotation.NonNull;
 import java.io.Serializable;
-import java.util.Locale; // Importiert Locale für die formatierte Ausgabe von Zahlen und Texten.
 
 /**
  * Repräsentiert einen Typ einer Note, z.B. schriftlich, mündlich, sonstig.

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schulmanager.R;
 import com.example.schulmanager.models.Fach;
+import com.example.schulmanager.utils.BerechnungUtil; // HINZUGEFÜGT: Import für BerechnungUtil
 
 import java.util.List;
 
@@ -47,12 +48,11 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
         return faecher.size();
     }
 
-    static final class FachViewHolder extends RecyclerView.ViewHolder { // final HINZUGEFÜGT
+    static final class FachViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvName;
         private final TextView tvHalbjahr;
         private final TextView tvNote;
         private final TextView tvPunkte;
-        // private final CardView cardView; // DIESE ZEILE WURDE WIE ZUVOR BESCHRIEBEN ENTFERNT
 
         public FachViewHolder(View itemView) {
             super(itemView);
@@ -67,22 +67,15 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
             tvHalbjahr.setText(itemView.getContext().getString(R.string.fach_halbjahr_format, fach.getHalbjahr()));
 
             double durchschnittPunkte = fach.getDurchschnitt();
-            // ÄNDERUNG: Angepasste Formel für punkteZuNote
-            tvNote.setText(itemView.getContext().getString(R.string.fach_avg_note_format, punkteZuNote(durchschnittPunkte)));
+            // GEÄNDERT: Aufruf der zentralen Methode in BerechnungUtil
+            tvNote.setText(itemView.getContext().getString(R.string.fach_avg_note_format,
+                    BerechnungUtil.punkteZuNoteEinzelwert(durchschnittPunkte)));
             tvPunkte.setText(itemView.getContext().getString(R.string.fach_avg_punkte_format, fach.getDurchschnittsPunkte()));
 
             itemView.setOnClickListener(v -> listener.onFachClick(fach));
         }
 
-        // NEU/GEÄNDERT: Hilfsmethode, um Punkte (0-15) in Note (1-6) umzurechnen
-        private double punkteZuNote(double punkte) {
-            // Umrechnung Punkte (0-15) → Note (1-6)
-            // 15 Punkte = 1,0
-            // 0 Punkte = 6,0
-            // Formel: Note = (17 - Punkte) / 3
-            double note = (17.0 - punkte) / 3.0;
-            // Sicherstellen, dass die Note im Bereich 1.0 bis 6.0 bleibt
-            return Math.max(1.0, Math.min(6.0, note));
-        }
+        // ENTFERNT: Die private Methode punkteZuNote wurde nach BerechnungUtil verschoben
+        // private double punkteZuNote(double punkte) { ... }
     }
 }

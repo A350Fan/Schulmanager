@@ -19,10 +19,8 @@ public class Fach implements Serializable {
         this.name = name;
         this.halbjahr = halbjahr;
         this.isAbiturfach = isAbiturfach;
-        this.noten = new ArrayList<>();
+        this.noten = new ArrayList<>(); // Sicherstellen, dass noten immer initialisiert ist
     }
-
-
 
     public void addNote(Note note) {
         if (this.noten == null) {
@@ -39,20 +37,27 @@ public class Fach implements Serializable {
 
     public List<Note> getNoten() {
         if (this.noten == null) {
-            this.noten = new ArrayList<>();
+            this.noten = new ArrayList<>(); // Sicherstellen, dass noten niemals null zurückgibt
         }
         return noten;
+    }
+
+    // NEU HINZUGEFÜGT: Setter für die Notenliste
+    public void setNoten(List<Note> noten) {
+        this.noten = noten;
     }
 
     /**
      * Berechnet den gewichteten Durchschnitt aller Noten des Fachs.
      * Die Gewichtung ist: schriftlich 2x, mündlich 1x, sonstig 1x.
      * Wenn eine Notenkategorie keine Noten enthält, wird sie mit 0 Punkten
-     * in die gewichtete Gesamtberechnung einbezogen.
+     * in die gewichtete Gesamtberechnung einbezogen, aber ihre volle Gewichtung
+     * fließt in den Teiler ein.
      *
      * @return Der ungerundete gewichtete Durchschnitt in Punkten (0.0-15.0).
      */
     public double getDurchschnitt() {
+        // Sicherstellen, dass noten nicht null ist, bevor darauf zugegriffen wird
         if (noten == null || noten.isEmpty()) {
             return 0.0;
         }
@@ -62,7 +67,7 @@ public class Fach implements Serializable {
         List<Double> sonstigeNoten = new ArrayList<>();
 
         for (Note note : noten) {
-            double punktWert = Math.max(0.0, Math.min(15.0, note.getWert()));
+            double punktWert = Math.max(0.0, Math.min(15.0, note.getWert())); // Sicherstellen, dass Werte 0-15 sind
 
             if ("schriftlich".equalsIgnoreCase(note.getTyp())) {
                 schriftlicheNoten.add(punktWert);
@@ -78,37 +83,28 @@ public class Fach implements Serializable {
         double avgMuendlich = muendlicheNoten.isEmpty() ? 0.0 : calculateAverage(muendlicheNoten);
         double avgSonstig = sonstigeNoten.isEmpty() ? 0.0 : calculateAverage(sonstigeNoten);
 
-        // NEUE LOGIK: Die Gesamtgewichtung wird dynamisch basierend auf
-        // den *vorhandenen* (gewichteten) Notenarten bestimmt.
-        // Wenn eine Notenart keine Noten enthält, soll sie mit 0 Punkten gewertet werden,
-        // aber ihre Gewichtung soll trotzdem in die Gesamtgewichtung eingehen,
-        // um den Durchschnitt gemäß der Erwartung zu bilden (z.B. 15 schriftlich, 0 mündlich -> Schnitt von 7.5).
+        // KORRIGIERTE LOGIK: Feste Gewichtungen wie in den Kommentaren beschrieben
+        final int GEWICHTUNG_SCHRIFTLICH = 2; // Soll 2x gewichtet werden
+        final int GEWICHTUNG_MUENDLICH = 1;
+        final int GEWICHTUNG_SONSTIG = 1;
 
         double gesamtPunkteGewichtet = 0.0;
         double gesamtGewichtung = 0.0;
 
-        // Feste Gewichtungen
-        final int GEWICHTUNG_SCHRIFTLICH = 1;
-        final int GEWICHTUNG_MUENDLICH = 1;
-        final int GEWICHTUNG_SONSTIG = 1;
+        // Punkte und Gewichtungen immer hinzufügen, auch wenn die Liste leer ist.
+        // Wenn eine Notenart keine Noten enthält, ist ihr avgX = 0.0, was korrekt ist.
+        gesamtPunkteGewichtet += (avgSchriftlich * GEWICHTUNG_SCHRIFTLICH);
+        gesamtGewichtung += GEWICHTUNG_SCHRIFTLICH;
+
+        gesamtPunkteGewichtet += (avgMuendlich * GEWICHTUNG_MUENDLICH);
+        gesamtGewichtung += GEWICHTUNG_MUENDLICH;
+
+        gesamtPunkteGewichtet += (avgSonstig * GEWICHTUNG_SONSTIG);
+        gesamtGewichtung += GEWICHTUNG_SONSTIG;
 
 
-        // Nur Gewichtung hinzufügen, wenn Noten dieses Typs vorhanden sind.
-        // Andernfalls fließt 0.0 in gesamtPunkteGewichtet ein, aber nicht in gesamtGewichtung.
-        if (!schriftlicheNoten.isEmpty()) {
-            gesamtPunkteGewichtet += (avgSchriftlich * GEWICHTUNG_SCHRIFTLICH);
-            gesamtGewichtung += GEWICHTUNG_SCHRIFTLICH;
-        }
-        if (!muendlicheNoten.isEmpty()) {
-            gesamtPunkteGewichtet += (avgMuendlich * GEWICHTUNG_MUENDLICH);
-            gesamtGewichtung += GEWICHTUNG_MUENDLICH;
-        }
-        if (!sonstigeNoten.isEmpty()) {
-            gesamtPunkteGewichtet += (avgSonstig * GEWICHTUNG_SONSTIG);
-            gesamtGewichtung += GEWICHTUNG_SONSTIG;
-        }
-
-        // Falls keine Noten vorhanden waren (wird eigentlich schon oben abgefangen)
+        // Falls die Gesamtgewichtung 0 ist (sollte bei festen Gewichtungen nicht passieren,
+        // es sei denn, alle Gewichtungen sind 0, was hier nicht der Fall ist).
         if (gesamtGewichtung == 0) {
             return 0.0;
         } else {
@@ -146,7 +142,7 @@ public class Fach implements Serializable {
      * @return Der gerundete Integer-Wert (0-15 Punkte).
      */
     private int roundToNearestNotePoint(double value) {
-        if (value < 1.0) {
+        if (value < 1.0) { // Punkte unter 1.0 werden zu 0 gerundet
             return 0;
         }
 

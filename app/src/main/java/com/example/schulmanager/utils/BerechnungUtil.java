@@ -2,17 +2,15 @@
 package com.example.schulmanager.utils;
 
 import com.example.schulmanager.models.Fach;
-//import com.example.schulmanager.models.Note;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale; // Für String.format
+import java.util.Locale;
 
 public class BerechnungUtil {
 
     // Abitur Noten- und Punkte-Tabelle (Referenz aus Oberstufe / G9 in Bayern, kann variieren)
-    // {Gesamtpunkte min, Gesamtpunkte max, Notenwert (z.B. 40 für 4.0)}
+    // {Gesamtpunkte min, Gesamtpunkte max, Notenwert (z.B. 10 für 1,0)}
     // WICHTIG: Die Reihenfolge ist entscheidend (absteigend nach Punkten)
     private static final int[][] PUNKTE_TABELLE = {
             {900, 823, 10}, // 1,0
@@ -46,7 +44,6 @@ public class BerechnungUtil {
             {336, 319, 38}, // 3,8
             {318, 301, 39}, // 3,9
             {300, 300, 40}  // 4,0 (Mindestpunktzahl für Bestehen)
-            // Nicht bestanden unter 300 siehe unten
     };
 
     public static class AbiErgebnis {
@@ -54,6 +51,8 @@ public class BerechnungUtil {
         public int pruefungsPunkte;
         public int gesamtPunkte;
         public String abiSchnitt;
+        public boolean bestanden; // HINZUGEFÜGT: Für den Bestehensstatus
+        public String bestandenNachricht; // HINZUGEFÜGT: Für die angepasste Nachricht
     }
 
     /**
@@ -61,7 +60,7 @@ public class BerechnungUtil {
      *
      * @param faecher Eine Liste aller Fächer.
      * @param pruefungsNoten Ein Array der 5 Abiturprüfungsnoten (0-15 Punkte).
-     * @return Ein AbiErgebnis-Objekt mit den berechneten Punkten und dem Schnitt.
+     * @return Ein AbiErgebnis-Objekt mit den berechneten Punkten, dem Schnitt und dem Bestehensstatus.
      */
     public static AbiErgebnis berechneAbi(List<Fach> faecher, int[] pruefungsNoten) {
         AbiErgebnis ergebnis = new AbiErgebnis();
@@ -69,31 +68,33 @@ public class BerechnungUtil {
         // 1. Halbjahresleistungen berechnen (max. 600 Punkte)
         List<Integer> halbjahresLeistungen = new ArrayList<>();
         for (Fach fach : faecher) {
-            // WICHTIG: fach.getDurchschnittsPunkte() liefert nun den gerundeten Durchschnitt
-            // der Notenliste des Fachs.
             halbjahresLeistungen.add(fach.getDurchschnittsPunkte());
         }
 
-        // Sortieren der Leistungen absteigend, um die besten 40 zu finden
         halbjahresLeistungen.sort(Collections.reverseOrder());
-
-        // Berechnung der besten 40 Leistungen
         ergebnis.halbjahresPunkte = berechneHalbjahresPunkte(halbjahresLeistungen);
 
         // 2. Prüfungsleistungen berechnen (5 Prüfungen à max. 60 Punkte, gesamt max. 300 Punkte)
         ergebnis.pruefungsPunkte = 0;
         for (int note : pruefungsNoten) {
-            // Jede Prüfungsnote (0-15 Punkte) wird * 4 multipliziert (max. 60 Punkte pro Prüfung)
             ergebnis.pruefungsPunkte += Math.min(60, note * 4);
         }
-        // Gesamtsumme der Prüfungsleistungen auf maximal 300 begrenzen
         ergebnis.pruefungsPunkte = Math.min(300, ergebnis.pruefungsPunkte);
 
         // 3. Gesamtpunkte berechnen (Halbjahresleistungen + Prüfungsleistungen)
         ergebnis.gesamtPunkte = ergebnis.halbjahresPunkte + ergebnis.pruefungsPunkte;
 
-        // 4. Abischnitt ermitteln
-        ergebnis.abiSchnitt = punkteZuNote(ergebnis.gesamtPunkte);
+        // 4. Abischnitt und Bestehensstatus ermitteln
+        ergebnis.abiSchnitt = punkteZuNoteGesamt(ergebnis.gesamtPunkte); // Umbenannt, um Verwechslung zu vermeiden
+
+        // NEUE LOGIK FÜR BESTEHEN/NICHT BESTEHEN HIER HINZUGEFÜGT
+        if (ergebnis.gesamtPunkte < 300) {
+            ergebnis.bestanden = false;
+            ergebnis.bestandenNachricht = "Leider nicht bestanden.";
+        } else {
+            ergebnis.bestanden = true;
+            ergebnis.bestandenNachricht = "Herzlichen Glückwunsch! Abitur bestanden!";
+        }
 
         return ergebnis;
     }
@@ -108,43 +109,39 @@ public class BerechnungUtil {
         if (leistungen.isEmpty()) return 0;
 
         int summe = 0;
-        // Wähle die Anzahl der zu berücksichtigenden Leistungen (max. 40)
         int anzahlDerLeistungen = Math.min(40, leistungen.size());
 
-        // Summiere die besten Leistungen
         for (int i = 0; i < anzahlDerLeistungen; i++) {
             summe += leistungen.get(i);
         }
 
-        // Falls weniger als 40 Leistungen vorhanden sind, wird der Durchschnitt
-        // auf 40 Leistungen hochgerechnet.
         if (anzahlDerLeistungen < 40) {
             double durchschnitt = (double)summe / anzahlDerLeistungen;
-            summe = (int) Math.round(durchschnitt * 40); // Aufrunden auf ganze Punkte
+            summe = (int) Math.round(durchschnitt * 40);
         }
 
-        // Begrenze die Gesamtpunkte auf maximal 600
         return Math.min(600, summe);
     }
 
     /**
      * Wandelt die Gesamtpunktzahl des Abiturs in eine Noten-String (z.B. "2,5") um.
-     * Basierend auf der PUNKTE_TABELLE.
+     * Basierend auf der PUNKTE_TABELLE. Enthält die Bestehensprüfung.
      * @param gesamtPunkte Die erreichte Gesamtpunktzahl.
-     * @return Der Abischnitt als String.
+     * @return Der Abischnitt als String ("1,0" bis "4,0") oder "Nicht bestanden".
      */
-    private static String punkteZuNote(int gesamtPunkte) {
+    private static String punkteZuNoteGesamt(int gesamtPunkte) { // METHODE UMBENANNT
         for (int[] eintrag : PUNKTE_TABELLE) {
             if (gesamtPunkte <= eintrag[0] && gesamtPunkte >= eintrag[1]) {
                 return noteToString(eintrag[2]);
             }
-            if(gesamtPunkte < 300)
-            {
+            if (gesamtPunkte < 300) { // Die explizite Bestehensprüfung
                 return "Nicht bestanden";
             }
         }
-        // Fallback, falls Punkte außerhalb der Tabelle liegen (sollte nicht passieren bei 0-900)
-        return "4,0"; // Standardmäßig 4,0 bei Nichtbestehen oder Ungültigkeit
+        // Fallback für den seltenen Fall, dass Punkte außerhalb der bekannten Tabelle, aber >= 300 sind
+        // oder wenn die Tabelle nicht alle möglichen gültigen Punkte abdeckt.
+        // Standardmäßig als bestanden (4,0) deklarieren, da die <300 Prüfung zuerst kommt.
+        return "4,0";
     }
 
     /**
@@ -156,6 +153,20 @@ public class BerechnungUtil {
         int ganzzahl = noteWert / 10;
         int nachkomma = noteWert % 10;
         return String.format(Locale.GERMAN, "%d,%d", ganzzahl, nachkomma);
+    }
+
+    /**
+     * NEU HINZUGEFÜGT: Wandelt eine Punktzahl (0-15) in eine Notenwert (1.0-6.0) um.
+     * Diese Methode ersetzt die ähnlichen Methoden in FachAdapter und NotenmanagerFragment.
+     * 15 Punkte = 1.0, 0 Punkte = 6.0
+     * @param punkte Die Punktzahl (0-15).
+     * @return Die umgerechnete Note als double.
+     */
+    public static double punkteZuNoteEinzelwert(double punkte) {
+        // Korrigierte Formel: Note = 6.0 - (Punkte / 3.0)
+        double note = 6.0 - (punkte / 3.0);
+        // Sicherstellen, dass die Note im Bereich 1.0 bis 6.0 bleibt
+        return Math.max(1.0, Math.min(6.0, note));
     }
 
     public static class HalbjahrErgebnis {
@@ -178,8 +189,6 @@ public class BerechnungUtil {
 
         for (Fach fach : alleFaecher) {
             if (fach.getHalbjahr() == halbjahr) {
-                // Auch hier wird fach.getDurchschnittsPunkte() verwendet,
-                // das intern die Notenliste berücksichtigt.
                 summe += fach.getDurchschnittsPunkte();
                 ergebnis.anzahlFaecher++;
             }

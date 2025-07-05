@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schulmanager.R;
 import com.example.schulmanager.models.Note;
 
-import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat; // KORRIGIERT: Richtiger Import
 import java.util.List;
 import java.util.Locale;
 
@@ -33,7 +33,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     @Override
     public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_note, parent, false); // Wir brauchen noch item_note.xml
+                .inflate(R.layout.item_note, parent, false);
         return new NoteViewHolder(itemView);
     }
 
@@ -51,36 +51,34 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     static final class NoteViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvNoteWert;
         private final TextView tvNoteTyp;
-        private final TextView tvNoteDatum; // Optional: Datum anzeigen
+        private final TextView tvNoteDatum;
 
         public NoteViewHolder(View itemView) {
             super(itemView);
             tvNoteWert = itemView.findViewById(R.id.tv_note_wert);
             tvNoteTyp = itemView.findViewById(R.id.tv_note_typ);
-            tvNoteDatum = itemView.findViewById(R.id.tv_note_datum); // Füge dies in item_note.xml hinzu
+            tvNoteDatum = itemView.findViewById(R.id.tv_note_datum);
         }
 
         public void bind(Note note, OnNoteClickListener listener, int position) {
-            //Verwendung von Ressourcen-Strings mit Platzhaltern
             tvNoteWert.setText(itemView.getContext().getString(R.string.note_value_format, note.getWert()));
             tvNoteTyp.setText(itemView.getContext().getString(R.string.note_type_format, note.getTyp()));
 
+            // KORRIGIERT: SimpleDateFormat statt SimplearedPreferences
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
             tvNoteDatum.setText(itemView.getContext().getString(R.string.note_date_format, sdf.format(note.getDatum())));
 
-            // Optional: Click Listener für Bearbeitung
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onNoteClick(note);
                 }
             });
 
-            // Long Click Listener für Löschen
             itemView.setOnLongClickListener(v -> {
                 if (listener != null) {
                     listener.onNoteLongClick(note, position);
                 }
-                return true; // Wichtig: true zurückgeben, um Long-Click zu konsumieren
+                return true;
             });
         }
     }

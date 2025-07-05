@@ -1,11 +1,10 @@
-// fragments/NotenmanagerFragment.java (Angepasst)
+// fragments/NotenmanagerFragment.java
 package com.example.schulmanager.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-//import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ import com.example.schulmanager.adapters.FachAdapter;
 import com.example.schulmanager.adapters.NoteAdapter;
 import com.example.schulmanager.models.Fach;
 import com.example.schulmanager.models.Note;
-import com.example.schulmanager.utils.BerechnungUtil;
+import com.example.schulmanager.utils.BerechnungUtil; // Import für BerechnungUtil
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,33 +39,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNoteClickListener { // NEU: NoteAdapter.OnNoteClickListener implementieren
+public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNoteClickListener {
 
     private FachAdapter adapter;
     private AlertDialog currentDialog;
     private List<Fach> alleFaecher = new ArrayList<>();
     private final List<Fach> gefilterteFaecher = new ArrayList<>();
-    private int aktuellesHalbjahr = 1; // Standard: HJ1
+    private int aktuellesHalbjahr = 1;
     private Spinner halbjahrSpinner;
-    // private ArrayAdapter<CharSequence> spinnerAdapter; // Nicht mehr als Klassenfeld nötig, da lokal initialisiert
 
-    // NEU: Für den Noten-Dialog
     private NoteAdapter noteAdapter;
-    private Fach currentFachForNotes; // Das Fach, dessen Noten gerade bearbeitet werden
+    private Fach currentFachForNotes;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notenmanager, container, false);
 
-        /// Spinner initialisieren
+        // Spinner initialisieren
         halbjahrSpinner = view.findViewById(R.id.halbjahr_filter);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.halbjahre_array,
-                android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.spinner_item); // GEÄNDERT: Hier auch benutzerdefiniertes Layout verwenden
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item); // GEÄNDERT: Hier auch benutzerdefiniertes Layout verwenden
         halbjahrSpinner.setAdapter(spinnerAdapter);
-        halbjahrSpinner.setSelection(0); // Standardmäßig HJ1 ausgewählt
+        halbjahrSpinner.setSelection(0);
         halbjahrSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -88,13 +85,11 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         FloatingActionButton fabAdd = view.findViewById(R.id.fab_add);
         fabAdd.setOnClickListener(v -> showAddDialog());
 
-        // Prüfungsnoten-Button
+        // Buttons
         Button btnPruefungen = view.findViewById(R.id.btn_pruefungen);
         btnPruefungen.setOnClickListener(v -> showPruefungenDialog());
-        // Abi-Berechnen-Button
         Button btnBerechnen = view.findViewById(R.id.btn_berechnen);
         btnBerechnen.setOnClickListener(v -> berechneUndZeigeAbi());
-        // Halbjahres-Notes berechnen Button
         Button btnSchnitt = view.findViewById(R.id.btn_halbjahr_schnitt);
         btnSchnitt.setOnClickListener(v -> zeigeHalbjahrSchnitt());
 
@@ -109,12 +104,10 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_fach, null);
 
-        // Dialogfelder
         EditText etName = dialogView.findViewById(R.id.dialog_name);
         Spinner spHalbjahr = dialogView.findViewById(R.id.sp_halbjahr);
 
-        // Adapter mit eigenem Layout für Dropdown
-        ArrayAdapter<CharSequence> spinnerArrayAdapter = ArrayAdapter.createFromResource( // ÄNDERUNG: Name
+        ArrayAdapter<CharSequence> spinnerArrayAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.halbjahre_array,
                 R.layout.spinner_item
@@ -127,13 +120,9 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         spHalbjahr.setSelection(lastSelectedHalbjahrPosition);
 
         CheckBox cbAbitur = dialogView.findViewById(R.id.cb_abitur);
-        // ACHTUNG: Die Felder für schriftlich/mündlich wurden aus dialog_fach.xml entfernt
-        // EditText etSchriftlich = dialogView.findViewById(R.id.dialog_schriftlich);
-        // EditText etMuendlich = dialogView.findViewById(R.id.dialog_muendlich);
 
-        // NEU: Button für Notenverwaltung im Fach-Dialog
         Button btnEditNotes = dialogView.findViewById(R.id.btn_edit_notes);
-        btnEditNotes.setVisibility(View.GONE); // Zuerst unsichtbar, da noch kein Fach existiert
+        btnEditNotes.setVisibility(View.GONE);
 
         builder.setView(dialogView)
                 .setTitle("Neues Fach hinzufügen")
@@ -151,15 +140,10 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                             cbAbitur.isChecked()
                     );
 
-                    // KEINE direkt Noten hier mehr eingeben
-
                     alleFaecher.add(fach);
                     saveAndUpdate(fach);
 
                     prefs.edit().putInt(PREF_LAST_HALBJAHR_ADD, selectedHalbjahrPosition).apply();
-
-                    // Optional: Nach dem Hinzufügen direkt den Noten-Dialog öffnen
-                    // showNotesDialog(fach); // Das ist Geschmackssache, kann man machen
                 })
                 .setNegativeButton("Abbrechen", null);
 
@@ -167,7 +151,6 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         currentDialog.show();
     }
 
-    // ACHTUNG: ensureValidPoints wird jetzt nur für einzelne Notenwerte verwendet
     private double ensureValidPoints(String input) {
         if (input == null || input.isEmpty()) return 0.0;
         double points = Double.parseDouble(input);
@@ -185,16 +168,12 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         EditText etName = dialogView.findViewById(R.id.dialog_name);
         Spinner spHalbjahr = dialogView.findViewById(R.id.sp_halbjahr);
         CheckBox cbAbitur = dialogView.findViewById(R.id.cb_abitur);
-        // ACHTUNG: Schriftlich/mündlich Felder existieren hier nicht mehr
-        // EditText etSchriftlich = dialogView.findViewById(R.id.dialog_schriftlich);
-        // EditText etMuendlich = dialogView.findViewById(R.id.dialog_muendlich);
 
-        // NEU: Button für Notenverwaltung
         Button btnEditNotes = dialogView.findViewById(R.id.btn_edit_notes);
-        btnEditNotes.setVisibility(View.VISIBLE); // Sichtbar machen
+        btnEditNotes.setVisibility(View.VISIBLE);
         btnEditNotes.setOnClickListener(v -> {
-            currentDialog.dismiss(); // Aktuellen Fach-Dialog schließen
-            showNotesDialog(fach); // Noten-Dialog öffnen
+            currentDialog.dismiss();
+            showNotesDialog(fach);
         });
 
         ArrayAdapter<CharSequence> dialogSpinnerAdapter = ArrayAdapter.createFromResource(
@@ -205,11 +184,9 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         dialogSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spHalbjahr.setAdapter(dialogSpinnerAdapter);
 
-        // Vorbelegung
         etName.setText(fach.getName());
         spHalbjahr.setSelection(fach.getHalbjahr() - 1);
         cbAbitur.setChecked(fach.isAbiturfach());
-        // Die Notenfelder werden hier nicht mehr vorbelegt
 
         builder.setView(dialogView)
                 .setTitle("Fach bearbeiten")
@@ -223,10 +200,9 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                     fach.setName(newName);
                     fach.setHalbjahr(spHalbjahr.getSelectedItemPosition() + 1);
                     fach.setAbiturfach(cbAbitur.isChecked());
-                    // Noten werden nicht mehr direkt hier gesetzt
 
-                    saveData(); // Speichert alle Fächer, inkl. der Notenlisten
-                    adapter.notifyItemChanged(position); // Aktualisiert das UI des Fachs
+                    saveData();
+                    adapter.notifyItemChanged(position);
                 })
                 .setNegativeButton("Löschen", (dialog, id) -> {
                     alleFaecher.remove(position);
@@ -239,9 +215,8 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         currentDialog.show();
     }
 
-    // NEU: Methode zum Anzeigen des Notenverwaltungs-Dialogs
     private void showNotesDialog(Fach fach) {
-        currentFachForNotes = fach; // Das Fach setzen, dessen Noten bearbeitet werden
+        currentFachForNotes = fach;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_note_add, null);
@@ -257,12 +232,11 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
 
         RecyclerView rvCurrentNotes = dialogView.findViewById(R.id.rv_current_notes);
         rvCurrentNotes.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Hier den NoteAdapter initialisieren und setzen
-        noteAdapter = new NoteAdapter(fach.getNoten(), this); // 'this' weil NotenmanagerFragment OnNoteClickListener implementiert
+        noteAdapter = new NoteAdapter(fach.getNoten(), this);
         rvCurrentNotes.setAdapter(noteAdapter);
 
         builder.setView(dialogView)
-                .setTitle("Noten hinzufügen/bearbeiten") // Generischer Titel
+                .setTitle("Noten hinzufügen/bearbeiten")
                 .setPositiveButton("Note hinzufügen", (dialog, id) -> {
                     String wertStr = etNoteWert.getText().toString().trim();
                     if (wertStr.isEmpty()) {
@@ -281,17 +255,17 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                         } else if (selectedId == rbSonstig.getId()) {
                             typ = "sonstig";
                         } else {
-                            typ = "unbekannt"; // Fallback
+                            typ = "unbekannt";
                         }
 
                         Note neueNote = new Note(wert, typ);
                         fach.addNote(neueNote);
-                        saveData(); // Speichern der aktualisierten Fach-Liste
+                        saveData();
 
-                        noteAdapter.notifyItemInserted(fach.getNoten().size() - 1); // Fügt das zuletzt hinzugefügte Element hinzu
-                        rvCurrentNotes.scrollToPosition(fach.getNoten().size() - 1); // Optional: Zum neuen Eintrag scrollen
-                        adapter.notifyItemChanged(alleFaecher.indexOf(fach)); // Aktualisiert das Fach im Haupt-RecyclerView
-                        etNoteWert.setText(""); // Feld leeren für nächste Eingabe
+                        noteAdapter.notifyItemInserted(fach.getNoten().size() - 1);
+                        rvCurrentNotes.scrollToPosition(fach.getNoten().size() - 1);
+                        adapter.notifyItemChanged(alleFaecher.indexOf(fach));
+                        etNoteWert.setText("");
                         Toast.makeText(requireContext(), "Note hinzugefügt", Toast.LENGTH_SHORT).show();
 
                     } catch (NumberFormatException e) {
@@ -299,34 +273,30 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                     }
                 })
                 .setNegativeButton("Fertig", (dialog, id) -> {
-                    // Der Dialog wird geschlossen, wenn auf "Fertig" geklickt wird
-                    // Keine Aktion notwendig, da Änderungen bereits gespeichert wurden
+                    // Dialog wird geschlossen
                 });
 
         currentDialog = builder.create();
         currentDialog.show();
     }
 
-    // NEU: Implementierung des OnNoteClickListener Interface
     @Override
     public void onNoteClick(Note note) {
-        // Optional: Hier könnte ein weiterer Dialog zum Bearbeiten einer einzelnen Note geöffnet werden
         Toast.makeText(requireContext(), "Note geklickt: " + note.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNoteLongClick(Note note, int position) {
-        // Logik zum Löschen einer Note bei Long-Click
         new AlertDialog.Builder(requireContext())
                 .setTitle("Note löschen?")
                 .setMessage("Möchtest du diese Note wirklich löschen?")
                 .setPositiveButton("Ja", (dialog, which) -> {
                     if (currentFachForNotes != null) {
                         currentFachForNotes.removeNote(note);
-                        saveData(); // Speichern der aktualisierten Fach-Liste
-                        noteAdapter.notifyItemRemoved(position); // Aktualisiert die Notenliste im Dialog
+                        saveData();
+                        noteAdapter.notifyItemRemoved(position);
                         noteAdapter.notifyItemRangeChanged(position, currentFachForNotes.getNoten().size());
-                        adapter.notifyItemChanged(alleFaecher.indexOf(currentFachForNotes)); // Aktualisiert das Fach im Haupt-RecyclerView
+                        adapter.notifyItemChanged(alleFaecher.indexOf(currentFachForNotes));
                         Toast.makeText(requireContext(), "Note gelöscht", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -334,17 +304,16 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                 .show();
     }
 
-
     private void loadData() {
         SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", Context.MODE_PRIVATE);
         String json = prefs.getString("faecher", null);
         if (json != null) {
             Type type = new TypeToken<ArrayList<Fach>>(){}.getType();
             alleFaecher = new Gson().fromJson(json, type);
-            // Gson kann leere Listen als null deserialisieren, daher sicherstellen
+            // KORRIGIERT: Sicherstellen, dass Notenlisten nicht null sind
             for (Fach fach : alleFaecher) {
                 if (fach.getNoten() == null) {
-                    fach.getNoten(); // Ruft den Getter auf, der eine neue Liste initialisiert
+                    fach.setNoten(new ArrayList<>()); // Sicherere Initialisierung
                 }
             }
             filterFaecher();
@@ -371,7 +340,6 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         saveData();
         adapter.notifyItemInserted(alleFaecher.indexOf(fach));
     }
-    // deleteAndUpdate bleibt gleich
 
     private void filterFaecher() {
         gefilterteFaecher.clear();
@@ -380,26 +348,27 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                 gefilterteFaecher.add(fach);
             }
         }
-        adapter.notifyDataSetChanged(); //passt trotz Fehler hier perfekt
+        adapter.notifyDataSetChanged();
     }
 
-    // berechneUndZeigeAbi bleibt gleich (nutzt getDurchschnittsPunkte() des Fachs)
     private void berechneUndZeigeAbi() {
         int[] pruefungsNoten = loadPruefungsNoten();
         BerechnungUtil.AbiErgebnis ergebnis = BerechnungUtil.berechneAbi(alleFaecher, pruefungsNoten);
 
+        // GEÄNDERT: Nachricht wird nun über das AbiErgebnis-Objekt erstellt, inkl. Bestehensstatus
+        String message =
+                "Halbjahresleistungen: " + ergebnis.halbjahresPunkte + "/600\n" +
+                        "Prüfungsleistungen: " + ergebnis.pruefungsPunkte + "/300\n" +
+                        "Gesamtpunkte: " + ergebnis.gesamtPunkte + "/900\n\n" +
+                        "Abiturschnitt: " + ergebnis.abiSchnitt + "\n\n" +
+                        ergebnis.bestandenNachricht; // NEU: Angepasste Bestehensnachricht
+
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Abiturberechnung")
-                .setMessage(
-                        "Halbjahresleistungen: " + ergebnis.halbjahresPunkte + "/600\n" +
-                                "Prüfungsleistungen: " + ergebnis.pruefungsPunkte + "/300\n" +
-                                "Gesamtpunkte: " + ergebnis.gesamtPunkte + "/900\n\n" +
-                                "Abiturschnitt: " + ergebnis.abiSchnitt)
+                .setMessage(message)
                 .setPositiveButton("OK", null)
                 .show();
     }
-
-    // showPruefungenDialog, loadPruefungsNoten, savePruefungsNoten bleiben gleich
 
     private void showPruefungenDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -411,7 +380,6 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                 dialogView.findViewById(R.id.mdl_pruefung1),
                 dialogView.findViewById(R.id.mdl_pruefung2)
         };
-        // Vorbelegung mit gespeicherten Werten
         int[] gespeicherteNoten = loadPruefungsNoten();
         for (int i = 0; i < pruefungFields.length; i++) {
             if (i < gespeicherteNoten.length) {
@@ -447,7 +415,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         if (json != null) {
             return new Gson().fromJson(json, int[].class);
         }
-        return new int[5]; // Standard: alle 0
+        return new int[5];
     }
     private void savePruefungsNoten(int[] noten) {
         SharedPreferences prefs = requireContext().getSharedPreferences("NotenManager", Context.MODE_PRIVATE);
@@ -455,8 +423,6 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         Toast.makeText(requireContext(), "Prüfungsnoten wurden gespeichert", Toast.LENGTH_SHORT).show();
     }
 
-
-    // zeigeHalbjahrSchnitt bleibt gleich (nutzt getDurchschnittsPunkte() des Fachs)
     private void zeigeHalbjahrSchnitt() {
         int aktuellesHalbjahr = halbjahrSpinner.getSelectedItemPosition() + 1;
 
@@ -468,14 +434,11 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                 .setMessage(
                         "Anzahl Fächer: " + ergebnis.anzahlFaecher + "\n" +
                                 "Durchschnittspunktzahl: " + String.format(Locale.GERMAN, "%.2f", ergebnis.durchschnitt) + "\n" +
-                                "Entspricht Note: " + punkteZuNote(ergebnis.durchschnitt))
+                                "Entspricht Note: " + String.format(Locale.GERMAN, "%.2f", BerechnungUtil.punkteZuNoteEinzelwert(ergebnis.durchschnitt))) // GEÄNDERT: Aufruf der zentralen Methode in BerechnungUtil
                 .setPositiveButton("OK", null)
                 .show();
     }
 
-    private String punkteZuNote(double punkte) {
-        // Umrechnung Punkte (0-15) → Note (1-6)
-        double note = 17.0 / 3.0 - punkte * 2.0 / 9.0;
-        return String.format(Locale.GERMAN, "%.2f", Math.max(1.0, Math.min(6.0, note)));
-    }
+    // ENTFERNT: Die Methode punkteZuNote wurde nach BerechnungUtil verschoben
+    // private String punkteZuNote(double punkte) { ... }
 }

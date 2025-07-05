@@ -35,19 +35,14 @@ dependencies {
 
     implementation(libs.appcompat)
     implementation(libs.material)
-    implementation(libs.material.v1100)
     implementation(libs.recyclerview)
     implementation(libs.cardview)
     // Android Core
     implementation(libs.core.ktx)
-    implementation(libs.appcompat.v161)
-// Material Design
-    implementation(libs.material.v1110)
 // ViewPager2 und Fragments
     implementation(libs.viewpager2)
     implementation(libs.fragment)
 // RecyclerView
-    implementation(libs.recyclerview.v132)
 // CardView
     implementation(libs.cardview)
 // Gson für JSON-Serialisierung

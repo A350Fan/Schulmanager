@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Abiturprüfungsnoten (0-15 Punkte)"
+        android:text="@string/abiturprüfungsnoten"
         android:textStyle="bold"
         android:layout_marginBottom="8dp"/>
 
@@ -21,7 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="1. Prüfung"/>
+            android:text="@string/pruefung1"/>
 
         <EditText
             android:id="@+id/pruefung1"
@@ -41,7 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="2. Prüfung"/>
+            android:text="@string/pruefung2"/>
 
         <EditText
             android:id="@+id/pruefung2"
@@ -61,7 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="3. Prüfung"/>
+            android:text="@string/pruefung3"/>
 
         <EditText
             android:id="@+id/pruefung3"
@@ -81,7 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="1. mündliche Prüfung"/>
+            android:text="@string/mdlPruefung1"/>
 
         <EditText
             android:id="@+id/mdl_pruefung1"
@@ -101,7 +101,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="2. mündliche Prüfung"/>
+            android:text="@string/mdlPruefung2"/>
 
         <EditText
             android:id="@+id/mdl_pruefung2"
@@ -112,14 +112,11 @@
             android:maxLength="2"/>
     </LinearLayout>
 
-    <!-- Wiederholen für Prüfung 2-5 -->
-    ...
-
     <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Speichern"
+        android:text="@string/save"
         android:layout_marginTop="16dp"/>
 </LinearLayout>

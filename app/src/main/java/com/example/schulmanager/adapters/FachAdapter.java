@@ -13,7 +13,6 @@ import com.example.schulmanager.R;
 import com.example.schulmanager.models.Fach;
 
 import java.util.List;
-import java.util.Locale;
 
 public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder> {
 

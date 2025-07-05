@@ -15,7 +15,7 @@ public class BerechnungUtil {
     // {Gesamtpunkte min, Gesamtpunkte max, Notenwert (z.B. 40 für 4.0)}
     // WICHTIG: Die Reihenfolge ist entscheidend (absteigend nach Punkten)
     private static final int[][] PUNKTE_TABELLE = {
-            {900, 823, 10},
+            {900, 823, 10}, // 1,0
             {822, 805, 11}, // 1,1
             {804, 787, 12}, // 1,2
             {786, 769, 13}, // 1,3

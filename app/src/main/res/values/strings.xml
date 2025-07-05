@@ -22,4 +22,11 @@
     <string name="fach_halbjahr_format">HJ %d</string>
     <string name="fach_avg_note_format">Ø Note: %.2f</string>
     <string name="fach_avg_punkte_format">Ø Pkt: %d</string>
+    <string name="abiturprüfungsnoten">Abiturprüfungsnoten (0-15 Punkte)</string>
+    <string name="pruefung1">1. Prüfung</string>
+    <string name="pruefung2">2. Prüfung</string>
+    <string name="pruefung3">3. Prüfung</string>
+    <string name="mdlPruefung1">1. mündliche Prüfung</string>
+    <string name="mdlPruefung2">2. mündliche Prüfung</string>
+    <string name="save">Speichern</string>
 </resources>

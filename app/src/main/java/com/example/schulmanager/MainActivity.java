@@ -11,7 +11,6 @@ import com.example.schulmanager.fragments.StundenplanFragment;
 import com.example.schulmanager.fragments.PruefungenFragment;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 

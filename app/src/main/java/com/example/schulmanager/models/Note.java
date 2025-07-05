@@ -38,8 +38,8 @@ public class Note implements Serializable {
         return datum;
     }
 
-    // Die drei sind für evtles Notenbearbeiten (not implemented!)
-    /*
+    // Die drei sind für evtles Notenbearbeiten (not (yet) implemented!)
+    /**
     public void setWert(double wert) {
         this.wert = wert;
     }

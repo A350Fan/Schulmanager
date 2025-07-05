@@ -29,4 +29,12 @@
     <string name="mdlPruefung1">1. mündliche Prüfung</string>
     <string name="mdlPruefung2">2. mündliche Prüfung</string>
     <string name="save">Speichern</string>
+    <string name="abi_halbjahresleistungen_format">Halbjahresleistungen: %d Punkte</string>
+    <string name="abi_pruefungsleistungen_format">Prüfungsleistungen: %d Punkte</string>
+    <string name="abi_gesamtpunkte_format">Gesamtpunkte: %d Punkte</string>
+    <string name="abi_schnitt_format">Abiturschnitt: %s</string>
+    <string name="halbjahr_schnitt_title_format">Schnitt für Halbjahr %d</string>
+    <string name="halbjahr_schnitt_anzahl_faecher">Anzahl der Fächer: %d</string>
+    <string name="halbjahr_schnitt_durchschnitt_punkte">Durchschnitt (Punkte): %s</string>
+    <string name="halbjahr_schnitt_entspricht_note">Entspricht Note: %s</string>
 </resources>

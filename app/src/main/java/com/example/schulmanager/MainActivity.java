@@ -6,9 +6,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.example.schulmanager.fragments.NotenmanagerFragment;
 import com.example.schulmanager.fragments.StundenplanFragment;
-import com.example.schulmanager.fragments.PruefungenFragment;
+import com.example.schulmanager.fragments.KalenderFragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 //        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
 //        adapter.addFragment(new NotenmanagerFragment(), "Noten");
 //        adapter.addFragment(new StundenplanFragment(), "Stundenplan");
-//        adapter.addFragment(new PruefungenFragment(), "Prüfungen");
+//        adapter.addFragment(new KalenderFragment(), "Prüfungen");
 //
 //        viewPager.setAdapter(adapter);
 //        new TabLayoutMediator(tabLayout, viewPager,
@@ -79,11 +80,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public Fragment createFragment(int position) {
                 // Je nach Position wird das entsprechende Fragment zurückgegeben.
-                switch(position) {
-                    case 0: return new NotenmanagerFragment(); // Erstes Tab: Notenmanager
-                    case 1: return new StundenplanFragment();  // Zweites Tab: Stundenplan
-                    case 2: return new PruefungenFragment();   // Drittes Tab: Prüfungen
-                    default: return new Fragment();            // Fallback für unbekannte Positionen
+                switch (position) {
+                    case 0:
+                        return new NotenmanagerFragment(); // Erstes Tab: Notenmanager
+                    case 1:
+                        return new StundenplanFragment();  // Zweites Tab: Stundenplan
+                    case 2:
+                        return new KalenderFragment();   // Drittes Tab: Prüfungen
+                    default:
+                        return new Fragment();            // Fallback für unbekannte Positionen
                 }
             }
 
@@ -103,10 +108,16 @@ public class MainActivity extends AppCompatActivity {
         // im ViewPager2 zu synchronisieren.
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             // Hier wird der Text für jeden Tab basierend auf seiner Position gesetzt.
-            switch(position) {
-                case 0: tab.setText("Noten"); break;
-                case 1: tab.setText("Stundenplan"); break;
-                case 2: tab.setText("Prüfungen"); break;
+            switch (position) {
+                case 0:
+                    tab.setText("Noten");
+                    break;
+                case 1:
+                    tab.setText("Stundenplan");
+                    break;
+                case 2:
+                    tab.setText("Prüfungen");
+                    break;
             }
         }).attach(); // Wichtig: attach() muss aufgerufen werden, um die Verbindung herzustellen.
         // --- Ende TabLayout Verbindung ---
@@ -118,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
      * Obwohl in der aktuellen onCreate-Methode ein anonymer Adapter verwendet wird,
      * könnte diese Klasse verwendet werden, um den Adapter in eine separate, wiederverwendbare Klasse
      * auszulagern.
-     *
+     * <p>
      * In der aktuellen Implementierung der MainActivity wird dieser Adapter nicht direkt genutzt,
      * da ein anonymer FragmentStateAdapter direkt im onCreate eingerichtet wurde.
      */
@@ -128,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Konstruktor für den ViewPagerAdapter.
+         *
          * @param fa Die FragmentActivity, die diesen Adapter hostet.
          */
         public ViewPagerAdapter(FragmentActivity fa) {
@@ -136,8 +148,9 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Fügt dem Adapter ein neues Fragment und dessen Titel hinzu.
+         *
          * @param fragment Das hinzuzufügende Fragment.
-         * @param title Der Titel des Fragments, der im TabLayout angezeigt wird.
+         * @param title    Der Titel des Fragments, der im TabLayout angezeigt wird.
          */
         public void addFragment(Fragment fragment, String title) {
             fragments.add(fragment);
@@ -147,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Gibt den Titel des Fragments an der angegebenen Position zurück.
          * Diese Methode wird vom TabLayoutMediator verwendet, um den Tab-Text zu setzen.
+         *
          * @param position Die Position des Fragments.
          * @return Der Titel des Fragments.
          */
@@ -156,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Erstellt und gibt das Fragment an der angegebenen Position zurück.
+         *
          * @param position Die Position des Fragments.
          * @return Das Fragment.
          */
@@ -167,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Gibt die Gesamtzahl der Elemente (Fragmente) im Adapter zurück.
+         *
          * @return Die Anzahl der Fragmente.
          */
         @Override

@@ -29,6 +29,7 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
     public interface OnFachClickListener {
         /**
          * Wird aufgerufen, wenn auf ein Fach-Element in der Liste geklickt wird.
+         *
          * @param fach Das Fach-Objekt, auf das geklickt wurde.
          */
         void onFachClick(Fach fach);
@@ -39,7 +40,8 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
 
     /**
      * Konstruktor für den FachAdapter.
-     * @param faecher Die Liste der Fächer, die der Adapter anzeigen soll.
+     *
+     * @param faecher  Die Liste der Fächer, die der Adapter anzeigen soll.
      * @param listener Der Listener, der über Klick-Events auf Fach-Elemente benachrichtigt wird.
      */
     public FachAdapter(List<Fach> faecher, OnFachClickListener listener) {
@@ -50,7 +52,8 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
     /**
      * Wird vom RecyclerView-LayoutManager aufgerufen, wenn ein neuer ViewHolder benötigt wird.
      * Erstellt eine neue View für ein Listen-Item, indem das Layout 'item_fach.xml' inflatiert wird.
-     * @param parent Die ViewGroup, in die die neue View eingefügt wird.
+     *
+     * @param parent   Die ViewGroup, in die die neue View eingefügt wird.
      * @param viewType Der View-Typ der neuen View (hier nicht verwendet, da nur ein Typ).
      * @return Ein neuer FachViewHolder, der die View für ein Fach-Element enthält.
      */
@@ -68,7 +71,8 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
     /**
      * Wird vom RecyclerView-LayoutManager aufgerufen, um die Daten an eine bestimmte View (ViewHolder) zu binden.
      * Hier werden die Daten eines Fach-Objekts in die entsprechenden TextViews des ViewHolders geladen.
-     * @param holder Der FachViewHolder, der aktualisiert werden soll.
+     *
+     * @param holder   Der FachViewHolder, der aktualisiert werden soll.
      * @param position Die Position des Fachs in der Liste 'faecher'.
      */
     @Override
@@ -82,6 +86,7 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
 
     /**
      * Gibt die Gesamtzahl der Elemente in der Datenquelle des Adapters zurück.
+     *
      * @return Die Anzahl der Fächer in der Liste 'faecher'.
      */
     @Override
@@ -92,6 +97,7 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
     /**
      * Aktualisiert die Datenliste des Adapters und benachrichtigt den RecyclerView über die Änderung.
      * Diese Methode sollte aufgerufen werden, wenn sich die Liste der Fächer außerhalb des Adapters ändert.
+     *
      * @param newFaecher Die neue Liste von Fächern, die angezeigt werden soll.
      */
     public void updateFaecher(List<Fach> newFaecher) {
@@ -116,6 +122,7 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
 
         /**
          * Konstruktor für den FachViewHolder.
+         *
          * @param itemView Die gesamte View für ein einzelnes Fach-Element (item_fach.xml).
          */
         public FachViewHolder(View itemView) {
@@ -130,7 +137,8 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
         /**
          * Bindet die Daten eines Fach-Objekts an die Views des ViewHolders.
          * Setzt außerdem den Klick-Listener für das gesamte Item.
-         * @param fach Das Fach-Objekt, dessen Daten angezeigt werden sollen.
+         *
+         * @param fach     Das Fach-Objekt, dessen Daten angezeigt werden sollen.
          * @param listener Der OnFachClickListener, der aufgerufen wird, wenn auf das Item geklickt wird.
          */
         public void bind(Fach fach, OnFachClickListener listener) {

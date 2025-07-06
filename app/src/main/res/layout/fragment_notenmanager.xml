@@ -1,70 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"  android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:padding="8dp">
 
         <LinearLayout
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_pruefungen"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/pruefungen"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:text="@string/pruefungen" />
 
             <Button
                 android:id="@+id/btn_berechnen"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/abi_schnitt"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:text="@string/abi_schnitt" />
 
             <Button
                 android:id="@+id/btn_halbjahr_schnitt"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/hj_schnitt"
-                android:layout_marginStart="4dp"/> </LinearLayout>
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="@string/hj_schnitt" />
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"> <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/halbjahr"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/halbjahr" />
 
             <Spinner
                 android:id="@+id/halbjahr_filter"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="1"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
-            android:layout_width="match_parent" android:layout_height="0dp"       android:layout_marginTop="8dp"
-            android:layout_weight="1"/>        </LinearLayout>
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
@@ -72,6 +80,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        app:srcCompat="@android:drawable/ic_menu_add"/>
+        app:srcCompat="@android:drawable/ic_menu_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

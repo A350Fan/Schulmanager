@@ -82,7 +82,8 @@ public class DataStorageUtil {
         String json = sharedPreferences.getString(KEY_FAECHER, "[]");
 
         // Definiere den Typ, in den der JSON-String konvertiert werden soll (Liste von Fach-Objekten).
-        Type type = new TypeToken<List<Fach>>() {}.getType();
+        Type type = new TypeToken<List<Fach>>() {
+        }.getType();
 
         List<Fach> faecher = new ArrayList<>();
         try {

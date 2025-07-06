@@ -71,10 +71,10 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
      * Wird aufgerufen, um die View-Hierarchie des Fragments zu erstellen und zurückzugeben.
      * Hier werden die UI-Elemente initialisiert, Listener gesetzt und Daten geladen.
      *
-     * @param inflater Der LayoutInflater-Objekt, das zum Inflating von Layouts verwendet werden kann.
-     * @param container Die übergeordnete ViewGroup, an die die View des Fragments angehängt werden soll.
+     * @param inflater           Der LayoutInflater-Objekt, das zum Inflating von Layouts verwendet werden kann.
+     * @param container          Die übergeordnete ViewGroup, an die die View des Fragments angehängt werden soll.
      * @param savedInstanceState Wenn das Fragment neu erstellt wird, nachdem sein Zustand gespeichert wurde,
-     * ist dies der Zustand.
+     *                           ist dies der Zustand.
      * @return Die Root-View des Fragments.
      */
     @Override
@@ -122,6 +122,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
 
     /**
      * Hilfsmethode zur Initialisierung des Halbjahrsfilter-Spinners.
+     *
      * @param view Die Root-View des Fragments, in der sich der Spinner befindet.
      */
     private void HalbjahrsfilterInitialisieren(View view) {
@@ -147,6 +148,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                 // Filtert die Fächerliste basierend auf dem neuen Halbjahr und aktualisiert den RecyclerView.
                 filterFaecher();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // Diese Methode wird aufgerufen, wenn die Auswahl im Spinner leer ist (selten in diesem Kontext).
@@ -247,7 +249,8 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
     private void showEditDialog(Fach fach) {
         // Findet die Position des Fachs in der Liste 'alleFaecher'. Wichtig für adapter.notifyItemRemoved/Changed.
         final int position = alleFaecher.indexOf(fach);
-        if (position == -1) return; // Falls das Fach aus irgendeinem Grund nicht gefunden wird, abbrechen.
+        if (position == -1)
+            return; // Falls das Fach aus irgendeinem Grund nicht gefunden wird, abbrechen.
 
         // Erstellt einen AlertDialog.Builder für den Dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -448,6 +451,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
      * Implementierung der onNoteClick-Methode aus dem NoteAdapter.OnNoteClickListener Interface.
      * Wird aufgerufen, wenn auf eine Note in der Liste geklickt wird.
      * Aktuell zeigt diese Methode nur einen Toast an.
+     *
      * @param note Die geklickte Note.
      */
     @Override
@@ -461,7 +465,8 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
      * Implementierung der onNoteLongClick-Methode aus dem NoteAdapter.OnNoteClickListener Interface.
      * Wird aufgerufen, wenn eine Note in der Liste lange gedrückt wird.
      * Zeigt einen Bestätigungsdialog zum Löschen der Note an.
-     * @param note Die Note, die lange gedrückt wurde.
+     *
+     * @param note     Die Note, die lange gedrückt wurde.
      * @param position Die Position der Note in der Liste.
      */
     @Override
@@ -501,7 +506,8 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         String jsonFaecher = prefs.getString(KEY_FAECHER, null); // Holt den JSON-String der Fächer.
         if (jsonFaecher != null) {
             // Definiert den Typ für die Deserialisierung (eine ArrayList von Fach-Objekten).
-            Type type = new TypeToken<ArrayList<Fach>>(){}.getType();
+            Type type = new TypeToken<ArrayList<Fach>>() {
+            }.getType();
             // Deserialisiert den JSON-String in eine Liste von Fach-Objekten.
             alleFaecher = new Gson().fromJson(jsonFaecher, type);
             // Iteriert durch alle geladenen Fächer, um sicherzustellen, dass ihre Notenlisten nicht null sind.
@@ -683,6 +689,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
 
     /**
      * Lädt die gespeicherten Abiturprüfungsnoten aus den SharedPreferences.
+     *
      * @return Ein Array von 5 Integer-Werten, die die Prüfungsnoten darstellen.
      * Gibt ein leeres Array zurück, wenn keine Noten gespeichert sind.
      */
@@ -698,6 +705,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
 
     /**
      * Speichert die übergebenen Abiturprüfungsnoten in den SharedPreferences.
+     *
      * @param noten Ein Array von 5 Integer-Werten, die die zu speichernden Prüfungsnoten sind.
      */
     private void savePruefungsNoten(int[] noten) {

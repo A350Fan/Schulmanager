@@ -8,9 +8,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="@string/abiturprüfungsnoten"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/pruefung1"/>
+            android:text="@string/pruefung1" />
 
         <EditText
             android:id="@+id/pruefung1"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:maxLength="2"/>
+            android:maxLength="2" />
     </LinearLayout>
 
     <LinearLayout
@@ -41,7 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/pruefung2"/>
+            android:text="@string/pruefung2" />
 
         <EditText
             android:id="@+id/pruefung2"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:maxLength="2"/>
+            android:maxLength="2" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,7 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/pruefung3"/>
+            android:text="@string/pruefung3" />
 
         <EditText
             android:id="@+id/pruefung3"
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:maxLength="2"/>
+            android:maxLength="2" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,7 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/mdlPruefung1"/>
+            android:text="@string/mdlPruefung1" />
 
         <EditText
             android:id="@+id/mdl_pruefung1"
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:maxLength="2"/>
+            android:maxLength="2" />
     </LinearLayout>
 
     <LinearLayout
@@ -101,7 +101,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/mdlPruefung2"/>
+            android:text="@string/mdlPruefung2" />
 
         <EditText
             android:id="@+id/mdl_pruefung2"
@@ -109,6 +109,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
-            android:maxLength="2"/>
+            android:maxLength="2" />
     </LinearLayout>
 </LinearLayout>

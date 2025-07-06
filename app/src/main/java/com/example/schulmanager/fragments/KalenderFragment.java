@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.schulmanager.R;
 
-public class PruefungenFragment extends Fragment {
+public class KalenderFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

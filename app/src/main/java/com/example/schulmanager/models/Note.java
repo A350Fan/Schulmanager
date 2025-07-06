@@ -3,6 +3,7 @@
 package com.example.schulmanager.models;
 
 import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -76,18 +77,19 @@ public class Note implements Serializable {
 
     // Die drei sind für evtles Notenbearbeiten (not (yet) implemented!)
     // Wenn du sie später implementierst, denke daran, die Validierung auch hier anzuwenden.
+
     /**
-     public void setWert(double wert) {
-     this.wert = validateWert(wert); // Auch hier validieren, falls diese Methode aktiviert wird
-     }
-
-     public void setTyp(String typ) {
-     this.typ = typ;
-     }
-
-     public void setDatum(long datum) {
-     this.datum = datum;
-     }
+     * public void setWert(double wert) {
+     * this.wert = validateWert(wert); // Auch hier validieren, falls diese Methode aktiviert wird
+     * }
+     * <p>
+     * public void setTyp(String typ) {
+     * this.typ = typ;
+     * }
+     * <p>
+     * public void setDatum(long datum) {
+     * this.datum = datum;
+     * }
      */
 
     @NonNull

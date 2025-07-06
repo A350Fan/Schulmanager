@@ -61,17 +61,29 @@ public class BerechnungUtil {
      * Enthält alle relevanten Informationen nach einer Abitur-Gesamtberechnung.
      */
     public static class AbiErgebnis {
-        /** Gesamtpunktzahl aus den Halbjahresleistungen (maximal 600). */
+        /**
+         * Gesamtpunktzahl aus den Halbjahresleistungen (maximal 600).
+         */
         public int halbjahresPunkte;
-        /** Gesamtpunktzahl aus den 5 Abiturprüfungen (maximal 300). */
+        /**
+         * Gesamtpunktzahl aus den 5 Abiturprüfungen (maximal 300).
+         */
         public int pruefungsPunkte;
-        /** Die Summe aus Halbjahres- und Prüfungsleistungen (maximal 900). */
+        /**
+         * Die Summe aus Halbjahres- und Prüfungsleistungen (maximal 900).
+         */
         public int gesamtPunkte;
-        /** Der berechnete Abiturschnitt als String (z.B. "1,0" oder "4,0"). */
+        /**
+         * Der berechnete Abiturschnitt als String (z.B. "1,0" oder "4,0").
+         */
         public String abiSchnitt;
-        /** Boolean-Wert, der angibt, ob das Abitur bestanden wurde. */
+        /**
+         * Boolean-Wert, der angibt, ob das Abitur bestanden wurde.
+         */
         public boolean bestanden;
-        /** Eine Nachricht, die den Bestehensstatus detailliert beschreibt (z.B. "Herzlichen Glückwunsch!"). */
+        /**
+         * Eine Nachricht, die den Bestehensstatus detailliert beschreibt (z.B. "Herzlichen Glückwunsch!").
+         */
         public String bestandenNachricht;
     }
 
@@ -81,7 +93,7 @@ public class BerechnungUtil {
      * die Berechnung der Gesamtpunktzahl und die Kriterien für das Bestehen,
      * einschließlich der maximalen Anzahl von Unterpunktungen.
      *
-     * @param faecher Eine Liste aller Fächer-Objekte, die die Halbjahresleistungen enthalten.
+     * @param faecher        Eine Liste aller Fächer-Objekte, die die Halbjahresleistungen enthalten.
      * @param pruefungsNoten Ein Array der 5 Abiturprüfungsnoten (Punkte von 0-15).
      * @return Ein {@link AbiErgebnis}-Objekt mit allen berechneten Punkten, dem Schnitt und dem Bestehensstatus.
      */
@@ -163,7 +175,8 @@ public class BerechnungUtil {
      * @return Die Gesamtpunktzahl für die Halbjahresleistungen (maximal 600 Punkte).
      */
     private static int berechneHalbjahresPunkte(List<Integer> leistungen) {
-        if (leistungen.isEmpty()) return 0; // Wenn keine Leistungen vorhanden sind, ist die Punktzahl 0.
+        if (leistungen.isEmpty())
+            return 0; // Wenn keine Leistungen vorhanden sind, ist die Punktzahl 0.
 
         int summe = 0;
         // Die Anzahl der tatsächlich einzubeziehenden Leistungen (maximal 40 oder weniger, falls nicht so viele vorhanden).
@@ -242,11 +255,17 @@ public class BerechnungUtil {
      * Eine innere statische Klasse, die die Ergebnisse der Halbjahresdurchschnittsberechnung kapselt.
      */
     public static class HalbjahrErgebnis {
-        /** Das Halbjahr, für das der Durchschnitt berechnet wurde. */
+        /**
+         * Das Halbjahr, für das der Durchschnitt berechnet wurde.
+         */
         public int halbjahr;
-        /** Der berechnete Durchschnitt der Punkte für das spezifische Halbjahr. */
+        /**
+         * Der berechnete Durchschnitt der Punkte für das spezifische Halbjahr.
+         */
         public double durchschnitt;
-        /** Die Anzahl der Fächer, die in die Berechnung dieses Halbjahresdurchschnitts eingeflossen sind. */
+        /**
+         * Die Anzahl der Fächer, die in die Berechnung dieses Halbjahresdurchschnitts eingeflossen sind.
+         */
         public int anzahlFaecher;
     }
 
@@ -255,7 +274,7 @@ public class BerechnungUtil {
      * Es werden alle Fächer berücksichtigt, die dem angegebenen Halbjahr zugeordnet sind.
      *
      * @param alleFaecher Eine Liste aller Fächer, aus denen der Halbjahresdurchschnitt berechnet werden soll.
-     * @param halbjahr Die Nummer des Halbjahres (z.B. 1, 2, 3, 4), für das der Durchschnitt berechnet werden soll.
+     * @param halbjahr    Die Nummer des Halbjahres (z.B. 1, 2, 3, 4), für das der Durchschnitt berechnet werden soll.
      * @return Ein {@link HalbjahrErgebnis}-Objekt mit dem Durchschnitt, dem Halbjahr und der Anzahl der Fächer.
      */
     public static HalbjahrErgebnis berechneHalbjahrSchnitt(List<Fach> alleFaecher, int halbjahr) {

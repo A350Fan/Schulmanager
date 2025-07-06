@@ -4,8 +4,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.schulmanager.R;
 import com.example.schulmanager.models.Note;
 
@@ -29,6 +31,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         /**
          * Wird aufgerufen, wenn auf ein Noten-Element in der Liste geklickt wird.
          * Kann für eine Detailansicht oder Bearbeitung verwendet werden.
+         *
          * @param note Das Note-Objekt, auf das geklickt wurde.
          */
         void onNoteClick(Note note);
@@ -36,7 +39,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         /**
          * Wird aufgerufen, wenn ein Noten-Element in der Liste lange gedrückt wird.
          * Wird typischerweise für Löschaktionen verwendet.
-         * @param note Das Note-Objekt, das lange gedrückt wurde.
+         *
+         * @param note     Das Note-Objekt, das lange gedrückt wurde.
          * @param position Die Position des Note-Objekts in der Liste.
          */
         void onNoteLongClick(Note note, int position);
@@ -47,7 +51,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     /**
      * Konstruktor für den NoteAdapter.
-     * @param noten Die Liste der Noten, die der Adapter anzeigen soll.
+     *
+     * @param noten    Die Liste der Noten, die der Adapter anzeigen soll.
      * @param listener Der Listener, der über Klick- und Long-Klick-Events auf Noten-Elemente benachrichtigt wird.
      */
     public NoteAdapter(List<Note> noten, OnNoteClickListener listener) {
@@ -58,7 +63,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     /**
      * Wird vom RecyclerView-LayoutManager aufgerufen, wenn ein neuer ViewHolder benötigt wird.
      * Erstellt eine neue View für ein Listen-Item, indem das Layout 'item_note.xml' inflatiert wird.
-     * @param parent Die ViewGroup, in die die neue View eingefügt wird.
+     *
+     * @param parent   Die ViewGroup, in die die neue View eingefügt wird.
      * @param viewType Der View-Typ der neuen View (hier nicht verwendet, da nur ein Typ).
      * @return Ein neuer NoteViewHolder, der die View für ein Noten-Element enthält.
      */
@@ -75,7 +81,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     /**
      * Wird vom RecyclerView-LayoutManager aufgerufen, um die Daten an eine bestimmte View (ViewHolder) zu binden.
      * Hier werden die Daten eines Note-Objekts in die entsprechenden TextViews des ViewHolders geladen.
-     * @param holder Der NoteViewHolder, der aktualisiert werden soll.
+     *
+     * @param holder   Der NoteViewHolder, der aktualisiert werden soll.
      * @param position Die Position der Note in der Liste 'noten'.
      */
     @Override
@@ -89,6 +96,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     /**
      * Gibt die Gesamtzahl der Elemente in der Datenquelle des Adapters zurück.
+     *
      * @return Die Anzahl der Noten in der Liste 'noten'.
      */
     @Override
@@ -99,6 +107,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     /**
      * Aktualisiert die Datenliste des Adapters und benachrichtigt den RecyclerView über die Änderung.
      * Diese Methode sollte aufgerufen werden, wenn sich die Liste der Noten außerhalb des Adapters ändert.
+     *
      * @param newNoten Die neue Liste von Noten, die angezeigt werden soll.
      */
     public void updateNoten(List<Note> newNoten) {
@@ -120,6 +129,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         /**
          * Konstruktor für den NoteViewHolder.
+         *
          * @param itemView Die gesamte View für ein einzelnes Noten-Element (item_note.xml).
          */
         public NoteViewHolder(View itemView) {
@@ -133,7 +143,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         /**
          * Bindet die Daten eines Note-Objekts an die Views des ViewHolders.
          * Setzt außerdem die Klick- und Long-Klick-Listener für das gesamte Item.
-         * @param note Das Note-Objekt, dessen Daten angezeigt werden sollen.
+         *
+         * @param note     Das Note-Objekt, dessen Daten angezeigt werden sollen.
          * @param listener Der OnNoteClickListener, der aufgerufen wird, wenn auf das Item geklickt oder lange gedrückt wird.
          * @param position Die Position des Note-Objekts in der Liste (wichtig für Long-Click zum Löschen).
          */

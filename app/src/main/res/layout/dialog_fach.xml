@@ -9,9 +9,9 @@
         android:id="@+id/dialog_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints="name"
         android:hint="@string/hint_fachname"
-        android:inputType="textCapWords"
-        android:autofillHints="name"/>
+        android:inputType="textCapWords" />
 
     <Spinner
         android:id="@+id/sp_halbjahr"
@@ -20,7 +20,7 @@
         android:backgroundTint="@color/colorPrimary"
         android:popupBackground="@android:color/white"
         android:spinnerMode="dropdown"
-        android:theme="@style/SpinnerStyle"/>
+        android:theme="@style/SpinnerStyle" />
 
 
     <CheckBox
@@ -28,13 +28,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/checkbox_abiturfach"/>
+        android:text="@string/checkbox_abiturfach" />
 
     <Button
         android:id="@+id/btn_edit_notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/button_manage_notes"/>
+        android:text="@string/button_manage_notes" />
 
 </LinearLayout>

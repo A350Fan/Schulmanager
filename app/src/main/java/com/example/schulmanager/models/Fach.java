@@ -1,6 +1,7 @@
 package com.example.schulmanager.models;
 
 import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,8 @@ public class Fach implements Serializable {
     /**
      * Konstruktor zum Erstellen eines neuen Fach-Objekts.
      *
-     * @param name Der Name des Faches.
-     * @param halbjahr Das Halbjahr, in dem das Fach belegt wird.
+     * @param name         Der Name des Faches.
+     * @param halbjahr     Das Halbjahr, in dem das Fach belegt wird.
      * @param isAbiturfach Gibt an, ob es sich um ein Abiturfach handelt.
      */
     public Fach(String name, int halbjahr, boolean isAbiturfach) {
@@ -128,13 +129,33 @@ public class Fach implements Serializable {
 
     // --- Getter- und Setter-Methoden für die Instanzvariablen ---
 
-    public long getId() { return id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public int getHalbjahr() { return halbjahr; }
-    public void setHalbjahr(int halbjahr) { this.halbjahr = halbjahr; }
-    public boolean isAbiturfach() { return isAbiturfach; }
-    public void setAbiturfach(boolean abitur) { this.isAbiturfach = abitur; }
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getHalbjahr() {
+        return halbjahr;
+    }
+
+    public void setHalbjahr(int halbjahr) {
+        this.halbjahr = halbjahr;
+    }
+
+    public boolean isAbiturfach() {
+        return isAbiturfach;
+    }
+
+    public void setAbiturfach(boolean abitur) {
+        this.isAbiturfach = abitur;
+    }
 
     /**
      * Rundet einen double-Wert nach spezifischen Regeln für Notenpunkte (0-15 Punkte).

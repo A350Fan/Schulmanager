@@ -210,7 +210,7 @@ public class BerechnungUtil {
     private static String punkteZuNoteGesamt(int gesamtPunkte) {
         // Wenn die Gesamtpunktzahl unter dem Minimum zum Bestehen liegt, ist die Note 4,0.
         if (gesamtPunkte < 300) {
-            return "4,0";
+            return "6,0";
         }
 
         // Durchläuft die Punktetabelle, um den passenden Notenbereich zu finden.
@@ -221,7 +221,7 @@ public class BerechnungUtil {
             }
         }
         // Fallback: Sollte bei einer korrekten und vollständigen Tabelle nicht erreicht werden.
-        return "4,0";
+        return "Fehler in Abitabelle?";
     }
 
     /**

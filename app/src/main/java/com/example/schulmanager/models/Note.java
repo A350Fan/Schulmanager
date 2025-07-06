@@ -58,9 +58,9 @@ public class Note implements Serializable {
     }
 
     // Setter für gewichtung (falls du Noten bearbeiten möchtest)
-    public void setGewichtung(double gewichtung) {
-        this.gewichtung = Math.max(0.0, gewichtung);
-    }
+//    public void setGewichtung(double gewichtung) {
+//        this.gewichtung = Math.max(0.0, gewichtung);
+//    }
 
     // Getter
     public double getWert() {

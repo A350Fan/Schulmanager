@@ -14,9 +14,9 @@ public class PruefungenFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pruefungen, container, false);
-        TextView textView = view.findViewById(R.id.text_temp);
-        textView.setText("Prüfungsplanung kommt später");
+        View view = inflater.inflate(R.layout.fragment_kalender, container, false);
+        TextView textView = view.findViewById(R.id.text_kalender);
+        textView.setText("Kalender kommt später");
         return view;
     }
 }

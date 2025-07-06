@@ -351,7 +351,6 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         RadioGroup rgNoteTyp = dialogView.findViewById(R.id.rg_note_typ);
         RadioButton rbSchriftlich = dialogView.findViewById(R.id.rb_schriftlich);
         RadioButton rbMuendlich = dialogView.findViewById(R.id.rb_muendlich);
-        RadioButton rbSonstig = dialogView.findViewById(R.id.rb_sonstig);
 
         // Setzt den Titel des Dialogs dynamisch, basierend auf dem Fachnamen.
         tvTitle.setText(String.format(Locale.GERMAN, "Noten für %s verwalten", fach.getName()));
@@ -400,8 +399,6 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                         typ = "schriftlich";
                     } else if (selectedId == rbMuendlich.getId()) {
                         typ = "muendlich";
-                    } else if (selectedId == rbSonstig.getId()) {
-                        typ = "sonstig";
                     } else {
                         typ = "unbekannt"; // Fallback, sollte bei korrekter UI-Logik nicht erreicht werden.
                     }

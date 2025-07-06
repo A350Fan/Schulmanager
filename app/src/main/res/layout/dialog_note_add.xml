@@ -38,11 +38,6 @@
         android:layout_height="wrap_content"
         android:text="@string/radio_muendlich" android:layout_weight="1"/>
 
-    <RadioButton
-        android:id="@+id/rb_sonstig"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/radio_sonstig" android:layout_weight="1"/>
 </RadioGroup>
 
     <TextView

@@ -43,4 +43,7 @@
     <string name="halbjahr">Halbjahr:</string>
     <string name="hint_note_gewichtung">Gewichtung (z. B. 2.0)</string>
     <string name="gewichtung_zahl">1.0</string>
+    <string name="fragment1">Noten</string>
+    <string name="fragment2">Stundenplan</string>
+    <string name="fragment3">Kalender</string>
 </resources>

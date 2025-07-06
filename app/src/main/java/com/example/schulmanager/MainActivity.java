@@ -110,13 +110,13 @@ public class MainActivity extends AppCompatActivity {
             // Hier wird der Text für jeden Tab basierend auf seiner Position gesetzt.
             switch (position) {
                 case 0:
-                    tab.setText("Noten");
+                    tab.setText(R.string.fragment1);
                     break;
                 case 1:
-                    tab.setText("Stundenplan");
+                    tab.setText(R.string.fragment2);
                     break;
                 case 2:
-                    tab.setText("Prüfungen");
+                    tab.setText(R.string.fragment3);
                     break;
             }
         }).attach(); // Wichtig: attach() muss aufgerufen werden, um die Verbindung herzustellen.

@@ -36,11 +36,13 @@ public class MainActivity extends AppCompatActivity {
         // --- Statusleiste transparent machen ---
         // Setzt die Farbe der Statusleiste auf Transparent.
         getWindow().setStatusBarColor(Color.TRANSPARENT);
-        // Konfiguriert die System-UI-Sichtbarkeit, damit der Inhalt der App
-        // den Bereich der Statusleiste und Navigationsleiste ausfüllen kann.
-        // SYSTEM_UI_FLAG_LAYOUT_STABLE sorgt dafür, dass die Layout-Größe stabil bleibt,
-        // auch wenn sich die Systemleisten ändern.
-        // SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN lässt das Layout bis unter die Statusleiste reichen.
+        /*
+         Konfiguriert die System-UI-Sichtbarkeit, damit der Inhalt der App
+         den Bereich der Statusleiste und Navigationsleiste ausfüllen kann.
+         SYSTEM_UI_FLAG_LAYOUT_STABLE sorgt dafür, dass die Layout-Größe stabil bleibt,
+         auch wenn sich die Systemleisten ändern.
+         SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN lässt das Layout bis unter die Statusleiste reichen.
+        */
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -52,19 +54,6 @@ public class MainActivity extends AppCompatActivity {
         // Referenzen zu den UI-Elementen aus dem Layout abrufen.
         ViewPager2 viewPager = findViewById(R.id.view_pager);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
-
-        // Die auskommentierten Zeilen zeigen eine frühere Implementierung mit einer separaten
-        // ViewPagerAdapter-Klasse. Die aktuelle Implementierung verwendet einen Inline-Adapter
-        // für den ViewPager2.
-//        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
-//        adapter.addFragment(new NotenmanagerFragment(), "Noten");
-//        adapter.addFragment(new StundenplanFragment(), "Stundenplan");
-//        adapter.addFragment(new KalenderFragment(), "Prüfungen");
-//
-//        viewPager.setAdapter(adapter);
-//        new TabLayoutMediator(tabLayout, viewPager,
-//                (tab, position) -> tab.setText(adapter.getPageTitle(position))
-//        ).attach();
 
         // --- Adapter für ViewPager2 konfigurieren ---
         // Hier wird ein anonymer Inner-Class-Adapter vom Typ FragmentStateAdapter erstellt.

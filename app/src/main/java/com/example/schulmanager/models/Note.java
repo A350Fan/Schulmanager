@@ -1,5 +1,3 @@
-// models/Note.java
-
 package com.example.schulmanager.models;
 
 import androidx.annotation.NonNull;
@@ -10,45 +8,27 @@ import java.util.Locale;
 public class Note implements Serializable {
     private double wert; // Der Punktwert der Note (0-15)
     private String typ; // z.B. "schriftlich", "muendlich", "sonstig"
-    private long datum; // Optional: Zeitstempel der Notenerfassung
-    private double gewichtung; // NEU: Gewichtung der Note (Standard: 1.0)
+    private long datum; // Zeitstempel der Notenerfassung
+    private double gewichtung; // Gewichtung der Note (Standard: 1.0)
 
     // Hilfsmethode zur Validierung des Punktwerts
     private double validateWert(double value) {
         return Math.max(0.0, Math.min(15.0, value)); // Sicherstellen, dass der Wert zwischen 0 und 15 liegt
     }
 
-    // Konstruktor (alt, setzt Gewichtung auf Standard 1.0)
-    public Note(double wert, String typ) {
-        this.wert = validateWert(wert); // Validierung hier anwenden
-        this.typ = typ;
-        this.datum = System.currentTimeMillis(); // Aktuelles Datum setzen
-        this.gewichtung = 1.0; // Standardgewichtung
-    }
-
-    // Optional: Konstruktor mit Datum (alt, setzt Gewichtung auf Standard 1.0)
-    public Note(double wert, String typ, long datum) {
-        this.wert = validateWert(wert); // Validierung hier anwenden
-        this.typ = typ;
-        this.datum = datum;
-        this.gewichtung = 1.0; // Standardgewichtung
-    }
-
-    // NEU: Konstruktor mit Gewichtung
+    // Konstruktor mit Gewichtung
     public Note(double wert, String typ, double gewichtung) {
         this.wert = validateWert(wert);
         this.typ = typ;
         this.datum = System.currentTimeMillis();
-        // Hier könntest du auch eine Validierung für die Gewichtung hinzufügen, z.B. gewichtung > 0
         this.gewichtung = Math.max(0.0, gewichtung); // Gewichtung muss mindestens 0 sein
     }
 
-    // NEU: Konstruktor mit Datum und Gewichtung
+    // Konstruktor mit Datum und Gewichtung
     public Note(double wert, String typ, long datum, double gewichtung) {
         this.wert = validateWert(wert);
         this.typ = typ;
         this.datum = datum;
-        // Hier könntest du auch eine Validierung für die Gewichtung hinzufügen
         this.gewichtung = Math.max(0.0, gewichtung);
     }
 
@@ -57,10 +37,12 @@ public class Note implements Serializable {
         return gewichtung;
     }
 
-    // Setter für gewichtung (falls du Noten bearbeiten möchtest)
-//    public void setGewichtung(double gewichtung) {
-//        this.gewichtung = Math.max(0.0, gewichtung);
-//    }
+    /*
+       Setter für gewichtung (für Notenbearbeitung (not implemented))
+    public void setGewichtung(double gewichtung) {
+        this.gewichtung = Math.max(0.0, gewichtung);
+    }
+    */
 
     // Getter
     public double getWert() {
@@ -76,7 +58,7 @@ public class Note implements Serializable {
     }
 
     // Die drei sind für evtles Notenbearbeiten (not (yet) implemented!)
-    // Wenn du sie später implementierst, denke daran, die Validierung auch hier anzuwenden.
+    // Validierung auch hier nochmal nötig (falls man es implementieren will).
 
     /**
      * public void setWert(double wert) {
@@ -95,7 +77,7 @@ public class Note implements Serializable {
     @NonNull
     @Override
     public String toString() {
-        // Optional: Die Gewichtung auch im toString anzeigen
+        // Die Gewichtung auch im toString anzeigen
         return String.format(Locale.GERMAN, "%.1f (%s) [x%.1f]", wert, typ, gewichtung);
     }
 }

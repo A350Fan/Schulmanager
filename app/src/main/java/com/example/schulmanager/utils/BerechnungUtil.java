@@ -19,8 +19,8 @@ public class BerechnungUtil {
     /**
      * Eine private Konstante, die die Punktetabelle für die Umrechnung von Gesamtpunkten
      * in eine Abiturnote (Abiturschnitt) speichert.
-     * Jede innere Array repräsentiert eine Zeile: {obere_punktgrenze, untere_punktgrenze, notenwert_multipliziert_mit_10}.
-     * Beispiel: {900, 823, 10} bedeutet, dass 823-900 Punkte einer Note von 1,0 entsprechen (10/10).
+     * Jeder innere Array repräsentiert eine Zeile: {obere_punktgrenze, untere_punktgrenze, notenwert_multipliziert_mit_10}.
+     * Beispiel: {900, 823, 10} bedeutet, dass 823-900 Punkte einer Note von 1,0 entsprechen.
      */
     private static final int[][] PUNKTE_TABELLE = {
             {900, 823, 10}, // 1,0
@@ -107,7 +107,7 @@ public class BerechnungUtil {
         }
         halbjahresLeistungen.sort(Collections.reverseOrder()); // Sortiert von höchsten zu niedrigsten Punkten
 
-        // NEU: Anzahl der Unterpunktungen in den relevanten Halbjahresleistungen zählen.
+        // Anzahl der Unterpunktungen in den relevanten Halbjahresleistungen zählen.
         // Dies ist ein wichtiges Kriterium für das Bestehen des Abiturs.
         int unterpunktungenCount = 0;
         // Es werden maximal 40 Halbjahresleistungen in die Abiturwertung eingebracht.
@@ -138,7 +138,7 @@ public class BerechnungUtil {
         ergebnis.gesamtPunkte = ergebnis.halbjahresPunkte + ergebnis.pruefungsPunkte;
 
         // 5. Abischnitt ermitteln.
-        // Auch wenn das Abitur nicht bestanden ist, wird eine 4,0 zurückgegeben.
+        // Wenn das Abitur nicht bestanden ist, wird eine 6,0 zurückgegeben.
         ergebnis.abiSchnitt = punkteZuNoteGesamt(ergebnis.gesamtPunkte);
 
         // 6. Bestehensstatus festlegen. Die Reihenfolge der Prüfungen ist hier wichtig,
@@ -208,7 +208,7 @@ public class BerechnungUtil {
      * @return Der Abischnitt als String (z.B. "1,0" bis "4,0").
      */
     private static String punkteZuNoteGesamt(int gesamtPunkte) {
-        // Wenn die Gesamtpunktzahl unter dem Minimum zum Bestehen liegt, ist die Note 4,0.
+        // Wenn die Gesamtpunktzahl unter dem Minimum zum Bestehen liegt, ist die Note 6,0.
         if (gesamtPunkte < 300) {
             return "6,0";
         }

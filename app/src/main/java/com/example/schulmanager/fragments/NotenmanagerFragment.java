@@ -351,7 +351,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         // Referenzen auf die UI-Elemente im Dialog-Layout.
         TextView tvTitle = dialogView.findViewById(R.id.dialog_note_title);
         EditText etNoteWert = dialogView.findViewById(R.id.et_note_wert);
-        // NEU: Referenz auf das EditText für die Gewichtung
+        // Referenz auf das EditText für die Gewichtung
         EditText etNoteGewichtung = dialogView.findViewById(R.id.et_note_gewichtung);
         RadioGroup rgNoteTyp = dialogView.findViewById(R.id.rg_note_typ);
         RadioButton rbSchriftlich = dialogView.findViewById(R.id.rb_schriftlich);
@@ -381,7 +381,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
             Button positiveButton = currentDialog.getButton(AlertDialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {
                 String wertStr = etNoteWert.getText().toString().trim(); // Holt den eingegebenen Punktwert.
-                // NEU: Holt den eingegebenen Gewichtungswert
+                // Holt den eingegebenen Gewichtungswert
                 String gewichtungStr = etNoteGewichtung.getText().toString().trim();
 
                 // Prüft, ob der Punktwert leer ist.
@@ -399,7 +399,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                         return; // Dialog bleibt offen.
                     }
 
-                    // NEU: Gewichtung parsen und validieren
+                    // Gewichtung parsen und validieren
                     double gewichtung;
                     if (gewichtungStr.isEmpty()) {
                         gewichtung = 1.0; // Standardwert, falls Feld leer gelassen wird
@@ -434,7 +434,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                     fachAdapter.notifyItemChanged(alleFaecher.indexOf(fach));
 
                     etNoteWert.setText("");
-                    etNoteGewichtung.setText("1.0"); // NEU: Gewichtungsfeld zurücksetzen auf Standard
+                    etNoteGewichtung.setText("1.0"); // Gewichtungsfeld zurücksetzen auf Standard
                     Toast.makeText(requireContext(), "Note hinzugefügt", Toast.LENGTH_SHORT).show();
                 } catch (NumberFormatException e) {
                     // Zeigt eine Fehlermeldung an, wenn die Eingabe keine gültige Zahl ist. [cite: 354]

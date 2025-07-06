@@ -167,7 +167,7 @@ public class Fach implements Serializable {
      * @return Der gerundete Integer-Wert (0-15 Punkte).
      */
     private int roundToNearestNotePoint(double value) {
-        if (value < 1.0) { // Punkte unter 1.0 werden zu 0 gerundet (entspricht "nicht gegeben" oder "ungenügend")
+        if (value < 1.0) { // Punkte unter 1.0 werden zu 0 gerundet (entspricht "ungenügend")
             return 0;
         }
 

@@ -41,4 +41,5 @@
     <string name="abi_schnitt">Abi-Schnitt</string>
     <string name="hj_schnitt">HJ-Schnitt</string>
     <string name="halbjahr">Halbjahr:</string>
+    <string name="hint_note_gewichtung">Gewichtung (z. B. 2.0)</string>
 </resources>

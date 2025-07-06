@@ -1,10 +1,10 @@
 package com.example.schulmanager.models;
 
-import androidx.annotation.NonNull; // Wird für @NonNull Annotationen verwendet
-import java.io.Serializable;     // Ermöglicht das Serialisieren von Objekten für die Speicherung
-import java.util.ArrayList;      // Für dynamische Listen von Noten
-import java.util.List;           // Interface für Listen
-import java.util.Locale;         // Für sprachspezifische Formatierungen (z.B. Komma statt Punkt bei Dezimalzahlen)
+import androidx.annotation.NonNull;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Repräsentiert ein Schulfach mit seinen Eigenschaften wie Name, Halbjahr,
@@ -89,9 +89,8 @@ public class Fach implements Serializable {
 
     /**
      * Berechnet den gewichteten Durchschnitt aller Noten des Faches.
-     * Die Gewichtung ist: schriftlich 2x, mündlich 1x.
-     * Noten vom Typ "sonstig" (oder unbekannte Typen) werden bei der Berechnung komplett ignoriert.
-     * Nur Notenkategorien mit tatsächlich vorhandenen Noten tragen zu den Gesamtpunkten und der Gesamtgewichtung bei.
+     * Jede Note wird mit ihrer individuellen Gewichtung (note.getGewichtung())
+     * in die Berechnung einbezogen. Noten mit einer Gewichtung von 0 werden ignoriert.
      *
      * @return Der ungerundete gewichtete Durchschnitt in Punkten (0.0-15.0).
      */
@@ -101,52 +100,36 @@ public class Fach implements Serializable {
             return 0.0;
         }
 
-        // Listen zum Sammeln der Noten für jede Kategorie
-        List<Double> schriftlicheNoten = new ArrayList<>();
-        List<Double> muendlicheNoten = new ArrayList<>();
-        // Die Liste für sonstige Noten wird nicht mehr benötigt, da sie ignoriert werden
+        double summeGewichteterPunkte = 0.0; // Summe (Note * Gewichtung)
+        double summeGewichtungen = 0.0;      // Summe aller Gewichtungen
 
-        // Iteriere durch alle Noten des Faches und ordne sie den Kategorien zu
+        // Iteriere durch alle Noten des Faches
         for (Note note : noten) {
             // Sicherstellen, dass der Punktwert zwischen 0 und 15 liegt
             double punktWert = Math.max(0.0, Math.min(15.0, note.getWert()));
+            double gewichtung = note.getGewichtung();
 
-            if ("schriftlich".equalsIgnoreCase(note.getTyp())) {
-                schriftlicheNoten.add(punktWert);
-            } else if ("muendlich".equalsIgnoreCase(note.getTyp())) {
-                muendlicheNoten.add(punktWert);
+            // Nur Noten mit einer positiven Gewichtung berücksichtigen
+            if (gewichtung > 0) {
+                summeGewichteterPunkte += (punktWert * gewichtung);
+                summeGewichtungen += gewichtung;
             }
-            // Noten mit anderen Typen (z.B. "sonstig") werden hier absichtlich ignoriert
         }
 
-        double gesamtPunkteGewichtet = 0.0; // Summe der gewichteten Punkte
-        double gesamtGewichtung = 0.0;       // Summe der Gewichtungen der berücksichtigten Noten
-
-        // Prüfen, ob schriftliche Noten vorhanden sind und deren Durchschnitt mit Gewichtung addieren
-        if (!schriftlicheNoten.isEmpty()) {
-            double avgSchriftlich = calculateAverage(schriftlicheNoten);
-            gesamtPunkteGewichtet += (avgSchriftlich * 1); // Schriftliche Noten 1x gewichten
-            gesamtGewichtung += 1;
-        }
-
-        // Prüfen, ob mündliche Noten vorhanden sind und deren Durchschnitt mit Gewichtung addieren
-        if (!muendlicheNoten.isEmpty()) {
-            double avgMuendlich = calculateAverage(muendlicheNoten);
-            gesamtPunkteGewichtet += (avgMuendlich * 1); // Mündliche Noten 1x gewichten
-            gesamtGewichtung += 1;
-        }
-
-        // Falls keine der berücksichtigten Notenkategorien Noten enthält, ist der Durchschnitt 0.0
-        if (gesamtGewichtung == 0) {
+        // Falls keine Noten mit positiver Gewichtung gefunden wurden, ist der Durchschnitt 0.0
+        if (summeGewichtungen == 0.0) {
             return 0.0;
         } else {
             // Berechne den gewichteten Durchschnitt
-            return gesamtPunkteGewichtet / gesamtGewichtung;
+            return summeGewichteterPunkte / summeGewichtungen;
         }
     }
 
     /**
      * Hilfsmethode zur Berechnung des arithmetischen Durchschnitts einer Liste von Double-Werten.
+     * Diese Methode wird nach der Umstellung auf individuelle Notengewichtung nicht mehr
+     * in {@code getDurchschnitt()} benötigt und kann entfernt werden, wenn sie nirgendwo anders
+     * verwendet wird. Ich lasse sie vorerst drin.
      *
      * @param list Die Liste der Double-Werte.
      * @return Der Durchschnitt der Werte in der Liste, oder 0.0, wenn die Liste leer ist.

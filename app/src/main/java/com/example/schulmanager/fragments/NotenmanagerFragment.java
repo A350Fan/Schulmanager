@@ -348,6 +348,8 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         // Referenzen auf die UI-Elemente im Dialog-Layout.
         TextView tvTitle = dialogView.findViewById(R.id.dialog_note_title);
         EditText etNoteWert = dialogView.findViewById(R.id.et_note_wert);
+        // NEU: Referenz auf das EditText für die Gewichtung
+        EditText etNoteGewichtung = dialogView.findViewById(R.id.et_note_gewichtung);
         RadioGroup rgNoteTyp = dialogView.findViewById(R.id.rg_note_typ);
         RadioButton rbSchriftlich = dialogView.findViewById(R.id.rb_schriftlich);
         RadioButton rbMuendlich = dialogView.findViewById(R.id.rb_muendlich);
@@ -369,7 +371,6 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                     // Der Dialog wird beim Klick auf "Fertig" einfach geschlossen.
                     dialog.dismiss();
                 });
-
         currentDialog = builder.create(); // Erstellt den AlertDialog.
 
         // Überschreibt den OnClickListener des Positive Buttons ("Note hinzufügen") für Validierung.
@@ -377,6 +378,9 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
             Button positiveButton = currentDialog.getButton(AlertDialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {
                 String wertStr = etNoteWert.getText().toString().trim(); // Holt den eingegebenen Punktwert.
+                // NEU: Holt den eingegebenen Gewichtungswert
+                String gewichtungStr = etNoteGewichtung.getText().toString().trim();
+
                 // Prüft, ob der Punktwert leer ist.
                 if (wertStr.isEmpty()) {
                     Toast.makeText(requireContext(), "Punktwert benötigt", Toast.LENGTH_SHORT).show();
@@ -392,6 +396,18 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                         return; // Dialog bleibt offen.
                     }
 
+                    // NEU: Gewichtung parsen und validieren
+                    double gewichtung;
+                    if (gewichtungStr.isEmpty()) {
+                        gewichtung = 1.0; // Standardwert, falls Feld leer gelassen wird
+                    } else {
+                        gewichtung = Double.parseDouble(gewichtungStr);
+                        if (gewichtung <= 0) { // Gewichtung sollte positiv sein
+                            Toast.makeText(requireContext(), "Gewichtung muss größer als 0 sein", Toast.LENGTH_SHORT).show();
+                            return; // Dialog bleibt offen.
+                        }
+                    }
+
                     String typ;
                     int selectedId = rgNoteTyp.getCheckedRadioButtonId(); // Holt die ID des ausgewählten RadioButtons.
                     // Bestimmt den Notentyp basierend auf der ausgewählten RadioButton-ID.
@@ -403,24 +419,23 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                         typ = "unbekannt"; // Fallback, sollte bei korrekter UI-Logik nicht erreicht werden.
                     }
 
-                    // Erstellt ein neues Note-Objekt.
-                    Note neueNote = new Note(wert, typ);
+                    // Erstellt ein neues Note-Objekt mit der Gewichtung.
+                    Note neueNote = new Note(wert, typ, gewichtung);
                     fach.addNote(neueNote); // Fügt die neue Note zur Liste des Fachs hinzu.
                     saveData(); // Speichert die aktualisierten Daten.
 
                     // Benachrichtigt den NoteAdapter über die hinzugefügte Note.
                     noteAdapter.notifyItemInserted(fach.getNoten().size() - 1);
-                    // Scrollt den RecyclerView zur zuletzt hinzugefügten Note.
                     rvCurrentNotes.scrollToPosition(fach.getNoten().size() - 1);
                     // Benachrichtigt den FachAdapter, dass sich die Daten dieses Fachs geändert haben (Durchschnitt).
                     fachAdapter.notifyItemChanged(alleFaecher.indexOf(fach));
 
-                    etNoteWert.setText(""); // Leert das Eingabefeld für den nächsten Eintrag.
+                    etNoteWert.setText("");
+                    etNoteGewichtung.setText("1.0"); // NEU: Gewichtungsfeld zurücksetzen auf Standard
                     Toast.makeText(requireContext(), "Note hinzugefügt", Toast.LENGTH_SHORT).show();
-
                 } catch (NumberFormatException e) {
-                    // Zeigt eine Fehlermeldung an, wenn die Eingabe keine gültige Zahl ist.
-                    Toast.makeText(requireContext(), "Gültige Zahl eingeben (z.B. 10 oder 7.5)", Toast.LENGTH_SHORT).show();
+                    // Zeigt eine Fehlermeldung an, wenn die Eingabe keine gültige Zahl ist. [cite: 354]
+                    Toast.makeText(requireContext(), "Gültige Zahl für Punktwert oder Gewichtung eingeben (z.B. 10 oder 7.5)", Toast.LENGTH_LONG).show();
                     // Dialog bleibt offen.
                 }
             });

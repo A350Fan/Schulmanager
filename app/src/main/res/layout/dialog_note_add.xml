@@ -39,7 +39,7 @@
             android:hint="@string/hint_note_gewichtung"
             android:inputType="numberDecimal"
             android:maxLength="4"
-            android:text="1.0" />
+            android:text="@string/gewichtung_zahl" />
 
         <RadioButton
             android:id="@+id/rb_schriftlich"

@@ -125,25 +125,6 @@ public class Fach implements Serializable {
         }
     }
 
-    /**
-     * Hilfsmethode zur Berechnung des arithmetischen Durchschnitts einer Liste von Double-Werten.
-     * Diese Methode wird nach der Umstellung auf individuelle Notengewichtung nicht mehr
-     * in {@code getDurchschnitt()} benötigt und kann entfernt werden, wenn sie nirgendwo anders
-     * verwendet wird. Ich lasse sie vorerst drin.
-     *
-     * @param list Die Liste der Double-Werte.
-     * @return Der Durchschnitt der Werte in der Liste, oder 0.0, wenn die Liste leer ist.
-     */
-    private double calculateAverage(List<Double> list) {
-        if (list.isEmpty()) {
-            return 0.0;
-        }
-        double sum = 0;
-        for (double d : list) {
-            sum += d;
-        }
-        return sum / list.size();
-    }
 
     // --- Getter- und Setter-Methoden für die Instanzvariablen ---
 

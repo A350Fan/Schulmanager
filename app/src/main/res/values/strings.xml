@@ -37,4 +37,8 @@
     <string name="halbjahr_schnitt_anzahl_faecher">Anzahl der Fächer: %d</string>
     <string name="halbjahr_schnitt_durchschnitt_punkte">Durchschnitt (Punkte): %s</string>
     <string name="halbjahr_schnitt_entspricht_note">Entspricht Note: %s</string>
+    <string name="pruefungen">Prüfungen</string>
+    <string name="abi_schnitt">Abi-Schnitt</string>
+    <string name="hj_schnitt">HJ-Schnitt</string>
+    <string name="halbjahr">Halbjahr:</string>
 </resources>

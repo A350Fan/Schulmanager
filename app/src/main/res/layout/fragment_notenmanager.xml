@@ -11,30 +11,39 @@
         android:padding="8dp">
 
         <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="8dp"> <Button
-            android:id="@+id/btn_pruefungen"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Prüfungen"
-            android:layout_marginEnd="4dp"/>
+            android:layout_marginBottom="8dp">
+
+            <Button
+                android:id="@+id/btn_pruefungen"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/pruefungen"
+                android:layout_marginEnd="4dp" />
+
             <Button
                 android:id="@+id/btn_berechnen"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Abi-Schnitt"
+                android:text="@string/abi_schnitt"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"/> <Button
+                android:layout_marginEnd="4dp" />
+
+            <Button
                 android:id="@+id/btn_halbjahr_schnitt"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="HJ-Schnitt"
+                android:text="@string/hj_schnitt"
                 android:layout_marginStart="4dp"/> </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,7 +52,7 @@
             android:layout_marginTop="8dp"> <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Halbjahr:"
+            android:text="@string/halbjahr"
             android:layout_marginEnd="8dp"/>
 
             <Spinner

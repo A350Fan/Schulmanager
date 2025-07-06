@@ -3,7 +3,6 @@ package com.example.schulmanager;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -17,9 +16,6 @@ import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Die Hauptaktivität der Schulmanager-App.
@@ -112,71 +108,4 @@ public class MainActivity extends AppCompatActivity {
         // --- Ende TabLayout Verbindung ---
     }
 
-    /**
-     * Diese statische innere Klasse ist ein Beispiel für einen {@link FragmentStateAdapter},
-     * der eine Liste von Fragmenten und deren Titel verwaltet.
-     * Obwohl in der aktuellen onCreate-Methode ein anonymer Adapter verwendet wird,
-     * könnte diese Klasse verwendet werden, um den Adapter in eine separate, wiederverwendbare Klasse
-     * auszulagern.
-     * <p>
-     * In der aktuellen Implementierung der MainActivity wird dieser Adapter nicht direkt genutzt,
-     * da ein anonymer FragmentStateAdapter direkt im onCreate eingerichtet wurde.
-     */
-    public static class ViewPagerAdapter extends FragmentStateAdapter {
-        private final List<Fragment> fragments = new ArrayList<>(); // Liste der Fragments
-        private final List<String> fragmentTitles = new ArrayList<>(); // Liste der Titel für die Fragments
-
-        /**
-         * Konstruktor für den ViewPagerAdapter.
-         *
-         * @param fa Die FragmentActivity, die diesen Adapter hostet.
-         */
-        public ViewPagerAdapter(FragmentActivity fa) {
-            super(fa);
-        }
-
-        /**
-         * Fügt dem Adapter ein neues Fragment und dessen Titel hinzu.
-         *
-         * @param fragment Das hinzuzufügende Fragment.
-         * @param title    Der Titel des Fragments, der im TabLayout angezeigt wird.
-         */
-        public void addFragment(Fragment fragment, String title) {
-            fragments.add(fragment);
-            fragmentTitles.add(title);
-        }
-
-        /**
-         * Gibt den Titel des Fragments an der angegebenen Position zurück.
-         * Diese Methode wird vom TabLayoutMediator verwendet, um den Tab-Text zu setzen.
-         *
-         * @param position Die Position des Fragments.
-         * @return Der Titel des Fragments.
-         */
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitles.get(position);
-        }
-
-        /**
-         * Erstellt und gibt das Fragment an der angegebenen Position zurück.
-         *
-         * @param position Die Position des Fragments.
-         * @return Das Fragment.
-         */
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            return fragments.get(position);
-        }
-
-        /**
-         * Gibt die Gesamtzahl der Elemente (Fragmente) im Adapter zurück.
-         *
-         * @return Die Anzahl der Fragmente.
-         */
-        @Override
-        public int getItemCount() {
-            return fragments.size();
-        }
-    }
 }

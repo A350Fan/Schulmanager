@@ -50,7 +50,7 @@
     <string name="subject">Fach</string>
     <string name="uhrzeit">Uhrzeit (z.B. 08:00 - 08:45)</string>
     <string name="raum">Raum</string>
-    <string name="lehrer">Lehrer (optional)</string>
+    <string name="teacher">Lehrer (optional)</string>
     <string name="stundenindex">Stundenindex (0-10)</string>
     <string name="cancel">Abbrechen</string>
     <string name="add">Hinzufügen</string>
@@ -69,4 +69,6 @@
     <string name="choose_date_to_see_holiday_info">Wähle ein Datum, um Ferieninformationen zu sehen.</string>
     <string name="hint_stundeangabe">1. Stunde:</string>
     <string name="hint_zeitangabe">z.B. 08:00 - 08:45</string>
+    <string name="choose_time">Uhrzeit wählen:</string>
+    <string name="room">Raum</string>
 </resources>

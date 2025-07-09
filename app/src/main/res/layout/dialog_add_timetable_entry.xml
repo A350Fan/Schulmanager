@@ -8,14 +8,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Neuen Stundenplan-Eintrag hinzufügen"
+        android:text="@string/add_new_timetable_entry"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:layout_marginBottom="16dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Fach"
+        android:hint="@string/subject"
         android:layout_marginBottom="8dp">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_fach"
@@ -27,7 +27,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Uhrzeit wählen:"
+        android:text="@string/choose_time"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:layout_marginTop="8dp"/>
     <Spinner
@@ -39,7 +39,7 @@
         android:background="?attr/editTextBackground"/> <com.google.android.material.textfield.TextInputLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hint="Raum"
+    android:hint="@string/room"
     android:layout_marginBottom="8dp">
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/et_raum"
@@ -51,7 +51,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Lehrer (optional)"
+        android:hint="@string/teacher"
         android:layout_marginBottom="16dp">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_lehrer"

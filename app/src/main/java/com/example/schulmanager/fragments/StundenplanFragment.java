@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper; // Import für ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +24,7 @@ import com.example.schulmanager.database.AppDatabase;
 import com.example.schulmanager.database.StundenplanDAO;
 import com.example.schulmanager.dialogs.AddStundenplanEntryDialog;
 import com.example.schulmanager.dialogs.OnStundenplanEntryAddedListener;
+import com.example.schulmanager.dialogs.DefineStundenzeitenDialog; // NEU: Import für den Stundenzeiten-Dialog
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,16 +33,25 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-// Implementiere beide Interfaces
-public class StundenplanFragment extends Fragment implements OnStundenplanEntryAddedListener, StundenplanAdapter.OnItemActionListener {
+// Implementiere beide Interfaces: OnStundenplanEntryAddedListener und OnItemActionListener,
+// sowie das neue OnStundenzeitenDefinedListener
+public class StundenplanFragment extends Fragment implements
+        OnStundenplanEntryAddedListener,
+        StundenplanAdapter.OnItemActionListener,
+        DefineStundenzeitenDialog.OnStundenzeitenDefinedListener { // NEU: Implementiere das Interface
 
     private MaterialButtonToggleGroup toggleButtonGroupDays;
     private RecyclerView recyclerViewStundenplanTag;
     private StundenplanAdapter stundenplanAdapter;
     private StundenplanDAO stundenplanDao;
     private FloatingActionButton fabAddEntry;
+    private FloatingActionButton fabDefineStundenzeiten; // NEU: Für den neuen Button
 
     private final String[] tage = {"Mo", "Di", "Mi", "Do", "Fr"};
+    // Die Stundenzeiten werden jetzt aus der Datenbank geladen,
+    // diese Liste ist nicht mehr primär relevant für die Anzeige,
+    // wird aber noch für die StundenIndex-Berechnung im AddDialog benötigt,
+    // bis wir diesen Dialog anpassen.
     private final String[] stundenzeiten = {
             "08:00 - 08:45", "08:50 - 09:35", "09:50 - 10:35", "10:40 - 11:25", "11:30 - 12:15",
             "12:20 - 13:05", "13:10 - 13:55", "14:00 - 14:45", "14:50 - 15:35", "15:40 - 16:25", "16:30 - 17:15"
@@ -70,13 +80,13 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
         toggleButtonGroupDays = view.findViewById(R.id.toggleButtonGroupDays);
         recyclerViewStundenplanTag = view.findViewById(R.id.recyclerViewStundenplanTag);
         fabAddEntry = view.findViewById(R.id.fab_add_stundenplan_entry);
+        fabDefineStundenzeiten = view.findViewById(R.id.fabDefineStundenzeiten); // NEU: Initialisiere den neuen Button
 
         recyclerViewStundenplanTag.setLayoutManager(new LinearLayoutManager(getContext()));
-        // NEU: Übergib 'this' als Listener an den Adapter
         stundenplanAdapter = new StundenplanAdapter(new ArrayList<>(), this);
         recyclerViewStundenplanTag.setAdapter(stundenplanAdapter);
 
-        // NEU: ItemTouchHelper für Swipe-to-Dismiss konfigurieren und an RecyclerView anbinden
+        // ItemTouchHelper für Swipe-to-Dismiss konfigurieren und an RecyclerView anbinden
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -89,7 +99,7 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
                 StundenplanEintrag entryToDelete = stundenplanAdapter.getItemAtPosition(position);
                 deleteStundenplanEntryFromDb(entryToDelete);
             }
-        }).attachToRecyclerView(recyclerViewStundenplanTag); // An RecyclerView anbinden
+        }).attachToRecyclerView(recyclerViewStundenplanTag);
 
         toggleButtonGroupDays.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
@@ -111,6 +121,14 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
             dialog.show(getParentFragmentManager(), "AddStundenplanEntryDialog");
         });
 
+        // NEU: Klick-Listener für den "Stundenzeiten festlegen"-Button
+        fabDefineStundenzeiten.setOnClickListener(v -> {
+            DefineStundenzeitenDialog dialog = new DefineStundenzeitenDialog();
+            dialog.setOnStundenzeitenDefinedListener(this); // Wichtig: Setze den Listener
+            dialog.show(getParentFragmentManager(), "define_stundenzeiten_dialog");
+        });
+
+
         // runOnceAfterDBSetup(); // Optional: Initialdaten für Testzwecke
     }
 
@@ -121,7 +139,9 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
             Collections.sort(filteredList, Comparator.comparingInt(StundenplanEintrag::getStundenIndex));
 
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> stundenplanAdapter.updateData(filteredList));
+                getActivity().runOnUiThread(() -> {
+                    stundenplanAdapter.updateData(filteredList);
+                });
             }
         });
     }
@@ -131,7 +151,9 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
             stundenplanDao.insert(eintrag);
             loadStundenplanForSelectedDay(); // Daten neu laden, um die UI zu aktualisieren
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Eintrag hinzugefügt!", Toast.LENGTH_SHORT).show());
+                getActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Eintrag hinzugefügt!", Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }
@@ -141,7 +163,9 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
             stundenplanDao.delete(eintrag);
             loadStundenplanForSelectedDay(); // Daten neu laden
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Eintrag gelöscht!", Toast.LENGTH_SHORT).show());
+                getActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Eintrag gelöscht!", Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }
@@ -151,7 +175,9 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
             stundenplanDao.update(eintrag);
             loadStundenplanForSelectedDay(); // Daten neu laden
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Eintrag aktualisiert!", Toast.LENGTH_SHORT).show());
+                getActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Eintrag aktualisiert!", Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }
@@ -163,7 +189,7 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
         addStundenplanEntryToDb(newEntry);
     }
 
-    // NEU: Implementierung der Schnittstellenmethode für das Löschen (vom Adapter via ItemTouchHelper)
+    // Implementierung der Schnittstellenmethode für das Löschen (vom Adapter via ItemTouchHelper)
     @Override
     public void onDeleteClick(StundenplanEintrag eintrag) {
         // Diese Methode wird tatsächlich nicht direkt vom Adapter aufgerufen, wenn du Swipe-to-Dismiss nutzt.
@@ -171,24 +197,16 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
         // Die onDeleteClick Methode wäre relevanter, wenn du z.B. einen expliziten Lösch-Button im item_stundenplan_eintrag hättest.
         // In diesem Fall, da wir ItemTouchHelper verwenden, ist der Aufruf in onSwiped() ausreichend.
         // Du könntest hier jedoch einen Bestätigungsdialog anzeigen, bevor du deleteStundenplanEntryFromDb aufrufst.
-        // Beispiel:
-        /*
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Eintrag löschen?")
-                .setMessage("Möchtest du diesen Eintrag wirklich löschen?")
-                .setPositiveButton("Löschen", (dialog, which) -> {
-                    deleteStundenplanEntryFromDb(eintrag);
-                })
-                .setNegativeButton("Abbrechen", (dialog, which) -> {
-                    // Falls der User abbricht, muss das Item im Adapter zurückgesetzt werden
-                    // (z.B. stundenplanAdapter.notifyItemChanged(stundenplanAdapter.stundenplanList.indexOf(eintrag));
-                    // oder einfach loadStundenplanForSelectedDay() erneut aufrufen, um die Liste zu aktualisieren)
-                    loadStundenplanForSelectedDay();
-                })
-                .show();
-        */
-        // Für den Anfang rufen wir deleteStundenplanEntryFromDb direkt in onSwiped auf.
-        // Wenn du einen Bestätigungsdialog hinzufügen möchtest, verschiebe den Aufruf dorthin.
+    }
+
+    // NEU: Implementierung der Schnittstellenmethode für das Speichern von Stundenzeiten
+    @Override
+    public void onStundenzeitenSaved() {
+        Toast.makeText(getContext(), "Stundenzeiten erfolgreich festgelegt!", Toast.LENGTH_SHORT).show();
+        // Hier könntest du weitere Aktionen ausführen, z.B. wenn die Anzeige des Stundenplans
+        // direkt von den Stundenzeit-Definitionen abhängt, müsstest du ihn aktualisieren.
+        // Aktuell ist die "Uhrzeit" im StundenplanEintrag selbst gespeichert, daher
+        // ist keine direkte Aktualisierung hier notwendig, außer du änderst das Verhalten.
     }
 
 
@@ -215,7 +233,9 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
                 stundenplanDao.insertAll(initialData);
 
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> loadStundenplanForSelectedDay());
+                    getActivity().runOnUiThread(() -> {
+                        loadStundenplanForSelectedDay();
+                    });
                 }
             }
         });
@@ -224,6 +244,7 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
     @Override
     public void onDestroy() {
         super.onDestroy();
+        // Korrektur: Nutze den korrekten Variablennamen databaseWriteExecutor
         if (databaseWriteExecutor != null && !databaseWriteExecutor.isShutdown()) {
             databaseWriteExecutor.shutdown();
         }

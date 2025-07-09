@@ -12,7 +12,7 @@
         android:id="@+id/tvStundenIndex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1. Stunde:"
+        android:text="@string/hint_stundeangabe"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginEnd="8dp"/>
@@ -22,7 +22,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:hint="z.B. 08:00 - 08:45"
+        android:autofillHints=""
+        android:hint="@string/hint_zeitangabe"
         android:inputType="text"
         android:maxLines="1"
         android:textSize="16sp"/>

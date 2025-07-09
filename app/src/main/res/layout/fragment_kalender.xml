@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Jahreskalender"
+        android:text="@string/year_calendar"
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center_horizontal"
@@ -27,7 +27,7 @@
         android:id="@+id/tvHolidayInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Wähle ein Datum, um Ferieninformationen zu sehen."
+        android:text="@string/choose_date_to_see_holiday_info"
         android:textSize="16sp"
         android:gravity="center_horizontal"
         android:padding="8dp"/>

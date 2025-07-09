@@ -24,10 +24,6 @@ public class StundenzeitDefinition {
         return stundenIndex;
     }
 
-    public void setStundenIndex(int stundenIndex) {
-        this.stundenIndex = stundenIndex;
-    }
-
     public String getUhrzeitString() {
         return uhrzeitString;
     }

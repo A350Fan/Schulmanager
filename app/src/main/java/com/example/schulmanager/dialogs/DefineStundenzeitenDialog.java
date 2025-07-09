@@ -20,6 +20,7 @@ import com.example.schulmanager.database.StundenzeitDefinitionDAO;
 import com.example.schulmanager.models.StundenzeitDefinition;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -90,13 +91,11 @@ public class DefineStundenzeitenDialog extends DialogFragment {
                 }
             }
             // Sortiere die Liste nach StundenIndex
-            displayList.sort((d1, d2) -> Integer.compare(d1.getStundenIndex(), d2.getStundenIndex()));
+            displayList.sort(Comparator.comparingInt(StundenzeitDefinition::getStundenIndex));
 
 
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    adapter.updateData(displayList);
-                });
+                getActivity().runOnUiThread(() -> adapter.updateData(displayList));
             }
         });
     }

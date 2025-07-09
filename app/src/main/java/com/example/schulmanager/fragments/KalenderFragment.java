@@ -64,16 +64,13 @@ public class KalenderFragment extends Fragment {
         calendarView.setFirstDayOfWeek(Calendar.MONDAY);
 
         // Optional: Setze einen Listener für Datumsänderungen
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                // Monat ist 0-basiert in CalendarView, d.h. Januar = 0
-                String selectedDate = String.format(Locale.GERMAN, "%02d.%02d.%d", dayOfMonth, month + 1, year);
-                Toast.makeText(getContext(), "Ausgewähltes Datum: " + selectedDate, Toast.LENGTH_SHORT).show();
+        calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
+            // Monat ist 0-basiert in CalendarView, d.h. Januar = 0
+            String selectedDate = String.format(Locale.GERMAN, "%02d.%02d.%d", dayOfMonth, month + 1, year);
+            Toast.makeText(getContext(), "Ausgewähltes Datum: " + selectedDate, Toast.LENGTH_SHORT).show();
 
-                // Zeige hier die Ferieninformationen für das ausgewählte Datum an
-                displayHolidaysForDate(year, month + 1, dayOfMonth);
-            }
+            // Zeige hier die Ferieninformationen für das ausgewählte Datum an
+            displayHolidaysForDate(year, month + 1, dayOfMonth);
         });
 
         // Lade die Ferientermine, sobald das Fragment erstellt wurde

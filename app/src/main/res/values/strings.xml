@@ -64,4 +64,9 @@
     <string name="thursday">Do</string>
     <string name="friday">Fr</string>
     <string name="add_timetable_entry">Stundenplaneintrag hinzufügen</string>
+    <string name="set_lesson_times">Stundenzeiten festlegen</string>
+    <string name="year_calendar">Jahreskalender</string>
+    <string name="choose_date_to_see_holiday_info">Wähle ein Datum, um Ferieninformationen zu sehen.</string>
+    <string name="hint_stundeangabe">1. Stunde:</string>
+    <string name="hint_zeitangabe">z.B. 08:00 - 08:45</string>
 </resources>

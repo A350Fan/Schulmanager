@@ -4,7 +4,7 @@ cardview = "1.0.0"
 coreKtx = "1.16.0"
 fragment = "1.8.8"
 gson = "2.13.1"
-gsonVersion = "2.10.1"
+gsonVersion = "2.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -21,7 +21,6 @@ cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-gson-v2101 = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

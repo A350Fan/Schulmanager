@@ -88,7 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="Stundenzeiten festlegen"
+        android:contentDescription="@string/set_lesson_times"
         android:icon="@drawable/ic_settings_white_24dp"
         app:backgroundTint="?attr/colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"

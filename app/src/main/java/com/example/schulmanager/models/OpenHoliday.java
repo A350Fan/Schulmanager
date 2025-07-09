@@ -1,5 +1,7 @@
 package com.example.schulmanager.models;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List; // Import für List
@@ -60,21 +62,9 @@ public class OpenHoliday {
         return type;
     }
 
-    public String[] getFederalStates() {
-        return federalStates;
-    }
-
     // Setter-Methoden (angepasst an neue "name"-Struktur)
     public void setId(String id) {
         this.id = id;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
     }
 
     // GEÄNDERT: Erwartet jetzt eine Liste von HolidayName-Objekten
@@ -82,18 +72,7 @@ public class OpenHoliday {
         this.name = name;
     }
 
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setFederalStates(String[] federalStates) {
-        this.federalStates = federalStates;
-    }
-
+    @NonNull
     @Override
     public String toString() {
         return "OpenHoliday{" +
@@ -128,15 +107,11 @@ public class OpenHoliday {
             return text;
         }
 
-        // Setter-Methoden (optional)
-        public void setLanguageId(String languageId) {
-            this.languageId = languageId;
-        }
-
         public void setText(String text) {
             this.text = text;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return "HolidayName{" +

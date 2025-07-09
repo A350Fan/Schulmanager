@@ -46,12 +46,6 @@ public class StundenplanFragment extends Fragment implements
     private StundenplanDAO stundenplanDao;
     private FloatingActionButton fabAddEntry;
     private FloatingActionButton fabDefineStundenzeiten; // NEU: Für den neuen Button
-
-    private final String[] tage = {"Mo", "Di", "Mi", "Do", "Fr"};
-    // Die Stundenzeiten werden jetzt aus der Datenbank geladen,
-    // diese Liste ist nicht mehr primär relevant für die Anzeige,
-    // wird aber noch für die StundenIndex-Berechnung im AddDialog benötigt,
-    // bis wir diesen Dialog anpassen.
     private final String[] stundenzeiten = {
             "08:00 - 08:45", "08:50 - 09:35", "09:50 - 10:35", "10:40 - 11:25", "11:30 - 12:15",
             "12:20 - 13:05", "13:10 - 13:55", "14:00 - 14:45", "14:50 - 15:35", "15:40 - 16:25", "16:30 - 17:15"
@@ -139,9 +133,7 @@ public class StundenplanFragment extends Fragment implements
             Collections.sort(filteredList, Comparator.comparingInt(StundenplanEintrag::getStundenIndex));
 
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    stundenplanAdapter.updateData(filteredList);
-                });
+                getActivity().runOnUiThread(() -> stundenplanAdapter.updateData(filteredList));
             }
         });
     }
@@ -151,9 +143,7 @@ public class StundenplanFragment extends Fragment implements
             stundenplanDao.insert(eintrag);
             loadStundenplanForSelectedDay(); // Daten neu laden, um die UI zu aktualisieren
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Eintrag hinzugefügt!", Toast.LENGTH_SHORT).show();
-                });
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Eintrag hinzugefügt!", Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -163,21 +153,7 @@ public class StundenplanFragment extends Fragment implements
             stundenplanDao.delete(eintrag);
             loadStundenplanForSelectedDay(); // Daten neu laden
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Eintrag gelöscht!", Toast.LENGTH_SHORT).show();
-                });
-            }
-        });
-    }
-
-    public void updateStundenplanEntryInDb(StundenplanEintrag eintrag) {
-        databaseWriteExecutor.execute(() -> {
-            stundenplanDao.update(eintrag);
-            loadStundenplanForSelectedDay(); // Daten neu laden
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Eintrag aktualisiert!", Toast.LENGTH_SHORT).show();
-                });
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Eintrag gelöscht!", Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -233,9 +209,7 @@ public class StundenplanFragment extends Fragment implements
                 stundenplanDao.insertAll(initialData);
 
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        loadStundenplanForSelectedDay();
-                    });
+                    getActivity().runOnUiThread(() -> loadStundenplanForSelectedDay());
                 }
             }
         });

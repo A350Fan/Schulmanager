@@ -8,9 +8,3 @@
     android:padding="12dp"
     android:singleLine="true"
     android:textColor="@color/colorPrimaryDark" />
-
-    <!--    **Erklärung der Änderung:**-->
-
-    <!--    * **`android:layout_height="wrap_content"`:** Dies weist Android an, die Höhe des `CheckedTextView` so groß zu machen, wie nötig ist, um seinen Inhalt (den Text "Halbjahr X") vollständig darzustellen. Die ursprüngliche Höhe `?attr/dropdownListPreferredItemHeight` ist eine Standardhöhe für Listenelemente, die in manchen Fällen zu klein sein kann, besonders wenn die Schriftgröße oder die Anzahl der Zeilen (hier `singleLine="true"` ist ja gesetzt) nicht genau darauf abgestimmt ist.-->
-    <!--    * **`android:padding="12dp"`:** Ich habe das Padding leicht von `16dp` auf `12dp` reduziert, oder du kannst es auch auf `16dp` lassen, je nachdem wie viel Platz du zwischen den Einträgen möchtest. Der Kern ist, dass `wrap_content` die Höhe richtig skaliert.-->
-    <!--    * **`android:gravity="center_vertical"`:** Dies ist optional, aber es sorgt dafür, dass der Text im `CheckedTextView` vertikal zentriert wird, was die Optik verbessern kann, falls der Text trotz `wrap_content` nicht genau mittig erscheinen sollte.-->

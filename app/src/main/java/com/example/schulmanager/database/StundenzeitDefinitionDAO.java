@@ -31,4 +31,7 @@ public interface StundenzeitDefinitionDAO {
 
     @Query("SELECT * FROM stundenzeit_definition WHERE stundenIndex = :index LIMIT 1")
     StundenzeitDefinition getStundenzeitDefinitionByIndex(int index);
+
+    @Query("DELETE FROM stundenzeit_definition")
+    void deleteAll();
 }

@@ -22,24 +22,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors; // NEU (benötigt Java 8 oder höher, wenn Target SDK < 24)
 
-public class AddStundenplanEntryDialog extends DialogFragment {
+public class AddTimetableEntryDialog extends DialogFragment {
 
     private TextInputEditText etFach, etRaum, etLehrer; // etUhrzeit und etStundenIndex entfernt
     private Spinner spinnerUhrzeit; // NEU: Spinner für Uhrzeit-Auswahl
     private MaterialButton btnCancel, btnAdd;
-    private OnStundenplanEntryAddedListener listener;
+    private OnTimetableEntryAddedListener listener;
 
     // NEU: Liste der StundenzeitDefinitionen, die an den Dialog übergeben werden
     private List<StundenzeitDefinition> availableStundenzeiten;
 
     // Methode, um den Listener zu setzen
-    public void setOnStundenplanEntryAddedListener(OnStundenplanEntryAddedListener listener) {
+    public void setOnStundenplanEntryAddedListener(OnTimetableEntryAddedListener listener) {
         this.listener = listener;
     }
 
     // NEU: Factory-Methode, um den Dialog mit Daten zu instanziieren
-    public static AddStundenplanEntryDialog newInstance(List<StundenzeitDefinition> stundenzeiten) {
-        AddStundenplanEntryDialog dialog = new AddStundenplanEntryDialog();
+    public static AddTimetableEntryDialog newInstance(List<StundenzeitDefinition> stundenzeiten) {
+        AddTimetableEntryDialog dialog = new AddTimetableEntryDialog();
         Bundle args = new Bundle();
         // Hier muss man vorsichtig sein: Direktes Übergeben einer List<Parcelable> oder Serializable
         // ist möglich, aber bei großen Listen nicht effizient.
@@ -56,7 +56,7 @@ public class AddStundenplanEntryDialog extends DialogFragment {
         return dialog;
     }
 
-    public AddStundenplanEntryDialog() {
+    public AddTimetableEntryDialog() {
         // Leerer Konstruktor erforderlich
     }
 
@@ -132,7 +132,7 @@ public class AddStundenplanEntryDialog extends DialogFragment {
             // Stundenindex wird jetzt direkt vom Spinner-Objekt geholt, nicht von etStundenIndex
 
             if (fach.isEmpty() || raum.isEmpty()) { // Uhrzeit und Stundenindex sind jetzt immer ausgewählt
-                Toast.makeText(getContext(), "Bitte alle Pflichtfelder ausfüllen (Fach, Raum)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Bitte alle Pflichtfelder ausfüllen (Subject, Raum)", Toast.LENGTH_SHORT).show();
                 return;
             }
 

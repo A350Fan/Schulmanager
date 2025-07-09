@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schulmanager.adapters.TimetableAdapter;
 import com.example.schulmanager.database.TimetableDAO;
+import com.example.schulmanager.dialogs.AddTimetableEntryDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,8 +25,7 @@ import com.example.schulmanager.models.StundenplanEintrag;
 import com.example.schulmanager.models.StundenzeitDefinition; // NEU
 import com.example.schulmanager.database.AppDatabase;
 import com.example.schulmanager.database.StundenzeitDefinitionDAO; // NEU
-import com.example.schulmanager.dialogs.AddStundenplanEntryDialog;
-import com.example.schulmanager.dialogs.OnStundenplanEntryAddedListener;
+import com.example.schulmanager.dialogs.OnTimetableEntryAddedListener;
 import com.example.schulmanager.dialogs.DefineStundenzeitenDialog;
 
 import java.util.ArrayList;
@@ -35,10 +35,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-// Implementiere beide Interfaces: OnStundenplanEntryAddedListener und OnItemActionListener,
+// Implementiere beide Interfaces: OnTimetableEntryAddedListener und OnItemActionListener,
 // sowie das neue OnStundenzeitenDefinedListener
-public class StundenplanFragment extends Fragment implements
-        OnStundenplanEntryAddedListener,
+public class TimetableFragment extends Fragment implements
+        OnTimetableEntryAddedListener,
         TimetableAdapter.OnItemActionListener,
         DefineStundenzeitenDialog.OnStundenzeitenDefinedListener {
 
@@ -56,7 +56,7 @@ public class StundenplanFragment extends Fragment implements
 
     private ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);
 
-    public StundenplanFragment() {
+    public TimetableFragment() {
         // Required empty public constructor
     }
 
@@ -125,9 +125,9 @@ public class StundenplanFragment extends Fragment implements
                             // defineDialog.show(getParentFragmentManager(), "define_stundenzeiten_dialog");
                         } else {
                             // Erstelle den Dialog über die neue newInstance Factory-Methode
-                            AddStundenplanEntryDialog dialog = AddStundenplanEntryDialog.newInstance(definedStundenzeiten);
+                            AddTimetableEntryDialog dialog = AddTimetableEntryDialog.newInstance(definedStundenzeiten);
                             dialog.setOnStundenplanEntryAddedListener(this);
-                            dialog.show(getParentFragmentManager(), "AddStundenplanEntryDialog");
+                            dialog.show(getParentFragmentManager(), "AddTimetableEntryDialog");
                         }
                     });
                 }

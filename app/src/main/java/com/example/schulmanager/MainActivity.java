@@ -6,9 +6,9 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.schulmanager.fragments.NotenmanagerFragment;
-import com.example.schulmanager.fragments.StundenplanFragment;
-import com.example.schulmanager.fragments.KalenderFragment;
+import com.example.schulmanager.fragments.GrademanagerFragment;
+import com.example.schulmanager.fragments.TimetableFragment;
+import com.example.schulmanager.fragments.CalendarFragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -67,11 +67,11 @@ public class MainActivity extends AppCompatActivity {
                 // Je nach Position wird das entsprechende Fragment zurückgegeben.
                 switch (position) {
                     case 0:
-                        return new NotenmanagerFragment(); // Erstes Tab: Notenmanager
+                        return new GrademanagerFragment(); // Erstes Tab: Notenmanager
                     case 1:
-                        return new StundenplanFragment();  // Zweites Tab: Stundenplan
+                        return new TimetableFragment();  // Zweites Tab: Stundenplan
                     case 2:
-                        return new KalenderFragment();   // Drittes Tab: Prüfungen
+                        return new CalendarFragment();   // Drittes Tab: Prüfungen
                     default:
                         return new Fragment();            // Fallback für unbekannte Positionen
                 }

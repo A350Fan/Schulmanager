@@ -5,11 +5,11 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Locale;
 
-public class Note implements Serializable {
-    private double wert; // Der Punktwert der Note (0-15)
+public class Grade implements Serializable {
+    private double wert; // Der Punktwert der Grade (0-15)
     private String typ; // z.B. "schriftlich", "muendlich", "sonstig"
     private long datum; // Zeitstempel der Notenerfassung
-    private double gewichtung; // Gewichtung der Note (Standard: 1.0)
+    private double gewichtung; // Gewichtung der Grade (Standard: 1.0)
 
     // Hilfsmethode zur Validierung des Punktwerts
     private double validateWert(double value) {
@@ -17,7 +17,7 @@ public class Note implements Serializable {
     }
 
     // Konstruktor mit Gewichtung
-    public Note(double wert, String typ, double gewichtung) {
+    public Grade(double wert, String typ, double gewichtung) {
         this.wert = validateWert(wert);
         this.typ = typ;
         this.datum = System.currentTimeMillis();
@@ -25,7 +25,7 @@ public class Note implements Serializable {
     }
 
     // Konstruktor mit Datum und Gewichtung
-    public Note(double wert, String typ, long datum, double gewichtung) {
+    public Grade(double wert, String typ, long datum, double gewichtung) {
         this.wert = validateWert(wert);
         this.typ = typ;
         this.datum = datum;

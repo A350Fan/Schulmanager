@@ -27,8 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schulmanager.R;
 import com.example.schulmanager.adapters.GradeAdapter;
 import com.example.schulmanager.adapters.SubjectAdapter;
-import com.example.schulmanager.models.Fach;
-import com.example.schulmanager.models.Note;
+import com.example.schulmanager.models.Subject;
+import com.example.schulmanager.models.Grade;
 import com.example.schulmanager.utils.BerechnungUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -40,12 +40,12 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Das NotenmanagerFragment ist das Haupt-Fragment für die Verwaltung von Fächern und Noten.
+ * Das GrademanagerFragment ist das Haupt-Fragment für die Verwaltung von Fächern und Noten.
  * Es zeigt eine Liste von Fächern an, ermöglicht das Hinzufügen, Bearbeiten und Löschen von Fächern
  * sowie das Verwalten der Noten innerhalb eines Fachs.
  * Zudem bietet es Funktionen zur Berechnung des Halbjahresschnitts und des Abitur-Gesamtschnitts.
  */
-public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNoteClickListener {
+public class GrademanagerFragment extends Fragment implements GradeAdapter.OnNoteClickListener {
 
     // --- Konstanten für SharedPreferences ---
     private static final String PREF_NAME = "NotenManager";
@@ -58,14 +58,14 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
     private GradeAdapter gradeAdapter; // Adapter für die Anzeige der Noten-Liste innerhalb des Noten-Dialogs.
 
     // --- Datenlisten ---
-    private List<Fach> alleFaecher = new ArrayList<>(); // Enthält alle Fächer der Anwendung, unabhängig vom Halbjahr.
-    private final List<Fach> gefilterteFaecher = new ArrayList<>(); // Enthält die Fächer, die dem aktuell ausgewählten Halbjahr entsprechen.
+    private List<Subject> alleFaecher = new ArrayList<>(); // Enthält alle Fächer der Anwendung, unabhängig vom Halbjahr.
+    private final List<Subject> gefilterteFaecher = new ArrayList<>(); // Enthält die Fächer, die dem aktuell ausgewählten Halbjahr entsprechen.
 
     // --- UI-Elemente und Zustandsvariablen ---
     private AlertDialog currentDialog; // Referenz auf den aktuell geöffneten AlertDialog, um ihn bei Bedarf zu schließen.
     private int aktuellesHalbjahr = 1; // Speichert das aktuell im Spinner ausgewählte Halbjahr (Standard: 1. Halbjahr).
     private Spinner halbjahrSpinner; // Spinner zur Auswahl des Halbjahres zum Filtern der Fächer.
-    private Fach currentFachForNotes; // Speichert das Fach, dessen Noten gerade im Noten-Dialog verwaltet werden.
+    private Subject currentSubjectForNotes; // Speichert das Subject, dessen Noten gerade im Noten-Dialog verwaltet werden.
 
     /**
      * Wird aufgerufen, um die View-Hierarchie des Fragments zu erstellen und zurückzugeben.
@@ -90,8 +90,8 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
         // Setzt einen LinearLayoutManager, um die Elemente vertikal anzuordnen.
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // Initialisiert den SubjectAdapter mit der gefilterten Fächerliste und dem Klick-Listener.
-        // `this::showEditDialog` ist eine Methodenreferenz, die sicherstellt, dass beim Klick auf ein Fach
-        // die Methode showEditDialog mit dem geklickten Fach aufgerufen wird.
+        // `this::showEditDialog` ist eine Methodenreferenz, die sicherstellt, dass beim Klick auf ein Subject
+        // die Methode showEditDialog mit dem geklickten Subject aufgerufen wird.
         subjectAdapter = new SubjectAdapter(gefilterteFaecher, this::showEditDialog);
         // Weist den Adapter dem RecyclerView zu.
         recyclerView.setAdapter(subjectAdapter);
@@ -191,7 +191,7 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
 
         // Setzt das Dialog-Layout und den Titel.
         builder.setView(dialogView)
-                .setTitle("Neues Fach hinzufügen")
+                .setTitle("Neues Subject hinzufügen")
                 // Da wir eine manuelle Validierung und Schließung steuern wollen,
                 // setzen wir den Positive Button Listener zunächst auf null.
                 .setPositiveButton("Hinzufügen", null)
@@ -216,22 +216,22 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
                 }
 
                 int selectedHalbjahrPosition = spHalbjahr.getSelectedItemPosition(); // Holt die ausgewählte Halbjahrsposition.
-                // Erstellt ein neues Fach-Objekt mit den eingegebenen Daten.
+                // Erstellt ein neues Subject-Objekt mit den eingegebenen Daten.
                 // Das Halbjahr ist 1-basiert, daher +1.
-                Fach fach = new Fach(
+                Subject subject = new Subject(
                         name,
                         selectedHalbjahrPosition + 1,
                         cbAbitur.isChecked() // Status der Abitur-Checkbox.
                 );
 
-                alleFaecher.add(fach); // Fügt das neue Fach zur globalen Liste hinzu.
+                alleFaecher.add(subject); // Fügt das neue Subject zur globalen Liste hinzu.
                 saveData(); // Speichert alle Fächer in SharedPreferences und aktualisiert den Adapter (durch filterFaecher()).
                 // Keine separate notifyItemInserted hier, da saveData() -> filterFaecher() -> notifyDataSetChanged() übernimmt.
 
-                // Speichert die zuletzt ausgewählte Halbjahrsposition für den nächsten "Fach hinzufügen"-Dialog.
+                // Speichert die zuletzt ausgewählte Halbjahrsposition für den nächsten "Subject hinzufügen"-Dialog.
                 prefs.edit().putInt(PREF_LAST_HALBJAHR_ADD, selectedHalbjahrPosition).apply();
 
-                Toast.makeText(requireContext(), "Fach hinzugefügt", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Subject hinzugefügt", Toast.LENGTH_SHORT).show();
                 currentDialog.dismiss(); // Schließt den Dialog nur, wenn die Eingabe gültig war.
             });
         });
@@ -244,13 +244,13 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
      * Der Dialog ermöglicht die Änderung von Fachname, Halbjahr und Abiturfach-Status.
      * Außerdem bietet er Optionen zum Löschen des Fachs oder zum Wechsel in den Noten-Dialog dieses Fachs.
      *
-     * @param fach Das Fach-Objekt, das bearbeitet werden soll.
+     * @param subject Das Subject-Objekt, das bearbeitet werden soll.
      */
-    private void showEditDialog(Fach fach) {
+    private void showEditDialog(Subject subject) {
         // Findet die Position des Fachs in der Liste 'alleFaecher'. Wichtig für adapter.notifyItemRemoved/Changed.
-        final int position = alleFaecher.indexOf(fach);
+        final int position = alleFaecher.indexOf(subject);
         if (position == -1)
-            return; // Falls das Fach aus irgendeinem Grund nicht gefunden wird, abbrechen.
+            return; // Falls das Subject aus irgendeinem Grund nicht gefunden wird, abbrechen.
 
         // Erstellt einen AlertDialog.Builder für den Dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -267,8 +267,8 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
         btnEditNotes.setVisibility(View.VISIBLE);
         // Setzt einen Klick-Listener für den "Noten bearbeiten"-Button.
         btnEditNotes.setOnClickListener(v -> {
-            currentDialog.dismiss(); // Schließt den aktuellen Fach-Bearbeiten-Dialog.
-            showNotesDialog(fach);   // Öffnet den Noten-Dialog für das ausgewählte Fach.
+            currentDialog.dismiss(); // Schließt den aktuellen Subject-Bearbeiten-Dialog.
+            showNotesDialog(subject);   // Öffnet den Noten-Dialog für das ausgewählte Subject.
         });
 
         // Konfiguriert den Spinner für die Halbjahresauswahl im Dialog.
@@ -281,21 +281,21 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
         spHalbjahr.setAdapter(dialogSpinnerAdapter);
 
         // Füllt die UI-Elemente des Dialogs mit den aktuellen Daten des Fachs.
-        etName.setText(fach.getName());
-        spHalbjahr.setSelection(fach.getHalbjahr() - 1); // Halbjahr ist 1-basiert, Spinner-Position 0-basiert.
-        cbAbitur.setChecked(fach.isAbiturfach());
+        etName.setText(subject.getName());
+        spHalbjahr.setSelection(subject.getHalbjahr() - 1); // Halbjahr ist 1-basiert, Spinner-Position 0-basiert.
+        cbAbitur.setChecked(subject.isAbiturfach());
 
         // Setzt das Dialog-Layout und den Titel.
         builder.setView(dialogView)
-                .setTitle("Fach bearbeiten")
+                .setTitle("Subject bearbeiten")
                 .setPositiveButton("Speichern", null) // Wieder null für manuelle Validierung.
                 .setNegativeButton("Löschen", (dialog, id) -> {
-                    // Bei Klick auf "Löschen": Entfernt das Fach aus der Liste.
+                    // Bei Klick auf "Löschen": Entfernt das Subject aus der Liste.
                     alleFaecher.remove(position);
                     saveData(); // Speichert die aktualisierte Liste.
                     // Durch saveData() wird filterFaecher() aufgerufen, das notifyDataSetChanged() macht.
                     // Kein notifyItemRemoved() hier, da es vom vollständigen Refresh abgedeckt wird.
-                    Toast.makeText(requireContext(), "Fach gelöscht", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Subject gelöscht", Toast.LENGTH_SHORT).show();
                     dialog.dismiss(); // Schließt den Dialog.
                 })
                 .setNeutralButton("Abbrechen", (dialog, id) -> {
@@ -316,17 +316,17 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
                     return; // Dialog bleibt offen.
                 }
 
-                // Aktualisiert die Eigenschaften des Fach-Objekts mit den neuen Werten.
-                fach.setName(newName);
-                fach.setHalbjahr(spHalbjahr.getSelectedItemPosition() + 1);
-                fach.setAbiturfach(cbAbitur.isChecked());
+                // Aktualisiert die Eigenschaften des Subject-Objekts mit den neuen Werten.
+                subject.setName(newName);
+                subject.setHalbjahr(spHalbjahr.getSelectedItemPosition() + 1);
+                subject.setAbiturfach(cbAbitur.isChecked());
 
                 saveData(); // Speichert die Änderungen an allen Fächern.
                 // notifyItemChanged ist weiterhin sinnvoll, um sicherzustellen,
                 // dass der spezielle Eintrag im RecyclerView sofort aktualisiert wird,
                 // auch wenn filterFaecher() später notifyDataSetChanged() aufruft.
                 subjectAdapter.notifyItemChanged(position);
-                Toast.makeText(requireContext(), "Fach gespeichert", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Subject gespeichert", Toast.LENGTH_SHORT).show();
                 currentDialog.dismiss(); // Schließt den Dialog nur, wenn die Eingabe gültig war.
             });
         });
@@ -340,10 +340,10 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
      * Innerhalb dieses Dialogs können Noten hinzugefügt werden und eine Liste der vorhandenen Noten
      * des Fachs wird angezeigt, die über Long-Click gelöscht werden können.
      *
-     * @param fach Das Fach-Objekt, dessen Noten verwaltet werden sollen.
+     * @param subject Das Subject-Objekt, dessen Noten verwaltet werden sollen.
      */
-    private void showNotesDialog(Fach fach) {
-        currentFachForNotes = fach; // Speichert das aktuelle Fach, um im Long-Click-Listener darauf zugreifen zu können.
+    private void showNotesDialog(Subject subject) {
+        currentSubjectForNotes = subject; // Speichert das aktuelle Subject, um im Long-Click-Listener darauf zugreifen zu können.
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_grade_add, null);
@@ -358,25 +358,25 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
         RadioButton rbMuendlich = dialogView.findViewById(R.id.rb_muendlich);
 
         // Setzt den Titel des Dialogs dynamisch, basierend auf dem Fachnamen.
-        tvTitle.setText(String.format(Locale.GERMAN, "Noten für %s verwalten", fach.getName()));
+        tvTitle.setText(String.format(Locale.GERMAN, "Noten für %s verwalten", subject.getName()));
 
         // Initialisiert den RecyclerView zur Anzeige der Noten des Fachs.
         RecyclerView rvCurrentNotes = dialogView.findViewById(R.id.rv_current_notes);
         rvCurrentNotes.setLayoutManager(new LinearLayoutManager(getContext()));
         // Initialisiert den GradeAdapter mit der Notenliste des aktuellen Fachs und dem Fragment als Listener.
-        gradeAdapter = new GradeAdapter(fach.getNoten(), this);
+        gradeAdapter = new GradeAdapter(subject.getNoten(), this);
         rvCurrentNotes.setAdapter(gradeAdapter);
 
         builder.setView(dialogView)
                 .setTitle("Noten hinzufügen/bearbeiten")
-                .setPositiveButton("Note hinzufügen", null) // Null für manuelle Validierung.
+                .setPositiveButton("Grade hinzufügen", null) // Null für manuelle Validierung.
                 .setNegativeButton("Fertig", (dialog, id) -> {
                     // Der Dialog wird beim Klick auf "Fertig" einfach geschlossen.
                     dialog.dismiss();
                 });
         currentDialog = builder.create(); // Erstellt den AlertDialog.
 
-        // Überschreibt den OnClickListener des Positive Buttons ("Note hinzufügen") für Validierung.
+        // Überschreibt den OnClickListener des Positive Buttons ("Grade hinzufügen") für Validierung.
         currentDialog.setOnShowListener(dialogInterface -> {
             Button positiveButton = currentDialog.getButton(AlertDialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {
@@ -422,20 +422,20 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
                         typ = "unbekannt"; // Fallback, sollte bei korrekter UI-Logik nicht erreicht werden.
                     }
 
-                    // Erstellt ein neues Note-Objekt mit der Gewichtung.
-                    Note neueNote = new Note(wert, typ, gewichtung);
-                    fach.addNote(neueNote); // Fügt die neue Note zur Liste des Fachs hinzu.
+                    // Erstellt ein neues Grade-Objekt mit der Gewichtung.
+                    Grade neueGrade = new Grade(wert, typ, gewichtung);
+                    subject.addNote(neueGrade); // Fügt die neue Grade zur Liste des Fachs hinzu.
                     saveData(); // Speichert die aktualisierten Daten.
 
-                    // Benachrichtigt den GradeAdapter über die hinzugefügte Note.
-                    gradeAdapter.notifyItemInserted(fach.getNoten().size() - 1);
-                    rvCurrentNotes.scrollToPosition(fach.getNoten().size() - 1);
+                    // Benachrichtigt den GradeAdapter über die hinzugefügte Grade.
+                    gradeAdapter.notifyItemInserted(subject.getNoten().size() - 1);
+                    rvCurrentNotes.scrollToPosition(subject.getNoten().size() - 1);
                     // Benachrichtigt den SubjectAdapter, dass sich die Daten dieses Fachs geändert haben (Durchschnitt).
-                    subjectAdapter.notifyItemChanged(alleFaecher.indexOf(fach));
+                    subjectAdapter.notifyItemChanged(alleFaecher.indexOf(subject));
 
                     etNoteWert.setText("");
                     etNoteGewichtung.setText("1.0"); // Gewichtungsfeld zurücksetzen auf Standard
-                    Toast.makeText(requireContext(), "Note hinzugefügt", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Grade hinzugefügt", Toast.LENGTH_SHORT).show();
                 } catch (NumberFormatException e) {
                     // Zeigt eine Fehlermeldung an, wenn die Eingabe keine gültige Zahl ist. [cite: 354]
                     Toast.makeText(requireContext(), "Gültige Zahl für Punktwert oder Gewichtung eingeben (z.B. 10 oder 7.5)", Toast.LENGTH_LONG).show();
@@ -449,45 +449,45 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
 
     /**
      * Implementierung der onNoteClick-Methode aus dem GradeAdapter.OnNoteClickListener Interface.
-     * Wird aufgerufen, wenn auf eine Note in der Liste geklickt wird.
+     * Wird aufgerufen, wenn auf eine Grade in der Liste geklickt wird.
      * Aktuell zeigt diese Methode nur einen Toast an.
      *
-     * @param note Die geklickte Note.
+     * @param grade Die geklickte Grade.
      */
     @Override
-    public void onNoteClick(Note note) {
-        // Hier könnte später Logik zum Bearbeiten der Note implementiert werden,
-        // z.B. das Öffnen eines Bearbeitungsdialogs für die Note.
-        Toast.makeText(requireContext(), "Note geklickt: " + note.toString(), Toast.LENGTH_SHORT).show();
+    public void onNoteClick(Grade grade) {
+        // Hier könnte später Logik zum Bearbeiten der Grade implementiert werden,
+        // z.B. das Öffnen eines Bearbeitungsdialogs für die Grade.
+        Toast.makeText(requireContext(), "Grade geklickt: " + grade.toString(), Toast.LENGTH_SHORT).show();
     }
 
     /**
      * Implementierung der onNoteLongClick-Methode aus dem GradeAdapter.OnNoteClickListener Interface.
-     * Wird aufgerufen, wenn eine Note in der Liste lange gedrückt wird.
-     * Zeigt einen Bestätigungsdialog zum Löschen der Note an.
+     * Wird aufgerufen, wenn eine Grade in der Liste lange gedrückt wird.
+     * Zeigt einen Bestätigungsdialog zum Löschen der Grade an.
      *
-     * @param note     Die Note, die lange gedrückt wurde.
-     * @param position Die Position der Note in der Liste.
+     * @param grade     Die Grade, die lange gedrückt wurde.
+     * @param position Die Position der Grade in der Liste.
      */
     @Override
-    public void onNoteLongClick(Note note, int position) {
-        // Erstellt einen Bestätigungsdialog zum Löschen der Note.
+    public void onNoteLongClick(Grade grade, int position) {
+        // Erstellt einen Bestätigungsdialog zum Löschen der Grade.
         new AlertDialog.Builder(requireContext())
-                .setTitle("Note löschen?")
-                .setMessage("Möchtest du diese Note wirklich löschen?")
+                .setTitle("Grade löschen?")
+                .setMessage("Möchtest du diese Grade wirklich löschen?")
                 .setPositiveButton("Ja", (dialog, which) -> {
-                    // Stellt sicher, dass ein Fach zur Bearbeitung der Noten ausgewählt ist.
-                    if (currentFachForNotes != null) {
-                        // Entfernt die Note aus der Liste des aktuellen Fachs.
-                        currentFachForNotes.removeNote(note);
+                    // Stellt sicher, dass ein Subject zur Bearbeitung der Noten ausgewählt ist.
+                    if (currentSubjectForNotes != null) {
+                        // Entfernt die Grade aus der Liste des aktuellen Fachs.
+                        currentSubjectForNotes.removeNote(grade);
                         saveData(); // Speichert die aktualisierten Daten.
 
-                        // Benachrichtigt den GradeAdapter über die entfernte Note und die Verschiebung der nachfolgenden Elemente.
+                        // Benachrichtigt den GradeAdapter über die entfernte Grade und die Verschiebung der nachfolgenden Elemente.
                         gradeAdapter.notifyItemRemoved(position);
-                        gradeAdapter.notifyItemRangeChanged(position, currentFachForNotes.getNoten().size());
+                        gradeAdapter.notifyItemRangeChanged(position, currentSubjectForNotes.getNoten().size());
                         // Benachrichtigt den SubjectAdapter, dass sich die Daten dieses Fachs geändert haben (Durchschnitt).
-                        subjectAdapter.notifyItemChanged(alleFaecher.indexOf(currentFachForNotes));
-                        Toast.makeText(requireContext(), "Note gelöscht", Toast.LENGTH_SHORT).show();
+                        subjectAdapter.notifyItemChanged(alleFaecher.indexOf(currentSubjectForNotes));
+                        Toast.makeText(requireContext(), "Grade gelöscht", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Nein", null) // Schließt den Dialog ohne Aktion.
@@ -505,16 +505,16 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
         // --- Fächer laden ---
         String jsonFaecher = prefs.getString(KEY_FAECHER, null); // Holt den JSON-String der Fächer.
         if (jsonFaecher != null) {
-            // Definiert den Typ für die Deserialisierung (eine ArrayList von Fach-Objekten).
-            Type type = new TypeToken<ArrayList<Fach>>() {
+            // Definiert den Typ für die Deserialisierung (eine ArrayList von Subject-Objekten).
+            Type type = new TypeToken<ArrayList<Subject>>() {
             }.getType();
-            // Deserialisiert den JSON-String in eine Liste von Fach-Objekten.
+            // Deserialisiert den JSON-String in eine Liste von Subject-Objekten.
             alleFaecher = new Gson().fromJson(jsonFaecher, type);
             // Iteriert durch alle geladenen Fächer, um sicherzustellen, dass ihre Notenlisten nicht null sind.
             // Dies ist wichtig, wenn Gson ein leeres Array als null interpretiert oder wenn Fächer ohne Noten gespeichert wurden.
-            for (Fach fach : alleFaecher) {
-                if (fach.getNoten() == null) {
-                    fach.setNoten(new ArrayList<>()); // Initialisiert eine leere Liste, falls null.
+            for (Subject subject : alleFaecher) {
+                if (subject.getNoten() == null) {
+                    subject.setNoten(new ArrayList<>()); // Initialisiert eine leere Liste, falls null.
                 }
             }
             // Filtert die geladenen Fächer basierend auf dem aktuell ausgewählten Halbjahr.
@@ -570,10 +570,10 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
     private void filterFaecher() {
         gefilterteFaecher.clear(); // Löscht alle Elemente aus der aktuell gefilterten Liste.
         // Iteriert durch alle Fächer.
-        for (Fach fach : alleFaecher) {
-            // Fügt ein Fach zur gefilterten Liste hinzu, wenn sein Halbjahr dem aktuell ausgewählten entspricht.
-            if (fach.getHalbjahr() == aktuellesHalbjahr) {
-                gefilterteFaecher.add(fach);
+        for (Subject subject : alleFaecher) {
+            // Fügt ein Subject zur gefilterten Liste hinzu, wenn sein Halbjahr dem aktuell ausgewählten entspricht.
+            if (subject.getHalbjahr() == aktuellesHalbjahr) {
+                gefilterteFaecher.add(subject);
             }
         }
         // Benachrichtigt den SubjectAdapter, dass sich die Daten geändert haben.
@@ -731,7 +731,7 @@ public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNot
         String message =
                 getString(R.string.halbjahr_schnitt_anzahl_faecher, ergebnis.anzahlFaecher) + "\n" +
                         getString(R.string.halbjahr_schnitt_durchschnitt_punkte, String.format(Locale.GERMAN, "%.2f", ergebnis.durchschnitt)) + "\n" +
-                        getString(R.string.halbjahr_schnitt_entspricht_note, String.format(Locale.GERMAN, "%.2f", BerechnungUtil.punkteZuNoteEinzelwert(ergebnis.durchschnitt))); // Umrechnung Punkte in Note.
+                        getString(R.string.halbjahr_schnitt_entspricht_note, String.format(Locale.GERMAN, "%.2f", BerechnungUtil.punkteZuNoteEinzelwert(ergebnis.durchschnitt))); // Umrechnung Punkte in Grade.
 
         // Zeigt die Ergebnisse in einem AlertDialog an.
         new AlertDialog.Builder(requireContext())

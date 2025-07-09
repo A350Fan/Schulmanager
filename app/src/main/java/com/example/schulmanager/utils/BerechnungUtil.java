@@ -2,7 +2,7 @@
 
 package com.example.schulmanager.utils;
 
-import com.example.schulmanager.models.Fach;
+import com.example.schulmanager.models.Subject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +20,7 @@ public class BerechnungUtil {
      * Eine private Konstante, die die Punktetabelle für die Umrechnung von Gesamtpunkten
      * in eine Abiturnote (Abiturschnitt) speichert.
      * Jeder innere Array repräsentiert eine Zeile: {obere_punktgrenze, untere_punktgrenze, notenwert_multipliziert_mit_10}.
-     * Beispiel: {900, 823, 10} bedeutet, dass 823-900 Punkte einer Note von 1,0 entsprechen.
+     * Beispiel: {900, 823, 10} bedeutet, dass 823-900 Punkte einer Grade von 1,0 entsprechen.
      */
     private static final int[][] PUNKTE_TABELLE = {
             {900, 823, 10}, // 1,0
@@ -97,13 +97,13 @@ public class BerechnungUtil {
      * @param pruefungsNoten Ein Array der 5 Abiturprüfungsnoten (Punkte von 0-15).
      * @return Ein {@link AbiErgebnis}-Objekt mit allen berechneten Punkten, dem Schnitt und dem Bestehensstatus.
      */
-    public static AbiErgebnis berechneAbi(List<Fach> faecher, int[] pruefungsNoten) {
+    public static AbiErgebnis berechneAbi(List<Subject> faecher, int[] pruefungsNoten) {
         AbiErgebnis ergebnis = new AbiErgebnis();
 
         // 1. Halbjahresleistungen sammeln und absteigend sortieren, um die besten Leistungen zu identifizieren.
         List<Integer> halbjahresLeistungen = new ArrayList<>();
-        for (Fach fach : faecher) {
-            halbjahresLeistungen.add(fach.getDurchschnittsPunkte());
+        for (Subject subject : faecher) {
+            halbjahresLeistungen.add(subject.getDurchschnittsPunkte());
         }
         halbjahresLeistungen.sort(Collections.reverseOrder()); // Sortiert von höchsten zu niedrigsten Punkten
 
@@ -201,14 +201,14 @@ public class BerechnungUtil {
 
     /**
      * Wandelt die Gesamtpunktzahl des Abiturs in eine Noten-String (z.B. "2,5") um.
-     * Diese Methode verwendet die {@link #PUNKTE_TABELLE}, um die entsprechende Note zu finden.
+     * Diese Methode verwendet die {@link #PUNKTE_TABELLE}, um die entsprechende Grade zu finden.
      * Wenn die Gesamtpunktzahl unter 300 liegt (nicht bestanden), wird "4,0" zurückgegeben.
      *
      * @param gesamtPunkte Die erreichte Gesamtpunktzahl im Abitur.
      * @return Der Abischnitt als String (z.B. "1,0" bis "4,0").
      */
     private static String punkteZuNoteGesamt(int gesamtPunkte) {
-        // Wenn die Gesamtpunktzahl unter dem Minimum zum Bestehen liegt, ist die Note 6,0.
+        // Wenn die Gesamtpunktzahl unter dem Minimum zum Bestehen liegt, ist die Grade 6,0.
         if (gesamtPunkte < 300) {
             return "6,0";
         }
@@ -240,14 +240,14 @@ public class BerechnungUtil {
     /**
      * Wandelt eine einzelne Punktzahl (0-15 Punkte) in einen Notenwert (1.0-6.0) um.
      * Diese Umrechnung wird oft für einzelne Leistungsnachweise oder Prüfungen verwendet.
-     * Die Formel ist in der Regel Note = 6 - (Punkte / 3).
+     * Die Formel ist in der Regel Grade = 6 - (Punkte / 3).
      *
      * @param punkte Die Punktzahl (0-15), die umgerechnet werden soll.
-     * @return Die umgerechnete Note als double. Die Werte sind auf 1.0 (beste) und 6.0 (schlechteste) begrenzt.
+     * @return Die umgerechnete Grade als double. Die Werte sind auf 1.0 (beste) und 6.0 (schlechteste) begrenzt.
      */
     public static double punkteZuNoteEinzelwert(double punkte) {
         double note = 6.0 - (punkte / 3.0);
-        // Stellt sicher, dass die Note im gültigen Bereich von 1.0 bis 6.0 liegt.
+        // Stellt sicher, dass die Grade im gültigen Bereich von 1.0 bis 6.0 liegt.
         return Math.max(1.0, Math.min(6.0, note));
     }
 
@@ -277,16 +277,16 @@ public class BerechnungUtil {
      * @param halbjahr    Die Nummer des Halbjahres (z.B. 1, 2, 3, 4), für das der Durchschnitt berechnet werden soll.
      * @return Ein {@link HalbjahrErgebnis}-Objekt mit dem Durchschnitt, dem Halbjahr und der Anzahl der Fächer.
      */
-    public static HalbjahrErgebnis berechneHalbjahrSchnitt(List<Fach> alleFaecher, int halbjahr) {
+    public static HalbjahrErgebnis berechneHalbjahrSchnitt(List<Subject> alleFaecher, int halbjahr) {
         HalbjahrErgebnis ergebnis = new HalbjahrErgebnis();
         ergebnis.halbjahr = halbjahr;
         ergebnis.anzahlFaecher = 0;
         double summe = 0;
 
         // Durchläuft alle Fächer und summiert die Punkte der Fächer, die zum gesuchten Halbjahr gehören.
-        for (Fach fach : alleFaecher) {
-            if (fach.getHalbjahr() == halbjahr) {
-                summe += fach.getDurchschnittsPunkte();
+        for (Subject subject : alleFaecher) {
+            if (subject.getHalbjahr() == halbjahr) {
+                summe += subject.getDurchschnittsPunkte();
                 ergebnis.anzahlFaecher++;
             }
         }

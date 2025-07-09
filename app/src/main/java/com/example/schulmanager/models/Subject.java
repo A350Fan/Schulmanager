@@ -12,23 +12,23 @@ import java.util.Locale;
  * Abiturfachstatus und einer Liste der zugehörigen Noten.
  * Implementiert Serializable, um Objekte persistent speichern zu können.
  */
-public class Fach implements Serializable {
+public class Subject implements Serializable {
 
     // --- Instanzvariablen ---
-    private final long id;          // Eindeutige ID für das Fach, generiert beim Erstellen
+    private final long id;          // Eindeutige ID für das Subject, generiert beim Erstellen
     private String name;            // Name des Faches (z.B. "Mathematik", "Deutsch")
-    private int halbjahr;           // Das Halbjahr, in dem das Fach belegt wird (z.B. 1, 2, 3, 4)
-    private boolean isAbiturfach;   // Flag, ob das Fach ein Abiturfach ist
-    private List<Note> noten;       // Liste der Noten, die zu diesem Fach gehören
+    private int halbjahr;           // Das Halbjahr, in dem das Subject belegt wird (z.B. 1, 2, 3, 4)
+    private boolean isAbiturfach;   // Flag, ob das Subject ein Abiturfach ist
+    private List<Grade> noten;       // Liste der Noten, die zu diesem Subject gehören
 
     /**
-     * Konstruktor zum Erstellen eines neuen Fach-Objekts.
+     * Konstruktor zum Erstellen eines neuen Subject-Objekts.
      *
      * @param name         Der Name des Faches.
-     * @param halbjahr     Das Halbjahr, in dem das Fach belegt wird.
+     * @param halbjahr     Das Halbjahr, in dem das Subject belegt wird.
      * @param isAbiturfach Gibt an, ob es sich um ein Abiturfach handelt.
      */
-    public Fach(String name, int halbjahr, boolean isAbiturfach) {
+    public Subject(String name, int halbjahr, boolean isAbiturfach) {
         // Generiert eine eindeutige ID basierend auf dem aktuellen Zeitstempel
         this.id = System.currentTimeMillis();
         this.name = name;
@@ -41,36 +41,36 @@ public class Fach implements Serializable {
     // --- Methoden zum Hinzufügen, Entfernen und Abrufen von Noten ---
 
     /**
-     * Fügt eine Note zur Liste der Noten dieses Faches hinzu.
+     * Fügt eine Grade zur Liste der Noten dieses Faches hinzu.
      *
-     * @param note Die hinzuzufügende Note.
+     * @param grade Die hinzuzufügende Grade.
      */
-    public void addNote(Note note) {
+    public void addNote(Grade grade) {
         // Stellt sicher, dass die Notenliste initialisiert ist, falls sie aus irgendeinem Grund null sein sollte
         if (this.noten == null) {
             this.noten = new ArrayList<>();
         }
-        this.noten.add(note);
+        this.noten.add(grade);
     }
 
     /**
-     * Entfernt eine spezifische Note aus der Liste der Noten dieses Faches.
+     * Entfernt eine spezifische Grade aus der Liste der Noten dieses Faches.
      *
-     * @param note Die zu entfernende Note.
+     * @param grade Die zu entfernende Grade.
      */
-    public void removeNote(Note note) {
-        // Prüft, ob die Notenliste existiert, bevor versucht wird, eine Note zu entfernen
+    public void removeNote(Grade grade) {
+        // Prüft, ob die Notenliste existiert, bevor versucht wird, eine Grade zu entfernen
         if (this.noten != null) {
-            this.noten.remove(note);
+            this.noten.remove(grade);
         }
     }
 
     /**
-     * Gibt die Liste aller Noten zurück, die zu diesem Fach gehören.
+     * Gibt die Liste aller Noten zurück, die zu diesem Subject gehören.
      *
-     * @return Eine Liste von Note-Objekten. Gibt eine leere Liste zurück, wenn keine Noten vorhanden sind oder die Liste nicht initialisiert war.
+     * @return Eine Liste von Grade-Objekten. Gibt eine leere Liste zurück, wenn keine Noten vorhanden sind oder die Liste nicht initialisiert war.
      */
-    public List<Note> getNoten() {
+    public List<Grade> getNoten() {
         // Stellt sicher, dass die Liste niemals null zurückgibt, sondern eine leere Liste
         if (this.noten == null) {
             this.noten = new ArrayList<>();
@@ -79,18 +79,18 @@ public class Fach implements Serializable {
     }
 
     /**
-     * Setzt die Liste der Noten für dieses Fach.
+     * Setzt die Liste der Noten für dieses Subject.
      * Nützlich, wenn Noten von außen geladen oder aktualisiert werden.
      *
      * @param noten Die neue Liste der Noten.
      */
-    public void setNoten(List<Note> noten) {
+    public void setNoten(List<Grade> noten) {
         this.noten = noten;
     }
 
     /**
      * Berechnet den gewichteten Durchschnitt aller Noten des Faches.
-     * Jede Note wird mit ihrer individuellen Gewichtung (note.getGewichtung())
+     * Jede Grade wird mit ihrer individuellen Gewichtung (note.getGewichtung())
      * in die Berechnung einbezogen. Noten mit einer Gewichtung von 0 werden ignoriert.
      *
      * @return Der ungerundete gewichtete Durchschnitt in Punkten (0.0-15.0).
@@ -101,14 +101,14 @@ public class Fach implements Serializable {
             return 0.0;
         }
 
-        double summeGewichteterPunkte = 0.0; // Summe (Note * Gewichtung)
+        double summeGewichteterPunkte = 0.0; // Summe (Grade * Gewichtung)
         double summeGewichtungen = 0.0;      // Summe aller Gewichtungen
 
         // Iteriere durch alle Noten des Faches
-        for (Note note : noten) {
+        for (Grade grade : noten) {
             // Sicherstellen, dass der Punktwert zwischen 0 und 15 liegt
-            double punktWert = Math.max(0.0, Math.min(15.0, note.getWert()));
-            double gewichtung = note.getGewichtung();
+            double punktWert = Math.max(0.0, Math.min(15.0, grade.getWert()));
+            double gewichtung = grade.getGewichtung();
 
             // Nur Noten mit einer positiven Gewichtung berücksichtigen
             if (gewichtung > 0) {

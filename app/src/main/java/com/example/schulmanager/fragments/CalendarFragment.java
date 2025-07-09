@@ -31,7 +31,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class KalenderFragment extends Fragment {
+public class CalendarFragment extends Fragment {
 
     private CalendarView calendarView;
     private TextView tvHolidayInfo;
@@ -40,7 +40,7 @@ public class KalenderFragment extends Fragment {
     private Gson gson;               // Gson für JSON-Parsen
     private List<OpenHoliday> fetchedHolidays = new ArrayList<>(); // Liste zum Speichern der abgerufenen Ferien
 
-    public KalenderFragment() {
+    public CalendarFragment() {
         // Required empty public constructor
     }
 

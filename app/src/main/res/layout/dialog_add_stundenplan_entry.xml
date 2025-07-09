@@ -3,21 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="16dp">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_new_timetable_entry"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:text="Neuen Stundenplan-Eintrag hinzufügen"
+        android:textAppearance="?attr/textAppearanceHeadline6"
         android:layout_marginBottom="16dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:hint="@string/fach">
+        android:hint="Fach"
+        android:layout_marginBottom="8dp">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_fach"
             android:layout_width="match_parent"
@@ -25,53 +24,40 @@
             android:inputType="textCapWords"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Uhrzeit wählen:"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:layout_marginTop="8dp"/>
+    <Spinner
+        android:id="@+id/spinner_uhrzeit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:hint="@string/uhrzeit">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_uhrzeit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"/>
-    </com.google.android.material.textfield.TextInputLayout>
+        android:minHeight="48dp"
+        android:background="?attr/editTextBackground"/> <com.google.android.material.textfield.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Raum"
+    android:layout_marginBottom="8dp">
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/et_raum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapWords"/>
+</com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:hint="@string/raum">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_raum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:hint="@string/lehrer">
+        android:hint="Lehrer (optional)"
+        android:layout_marginBottom="16dp">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_lehrer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapWords"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:hint="@string/stundenindex">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_stunden_index"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:maxLength="2"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
@@ -82,17 +68,16 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_cancel"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel"/>
+            android:text="Abbrechen"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_add"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/add"/>
+            android:text="Hinzufügen"/>
     </LinearLayout>
-
 </LinearLayout>

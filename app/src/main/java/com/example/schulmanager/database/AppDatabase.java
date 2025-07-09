@@ -13,7 +13,7 @@ import com.example.schulmanager.models.StundenzeitDefinition; // NEU: Importiere
  * Die Room-Datenbank für die Schulmanager-App.
  * Definiert die Datenbankversion und die Entitäten.
  */
-@Database(entities = {StundenplanEintrag.class, StundenzeitDefinition.class}, version = 2, exportSchema = false) // NEU: StundenzeitDefinition.class hinzufügen
+@Database(entities = {StundenplanEintrag.class, StundenzeitDefinition.class}, version = 3, exportSchema = false) // NEU: StundenzeitDefinition.class hinzufügen
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract StundenplanDAO stundenplanDao();

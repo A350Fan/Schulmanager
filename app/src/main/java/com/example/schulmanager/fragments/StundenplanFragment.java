@@ -20,11 +20,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.schulmanager.R;
 import com.example.schulmanager.adapters.StundenplanAdapter;
 import com.example.schulmanager.models.StundenplanEintrag;
+import com.example.schulmanager.models.StundenzeitDefinition; // NEU
 import com.example.schulmanager.database.AppDatabase;
 import com.example.schulmanager.database.StundenplanDAO;
+import com.example.schulmanager.database.StundenzeitDefinitionDAO; // NEU
 import com.example.schulmanager.dialogs.AddStundenplanEntryDialog;
 import com.example.schulmanager.dialogs.OnStundenplanEntryAddedListener;
-import com.example.schulmanager.dialogs.DefineStundenzeitenDialog; // NEU: Import für den Stundenzeiten-Dialog
+import com.example.schulmanager.dialogs.DefineStundenzeitenDialog;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,18 +40,17 @@ import java.util.concurrent.Executors;
 public class StundenplanFragment extends Fragment implements
         OnStundenplanEntryAddedListener,
         StundenplanAdapter.OnItemActionListener,
-        DefineStundenzeitenDialog.OnStundenzeitenDefinedListener { // NEU: Implementiere das Interface
+        DefineStundenzeitenDialog.OnStundenzeitenDefinedListener {
 
     private MaterialButtonToggleGroup toggleButtonGroupDays;
     private RecyclerView recyclerViewStundenplanTag;
     private StundenplanAdapter stundenplanAdapter;
     private StundenplanDAO stundenplanDao;
+    private StundenzeitDefinitionDAO stundenzeitDefinitionDao; // NEU: DAO für StundenzeitDefinitionen
     private FloatingActionButton fabAddEntry;
-    private FloatingActionButton fabDefineStundenzeiten; // NEU: Für den neuen Button
-    private final String[] stundenzeiten = {
-            "08:00 - 08:45", "08:50 - 09:35", "09:50 - 10:35", "10:40 - 11:25", "11:30 - 12:15",
-            "12:20 - 13:05", "13:10 - 13:55", "14:00 - 14:45", "14:50 - 15:35", "15:40 - 16:25", "16:30 - 17:15"
-    };
+    private FloatingActionButton fabDefineStundenzeiten;
+    // Die feste stundenzeiten-Array ist jetzt obsolet, da sie aus der DB kommt.
+    // private final String[] stundenzeiten = { ... };
 
     private String selectedDay = "Mo";
 
@@ -70,11 +71,12 @@ public class StundenplanFragment extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
 
         stundenplanDao = AppDatabase.getDatabase(getContext()).stundenplanDao();
+        stundenzeitDefinitionDao = AppDatabase.getDatabase(getContext()).stundenzeitDefinitionDao(); // NEU: Initialisiere StundenzeitDefinitionDAO
 
         toggleButtonGroupDays = view.findViewById(R.id.toggleButtonGroupDays);
         recyclerViewStundenplanTag = view.findViewById(R.id.recyclerViewStundenplanTag);
         fabAddEntry = view.findViewById(R.id.fab_add_stundenplan_entry);
-        fabDefineStundenzeiten = view.findViewById(R.id.fabDefineStundenzeiten); // NEU: Initialisiere den neuen Button
+        fabDefineStundenzeiten = view.findViewById(R.id.fabDefineStundenzeiten);
 
         recyclerViewStundenplanTag.setLayoutManager(new LinearLayoutManager(getContext()));
         stundenplanAdapter = new StundenplanAdapter(new ArrayList<>(), this);
@@ -110,15 +112,32 @@ public class StundenplanFragment extends Fragment implements
         }
 
         fabAddEntry.setOnClickListener(v -> {
-            AddStundenplanEntryDialog dialog = new AddStundenplanEntryDialog();
-            dialog.setOnStundenplanEntryAddedListener(this);
-            dialog.show(getParentFragmentManager(), "AddStundenplanEntryDialog");
+            // NEU: Stundenzeit-Definitionen laden und an den Dialog übergeben
+            databaseWriteExecutor.execute(() -> {
+                List<StundenzeitDefinition> definedStundenzeiten = stundenzeitDefinitionDao.getAllStundenzeitDefinitions();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        if (definedStundenzeiten == null || definedStundenzeiten.isEmpty()) {
+                            Toast.makeText(getContext(), "Bitte zuerst Stundenzeiten festlegen!", Toast.LENGTH_LONG).show();
+                            // Optional: Direkt den DefineStundenzeitenDialog öffnen
+                            // DefineStundenzeitenDialog defineDialog = new DefineStundenzeitenDialog();
+                            // defineDialog.setOnStundenzeitenDefinedListener(this);
+                            // defineDialog.show(getParentFragmentManager(), "define_stundenzeiten_dialog");
+                        } else {
+                            // Erstelle den Dialog über die neue newInstance Factory-Methode
+                            AddStundenplanEntryDialog dialog = AddStundenplanEntryDialog.newInstance(definedStundenzeiten);
+                            dialog.setOnStundenplanEntryAddedListener(this);
+                            dialog.show(getParentFragmentManager(), "AddStundenplanEntryDialog");
+                        }
+                    });
+                }
+            });
         });
 
-        // NEU: Klick-Listener für den "Stundenzeiten festlegen"-Button
+        // Klick-Listener für den "Stundenzeiten festlegen"-Button
         fabDefineStundenzeiten.setOnClickListener(v -> {
             DefineStundenzeitenDialog dialog = new DefineStundenzeitenDialog();
-            dialog.setOnStundenzeitenDefinedListener(this); // Wichtig: Setze den Listener
+            dialog.setOnStundenzeitenDefinedListener(this);
             dialog.show(getParentFragmentManager(), "define_stundenzeiten_dialog");
         });
 
@@ -160,9 +179,15 @@ public class StundenplanFragment extends Fragment implements
 
     // Implementierung der Schnittstellenmethode für das Hinzufügen (vom Dialog)
     @Override
-    public void onStundenplanEntryAdded(String fach, String uhrzeit, String raum, String lehrer, int stundenIndex) {
-        StundenplanEintrag newEntry = new StundenplanEintrag(selectedDay, uhrzeit, fach, raum, lehrer, stundenIndex);
-        addStundenplanEntryToDb(newEntry);
+    public void onStundenplanEntryAdded(String fach, String raum, String lehrer, int stundenIndex) { // Angepasste Signatur
+        // NEU: Uhrzeit anhand des StundenIndex aus den Definitionen laden
+        databaseWriteExecutor.execute(() -> {
+            StundenzeitDefinition definition = stundenzeitDefinitionDao.getStundenzeitDefinitionByIndex(stundenIndex);
+            String uhrzeit = (definition != null) ? definition.getUhrzeitString() : "Uhrzeit unbekannt"; // Fallback-Wert
+
+            StundenplanEintrag newEntry = new StundenplanEintrag(selectedDay, uhrzeit, fach, raum, lehrer, stundenIndex);
+            addStundenplanEntryToDb(newEntry);
+        });
     }
 
     // Implementierung der Schnittstellenmethode für das Löschen (vom Adapter via ItemTouchHelper)
@@ -175,50 +200,19 @@ public class StundenplanFragment extends Fragment implements
         // Du könntest hier jedoch einen Bestätigungsdialog anzeigen, bevor du deleteStundenplanEntryFromDb aufrufst.
     }
 
-    // NEU: Implementierung der Schnittstellenmethode für das Speichern von Stundenzeiten
+    // Implementierung der Schnittstellenmethode für das Speichern von Stundenzeiten
     @Override
     public void onStundenzeitenSaved() {
         Toast.makeText(getContext(), "Stundenzeiten erfolgreich festgelegt!", Toast.LENGTH_SHORT).show();
-        // Hier könntest du weitere Aktionen ausführen, z.B. wenn die Anzeige des Stundenplans
-        // direkt von den Stundenzeit-Definitionen abhängt, müsstest du ihn aktualisieren.
-        // Aktuell ist die "Uhrzeit" im StundenplanEintrag selbst gespeichert, daher
-        // ist keine direkte Aktualisierung hier notwendig, außer du änderst das Verhalten.
-    }
-
-
-    // OPTIONAL: Methode zum einmaligen Befüllen der DB mit Dummy-Daten beim ersten Start
-    private void runOnceAfterDBSetup() {
-        databaseWriteExecutor.execute(() -> {
-            if (stundenplanDao.getAllStundenplanEintraege().isEmpty()) {
-                List<StundenplanEintrag> initialData = new ArrayList<>();
-                initialData.add(new StundenplanEintrag("Mo", stundenzeiten[0], "Mathe", "A201", "Hr. Schmidt", 0));
-                initialData.add(new StundenplanEintrag("Mo", stundenzeiten[1], "Deutsch", "B102", "Fr. Meier", 1));
-                initialData.add(new StundenplanEintrag("Mo", stundenzeiten[3], "Sport", "Turnhalle", "", 3));
-
-                initialData.add(new StundenplanEintrag("Di", stundenzeiten[0], "Englisch", "C303", "Ms. Johnson", 0));
-                initialData.add(new StundenplanEintrag("Di", stundenzeiten[5], "Physik", "Lab 1", "Fr. Dr. Wagner", 5));
-
-                initialData.add(new StundenplanEintrag("Mi", stundenzeiten[2], "Chemie", "Lab 2", "Hr. Kuhn", 2));
-                initialData.add(new StundenplanEintrag("Mi", stundenzeiten[7], "Musik", "Musikraum", "Hr. Klang", 7));
-
-                initialData.add(new StundenplanEintrag("Do", stundenzeiten[4], "Geschichte", "G105", "Hr. Becker", 4));
-
-                initialData.add(new StundenplanEintrag("Fr", stundenzeiten[0], "Kunst", "Kreativraum", "Fr. Schulz", 0));
-                initialData.add(new StundenplanEintrag("Fr", stundenzeiten[6], "IT", "PC-Raum", "Hr. Lange", 6));
-
-                stundenplanDao.insertAll(initialData);
-
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> loadStundenplanForSelectedDay());
-                }
-            }
-        });
+        // Da die Uhrzeiten im StundenplanEintrag selbst gespeichert sind, ist keine Neuladung
+        // des Stundenplans direkt hier notwendig. Wenn ein StundenplanEintrag die Uhrzeit
+        // nur als Index speichern würde, müsste man hier loadStundenplanForSelectedDay() aufrufen.
+        // Die FabAddEntry wird die neuesten Definitionen laden, wenn sie das nächste Mal geöffnet wird.
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Korrektur: Nutze den korrekten Variablennamen databaseWriteExecutor
         if (databaseWriteExecutor != null && !databaseWriteExecutor.isShutdown()) {
             databaseWriteExecutor.shutdown();
         }

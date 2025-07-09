@@ -63,7 +63,7 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
         // Inflatiert das Layout für ein einzelnes Fach-Element (item_fach.xml).
         // LayoutInflater.from(parent.getContext()) holt den LayoutInflater aus dem Kontext der übergeordneten View.
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_fach, parent, false);
+                .inflate(R.layout.item_subject, parent, false);
         // Erstellt und gibt einen neuen FachViewHolder zurück, der die inflatierte View kapselt.
         return new FachViewHolder(itemView);
     }

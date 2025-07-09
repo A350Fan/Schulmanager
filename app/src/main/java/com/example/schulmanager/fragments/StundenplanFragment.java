@@ -121,9 +121,7 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
             Collections.sort(filteredList, Comparator.comparingInt(StundenplanEintrag::getStundenIndex));
 
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    stundenplanAdapter.updateData(filteredList);
-                });
+                getActivity().runOnUiThread(() -> stundenplanAdapter.updateData(filteredList));
             }
         });
     }
@@ -133,9 +131,7 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
             stundenplanDao.insert(eintrag);
             loadStundenplanForSelectedDay(); // Daten neu laden, um die UI zu aktualisieren
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Eintrag hinzugefügt!", Toast.LENGTH_SHORT).show();
-                });
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Eintrag hinzugefügt!", Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -145,9 +141,7 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
             stundenplanDao.delete(eintrag);
             loadStundenplanForSelectedDay(); // Daten neu laden
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Eintrag gelöscht!", Toast.LENGTH_SHORT).show();
-                });
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Eintrag gelöscht!", Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -157,9 +151,7 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
             stundenplanDao.update(eintrag);
             loadStundenplanForSelectedDay(); // Daten neu laden
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Eintrag aktualisiert!", Toast.LENGTH_SHORT).show();
-                });
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Eintrag aktualisiert!", Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -223,9 +215,7 @@ public class StundenplanFragment extends Fragment implements OnStundenplanEntryA
                 stundenplanDao.insertAll(initialData);
 
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        loadStundenplanForSelectedDay();
-                    });
+                    getActivity().runOnUiThread(() -> loadStundenplanForSelectedDay());
                 }
             }
         });

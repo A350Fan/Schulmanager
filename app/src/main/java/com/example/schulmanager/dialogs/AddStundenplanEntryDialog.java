@@ -9,11 +9,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentResultListener;
 
 import com.example.schulmanager.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.Objects;
 
 public class AddStundenplanEntryDialog extends DialogFragment {
 
@@ -55,11 +56,11 @@ public class AddStundenplanEntryDialog extends DialogFragment {
         btnCancel.setOnClickListener(v -> dismiss()); // Dialog schließen
 
         btnAdd.setOnClickListener(v -> {
-            String fach = etFach.getText().toString().trim();
-            String uhrzeit = etUhrzeit.getText().toString().trim();
-            String raum = etRaum.getText().toString().trim();
-            String lehrer = etLehrer.getText().toString().trim();
-            String stundenIndexStr = etStundenIndex.getText().toString().trim();
+            String fach = Objects.requireNonNull(etFach.getText()).toString().trim();
+            String uhrzeit = Objects.requireNonNull(etUhrzeit.getText()).toString().trim();
+            String raum = Objects.requireNonNull(etRaum.getText()).toString().trim();
+            String lehrer = Objects.requireNonNull(etLehrer.getText()).toString().trim();
+            String stundenIndexStr = Objects.requireNonNull(etStundenIndex.getText()).toString().trim();
 
             if (fach.isEmpty() || uhrzeit.isEmpty() || raum.isEmpty() || stundenIndexStr.isEmpty()) {
                 Toast.makeText(getContext(), "Bitte alle Pflichtfelder ausfüllen (Fach, Uhrzeit, Raum, Stundenindex)", Toast.LENGTH_SHORT).show();

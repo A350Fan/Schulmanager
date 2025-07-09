@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Neuen Stundenplaneintrag hinzufügen"
+        android:text="@string/add_new_timetable_entry"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp"/>
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:hint="Fach">
+        android:hint="@string/fach">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_fach"
             android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:hint="Uhrzeit (z.B. 08:00 - 08:45)">
+        android:hint="@string/uhrzeit">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_uhrzeit"
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:hint="Raum">
+        android:hint="@string/raum">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_raum"
             android:layout_width="match_parent"
@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:hint="Lehrer (optional)">
+        android:hint="@string/lehrer">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_lehrer"
             android:layout_width="match_parent"
@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:hint="Stundenindex (0-10)">
+        android:hint="@string/stundenindex">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_stunden_index"
             android:layout_width="match_parent"
@@ -85,14 +85,14 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Abbrechen"/>
+            android:text="@string/cancel"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Hinzufügen"/>
+            android:text="@string/add"/>
     </LinearLayout>
 
 </LinearLayout>

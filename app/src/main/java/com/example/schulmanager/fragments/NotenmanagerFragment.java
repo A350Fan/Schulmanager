@@ -80,7 +80,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflatiert das Layout für dieses Fragment (fragment_notenmanager.xml).
-        View view = inflater.inflate(R.layout.fragment_notenmanager, container, false);
+        View view = inflater.inflate(R.layout.fragment_grademanager, container, false);
 
         // --- Spinner für Halbjahresfilter initialisieren ---
         HalbjahrsfilterInitialisieren(view);
@@ -164,7 +164,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         // Erstellt einen AlertDialog.Builder für den Dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         // Inflatiert das Layout für den Dialog (dialog_fach.xml).
-        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_fach, null);
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_subject, null);
 
         // Referenzen auf die UI-Elemente im Dialog-Layout.
         EditText etName = dialogView.findViewById(R.id.dialog_name);
@@ -255,7 +255,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         // Erstellt einen AlertDialog.Builder für den Dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         // Inflatiert das Layout für den Dialog (dialog_fach.xml).
-        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_fach, null);
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_subject, null);
 
         // Referenzen auf die UI-Elemente im Dialog-Layout.
         EditText etName = dialogView.findViewById(R.id.dialog_name);
@@ -346,7 +346,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         currentFachForNotes = fach; // Speichert das aktuelle Fach, um im Long-Click-Listener darauf zugreifen zu können.
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_note_add, null);
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_grade_add, null);
 
         // Referenzen auf die UI-Elemente im Dialog-Layout.
         TextView tvTitle = dialogView.findViewById(R.id.dialog_note_title);
@@ -617,7 +617,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
      */
     private void showPruefungenDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_pruefungen, null);
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_exams, null);
 
         // Referenzen auf die EditText-Felder für die 5 Prüfungsnoten.
         final EditText[] pruefungFields = {

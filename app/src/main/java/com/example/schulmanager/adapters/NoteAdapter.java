@@ -73,7 +73,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflatiert das Layout für ein einzelnes Noten-Element (item_note.xml).
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_note, parent, false);
+                .inflate(R.layout.item_grade, parent, false);
         // Erstellt und gibt einen neuen NoteViewHolder zurück, der die inflatierte View kapselt.
         return new NoteViewHolder(itemView);
     }

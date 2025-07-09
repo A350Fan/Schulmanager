@@ -48,7 +48,7 @@ public class DefineStundenzeitenDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Setzt den Stil des Dialogs, um einen vollen Dialog zu erhalten
         // setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
-        return inflater.inflate(R.layout.dialog_define_stundenzeiten, container, false);
+        return inflater.inflate(R.layout.dialog_define_lessonhours, container, false);
     }
 
     @Override

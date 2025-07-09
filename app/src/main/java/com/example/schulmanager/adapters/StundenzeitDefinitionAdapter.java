@@ -27,7 +27,7 @@ public class StundenzeitDefinitionAdapter extends RecyclerView.Adapter<Stundenze
     @NonNull
     @Override
     public StundenzeitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_stundenzeit_definition, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lessonhours_definition, parent, false);
         return new StundenzeitViewHolder(view, new CustomTextWatcher()); // TextWatcher übergeben
     }
 

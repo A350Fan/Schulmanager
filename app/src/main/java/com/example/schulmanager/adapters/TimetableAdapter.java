@@ -13,7 +13,7 @@ import com.example.schulmanager.models.StundenplanEintrag;
 
 import java.util.List;
 
-public class StundenplanAdapter extends RecyclerView.Adapter<StundenplanAdapter.StundenplanViewHolder> {
+public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.StundenplanViewHolder> {
 
     private List<StundenplanEintrag> stundenplanList;
     private OnItemActionListener listener; // NEU: Listener-Variable
@@ -25,7 +25,7 @@ public class StundenplanAdapter extends RecyclerView.Adapter<StundenplanAdapter.
     }
 
     // Angepasster Konstruktor, der den Listener entgegennimmt
-    public StundenplanAdapter(List<StundenplanEintrag> stundenplanList, OnItemActionListener listener) {
+    public TimetableAdapter(List<StundenplanEintrag> stundenplanList, OnItemActionListener listener) {
         this.stundenplanList = stundenplanList;
         this.listener = listener; // Initialisiere den Listener
     }

@@ -20,7 +20,7 @@ import java.util.Locale;
  * Dieser Adapter ist verantwortlich für das Erstellen und Binden der Views für jedes Noten-Element
  * sowie für die Handhabung von Klick- und Long-Klick-Events auf einzelne Noten.
  */
-public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
+public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.NoteViewHolder> {
 
     /**
      * Interface zur Definition von Callback-Methoden für Klick- und Long-Klick-Events auf Noten-Elemente.
@@ -50,12 +50,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     private final OnNoteClickListener listener; // Der Listener für Klick-Events auf Noten-Elemente.
 
     /**
-     * Konstruktor für den NoteAdapter.
+     * Konstruktor für den GradeAdapter.
      *
      * @param noten    Die Liste der Noten, die der Adapter anzeigen soll.
      * @param listener Der Listener, der über Klick- und Long-Klick-Events auf Noten-Elemente benachrichtigt wird.
      */
-    public NoteAdapter(List<Note> noten, OnNoteClickListener listener) {
+    public GradeAdapter(List<Note> noten, OnNoteClickListener listener) {
         this.noten = noten;    // Speichert die übergebene Liste von Noten.
         this.listener = listener;  // Speichert den übergebenen Klick-Listener.
     }

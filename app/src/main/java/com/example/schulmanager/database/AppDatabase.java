@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 @Database(entities = {StundenplanEintrag.class, StundenzeitDefinition.class}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
-    public abstract StundenplanDAO stundenplanDao();
+    public abstract TimetableDAO stundenplanDao();
     public abstract StundenzeitDefinitionDAO stundenzeitDefinitionDao();
 
     private static volatile AppDatabase INSTANCE;

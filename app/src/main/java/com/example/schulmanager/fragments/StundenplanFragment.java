@@ -13,16 +13,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.schulmanager.adapters.TimetableAdapter;
+import com.example.schulmanager.database.TimetableDAO;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import com.example.schulmanager.R;
-import com.example.schulmanager.adapters.StundenplanAdapter;
 import com.example.schulmanager.models.StundenplanEintrag;
 import com.example.schulmanager.models.StundenzeitDefinition; // NEU
 import com.example.schulmanager.database.AppDatabase;
-import com.example.schulmanager.database.StundenplanDAO;
 import com.example.schulmanager.database.StundenzeitDefinitionDAO; // NEU
 import com.example.schulmanager.dialogs.AddStundenplanEntryDialog;
 import com.example.schulmanager.dialogs.OnStundenplanEntryAddedListener;
@@ -39,13 +39,13 @@ import java.util.concurrent.Executors;
 // sowie das neue OnStundenzeitenDefinedListener
 public class StundenplanFragment extends Fragment implements
         OnStundenplanEntryAddedListener,
-        StundenplanAdapter.OnItemActionListener,
+        TimetableAdapter.OnItemActionListener,
         DefineStundenzeitenDialog.OnStundenzeitenDefinedListener {
 
     private MaterialButtonToggleGroup toggleButtonGroupDays;
     private RecyclerView recyclerViewStundenplanTag;
-    private StundenplanAdapter stundenplanAdapter;
-    private StundenplanDAO stundenplanDao;
+    private TimetableAdapter timetableAdapter;
+    private TimetableDAO timetableDao;
     private StundenzeitDefinitionDAO stundenzeitDefinitionDao; // NEU: DAO für StundenzeitDefinitionen
     private FloatingActionButton fabAddEntry;
     private FloatingActionButton fabDefineStundenzeiten;
@@ -70,7 +70,7 @@ public class StundenplanFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        stundenplanDao = AppDatabase.getDatabase(getContext()).stundenplanDao();
+        timetableDao = AppDatabase.getDatabase(getContext()).stundenplanDao();
         stundenzeitDefinitionDao = AppDatabase.getDatabase(getContext()).stundenzeitDefinitionDao(); // NEU: Initialisiere StundenzeitDefinitionDAO
 
         toggleButtonGroupDays = view.findViewById(R.id.toggleButtonGroupDays);
@@ -79,8 +79,8 @@ public class StundenplanFragment extends Fragment implements
         fabDefineStundenzeiten = view.findViewById(R.id.fabDefineStundenzeiten);
 
         recyclerViewStundenplanTag.setLayoutManager(new LinearLayoutManager(getContext()));
-        stundenplanAdapter = new StundenplanAdapter(new ArrayList<>(), this);
-        recyclerViewStundenplanTag.setAdapter(stundenplanAdapter);
+        timetableAdapter = new TimetableAdapter(new ArrayList<>(), this);
+        recyclerViewStundenplanTag.setAdapter(timetableAdapter);
 
         // ItemTouchHelper für Swipe-to-Dismiss konfigurieren und an RecyclerView anbinden
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -92,7 +92,7 @@ public class StundenplanFragment extends Fragment implements
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                StundenplanEintrag entryToDelete = stundenplanAdapter.getItemAtPosition(position);
+                StundenplanEintrag entryToDelete = timetableAdapter.getItemAtPosition(position);
                 deleteStundenplanEntryFromDb(entryToDelete);
             }
         }).attachToRecyclerView(recyclerViewStundenplanTag);
@@ -147,19 +147,19 @@ public class StundenplanFragment extends Fragment implements
 
     private void loadStundenplanForSelectedDay() {
         databaseWriteExecutor.execute(() -> {
-            List<StundenplanEintrag> filteredList = stundenplanDao.getStundenplanEintraegeForTag(selectedDay);
+            List<StundenplanEintrag> filteredList = timetableDao.getStundenplanEintraegeForTag(selectedDay);
             // Sortiere nach StundenIndex aufsteigend
             Collections.sort(filteredList, Comparator.comparingInt(StundenplanEintrag::getStundenIndex));
 
             if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> stundenplanAdapter.updateData(filteredList));
+                getActivity().runOnUiThread(() -> timetableAdapter.updateData(filteredList));
             }
         });
     }
 
     public void addStundenplanEntryToDb(StundenplanEintrag eintrag) {
         databaseWriteExecutor.execute(() -> {
-            stundenplanDao.insert(eintrag);
+            timetableDao.insert(eintrag);
             loadStundenplanForSelectedDay(); // Daten neu laden, um die UI zu aktualisieren
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Eintrag hinzugefügt!", Toast.LENGTH_SHORT).show());
@@ -169,7 +169,7 @@ public class StundenplanFragment extends Fragment implements
 
     public void deleteStundenplanEntryFromDb(StundenplanEintrag eintrag) {
         databaseWriteExecutor.execute(() -> {
-            stundenplanDao.delete(eintrag);
+            timetableDao.delete(eintrag);
             loadStundenplanForSelectedDay(); // Daten neu laden
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Eintrag gelöscht!", Toast.LENGTH_SHORT).show());
@@ -194,7 +194,7 @@ public class StundenplanFragment extends Fragment implements
     @Override
     public void onDeleteClick(StundenplanEintrag eintrag) {
         // Diese Methode wird tatsächlich nicht direkt vom Adapter aufgerufen, wenn du Swipe-to-Dismiss nutzt.
-        // Der ItemTouchHelper ruft direkt stundenplanAdapter.getItemAtPosition() auf.
+        // Der ItemTouchHelper ruft direkt timetableAdapter.getItemAtPosition() auf.
         // Die onDeleteClick Methode wäre relevanter, wenn du z.B. einen expliziten Lösch-Button im item_stundenplan_eintrag hättest.
         // In diesem Fall, da wir ItemTouchHelper verwenden, ist der Aufruf in onSwiped() ausreichend.
         // Du könntest hier jedoch einen Bestätigungsdialog anzeigen, bevor du deleteStundenplanEntryFromDb aufrufst.

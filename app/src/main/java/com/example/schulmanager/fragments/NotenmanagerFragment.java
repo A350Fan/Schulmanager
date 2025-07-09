@@ -25,8 +25,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schulmanager.R;
-import com.example.schulmanager.adapters.FachAdapter;
-import com.example.schulmanager.adapters.NoteAdapter;
+import com.example.schulmanager.adapters.GradeAdapter;
+import com.example.schulmanager.adapters.SubjectAdapter;
 import com.example.schulmanager.models.Fach;
 import com.example.schulmanager.models.Note;
 import com.example.schulmanager.utils.BerechnungUtil;
@@ -45,7 +45,7 @@ import java.util.Locale;
  * sowie das Verwalten der Noten innerhalb eines Fachs.
  * Zudem bietet es Funktionen zur Berechnung des Halbjahresschnitts und des Abitur-Gesamtschnitts.
  */
-public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNoteClickListener {
+public class NotenmanagerFragment extends Fragment implements GradeAdapter.OnNoteClickListener {
 
     // --- Konstanten für SharedPreferences ---
     private static final String PREF_NAME = "NotenManager";
@@ -54,8 +54,8 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
     private static final String PREF_LAST_HALBJAHR_ADD = "lastHalbjahrAdd";
 
     // --- Adapter-Instanzen ---
-    private FachAdapter fachAdapter; // Adapter für die Anzeige der Fächer-Liste.
-    private NoteAdapter noteAdapter; // Adapter für die Anzeige der Noten-Liste innerhalb des Noten-Dialogs.
+    private SubjectAdapter subjectAdapter; // Adapter für die Anzeige der Fächer-Liste.
+    private GradeAdapter gradeAdapter; // Adapter für die Anzeige der Noten-Liste innerhalb des Noten-Dialogs.
 
     // --- Datenlisten ---
     private List<Fach> alleFaecher = new ArrayList<>(); // Enthält alle Fächer der Anwendung, unabhängig vom Halbjahr.
@@ -89,12 +89,12 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         // Setzt einen LinearLayoutManager, um die Elemente vertikal anzuordnen.
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Initialisiert den FachAdapter mit der gefilterten Fächerliste und dem Klick-Listener.
+        // Initialisiert den SubjectAdapter mit der gefilterten Fächerliste und dem Klick-Listener.
         // `this::showEditDialog` ist eine Methodenreferenz, die sicherstellt, dass beim Klick auf ein Fach
         // die Methode showEditDialog mit dem geklickten Fach aufgerufen wird.
-        fachAdapter = new FachAdapter(gefilterteFaecher, this::showEditDialog);
+        subjectAdapter = new SubjectAdapter(gefilterteFaecher, this::showEditDialog);
         // Weist den Adapter dem RecyclerView zu.
-        recyclerView.setAdapter(fachAdapter);
+        recyclerView.setAdapter(subjectAdapter);
 
         // --- FloatingActionButton (FAB) Funktionalität ---
         FloatingActionButton fabAdd = view.findViewById(R.id.fab_add);
@@ -325,7 +325,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                 // notifyItemChanged ist weiterhin sinnvoll, um sicherzustellen,
                 // dass der spezielle Eintrag im RecyclerView sofort aktualisiert wird,
                 // auch wenn filterFaecher() später notifyDataSetChanged() aufruft.
-                fachAdapter.notifyItemChanged(position);
+                subjectAdapter.notifyItemChanged(position);
                 Toast.makeText(requireContext(), "Fach gespeichert", Toast.LENGTH_SHORT).show();
                 currentDialog.dismiss(); // Schließt den Dialog nur, wenn die Eingabe gültig war.
             });
@@ -363,9 +363,9 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
         // Initialisiert den RecyclerView zur Anzeige der Noten des Fachs.
         RecyclerView rvCurrentNotes = dialogView.findViewById(R.id.rv_current_notes);
         rvCurrentNotes.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Initialisiert den NoteAdapter mit der Notenliste des aktuellen Fachs und dem Fragment als Listener.
-        noteAdapter = new NoteAdapter(fach.getNoten(), this);
-        rvCurrentNotes.setAdapter(noteAdapter);
+        // Initialisiert den GradeAdapter mit der Notenliste des aktuellen Fachs und dem Fragment als Listener.
+        gradeAdapter = new GradeAdapter(fach.getNoten(), this);
+        rvCurrentNotes.setAdapter(gradeAdapter);
 
         builder.setView(dialogView)
                 .setTitle("Noten hinzufügen/bearbeiten")
@@ -427,11 +427,11 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                     fach.addNote(neueNote); // Fügt die neue Note zur Liste des Fachs hinzu.
                     saveData(); // Speichert die aktualisierten Daten.
 
-                    // Benachrichtigt den NoteAdapter über die hinzugefügte Note.
-                    noteAdapter.notifyItemInserted(fach.getNoten().size() - 1);
+                    // Benachrichtigt den GradeAdapter über die hinzugefügte Note.
+                    gradeAdapter.notifyItemInserted(fach.getNoten().size() - 1);
                     rvCurrentNotes.scrollToPosition(fach.getNoten().size() - 1);
-                    // Benachrichtigt den FachAdapter, dass sich die Daten dieses Fachs geändert haben (Durchschnitt).
-                    fachAdapter.notifyItemChanged(alleFaecher.indexOf(fach));
+                    // Benachrichtigt den SubjectAdapter, dass sich die Daten dieses Fachs geändert haben (Durchschnitt).
+                    subjectAdapter.notifyItemChanged(alleFaecher.indexOf(fach));
 
                     etNoteWert.setText("");
                     etNoteGewichtung.setText("1.0"); // Gewichtungsfeld zurücksetzen auf Standard
@@ -448,7 +448,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
     }
 
     /**
-     * Implementierung der onNoteClick-Methode aus dem NoteAdapter.OnNoteClickListener Interface.
+     * Implementierung der onNoteClick-Methode aus dem GradeAdapter.OnNoteClickListener Interface.
      * Wird aufgerufen, wenn auf eine Note in der Liste geklickt wird.
      * Aktuell zeigt diese Methode nur einen Toast an.
      *
@@ -462,7 +462,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
     }
 
     /**
-     * Implementierung der onNoteLongClick-Methode aus dem NoteAdapter.OnNoteClickListener Interface.
+     * Implementierung der onNoteLongClick-Methode aus dem GradeAdapter.OnNoteClickListener Interface.
      * Wird aufgerufen, wenn eine Note in der Liste lange gedrückt wird.
      * Zeigt einen Bestätigungsdialog zum Löschen der Note an.
      *
@@ -482,11 +482,11 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                         currentFachForNotes.removeNote(note);
                         saveData(); // Speichert die aktualisierten Daten.
 
-                        // Benachrichtigt den NoteAdapter über die entfernte Note und die Verschiebung der nachfolgenden Elemente.
-                        noteAdapter.notifyItemRemoved(position);
-                        noteAdapter.notifyItemRangeChanged(position, currentFachForNotes.getNoten().size());
-                        // Benachrichtigt den FachAdapter, dass sich die Daten dieses Fachs geändert haben (Durchschnitt).
-                        fachAdapter.notifyItemChanged(alleFaecher.indexOf(currentFachForNotes));
+                        // Benachrichtigt den GradeAdapter über die entfernte Note und die Verschiebung der nachfolgenden Elemente.
+                        gradeAdapter.notifyItemRemoved(position);
+                        gradeAdapter.notifyItemRangeChanged(position, currentFachForNotes.getNoten().size());
+                        // Benachrichtigt den SubjectAdapter, dass sich die Daten dieses Fachs geändert haben (Durchschnitt).
+                        subjectAdapter.notifyItemChanged(alleFaecher.indexOf(currentFachForNotes));
                         Toast.makeText(requireContext(), "Note gelöscht", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -565,7 +565,7 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
 
     /**
      * Filtert die Liste aller Fächer basierend auf dem aktuell ausgewählten Halbjahr.
-     * Aktualisiert die `gefilterteFaecher`-Liste und benachrichtigt den FachAdapter über die Änderung.
+     * Aktualisiert die `gefilterteFaecher`-Liste und benachrichtigt den SubjectAdapter über die Änderung.
      */
     private void filterFaecher() {
         gefilterteFaecher.clear(); // Löscht alle Elemente aus der aktuell gefilterten Liste.
@@ -576,11 +576,11 @@ public class NotenmanagerFragment extends Fragment implements NoteAdapter.OnNote
                 gefilterteFaecher.add(fach);
             }
         }
-        // Benachrichtigt den FachAdapter, dass sich die Daten geändert haben.
+        // Benachrichtigt den SubjectAdapter, dass sich die Daten geändert haben.
         // Die zuvor hinzugefügte `updateFaecher`-Methode im Adapter würde hier auch passen.
-        // Wenn `updateFaecher` im Adapter genutzt wird: fachAdapter.updateFaecher(gefilterteFaecher);
+        // Wenn `updateFaecher` im Adapter genutzt wird: subjectAdapter.updateFaecher(gefilterteFaecher);
         // Ansonsten wie gehabt:
-        fachAdapter.notifyDataSetChanged();
+        subjectAdapter.notifyDataSetChanged();
     }
 
     /**

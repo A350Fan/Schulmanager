@@ -19,7 +19,7 @@ import java.util.List;
  * Dieser Adapter ist verantwortlich für das Erstellen und Binden der Views für jedes Fach-Element
  * sowie für die Handhabung von Klick-Events auf einzelne Fächer.
  */
-public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder> {
+public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.FachViewHolder> {
 
     /**
      * Interface zur Definition von Callback-Methoden für Klick-Events auf Fach-Elemente.
@@ -39,12 +39,12 @@ public class FachAdapter extends RecyclerView.Adapter<FachAdapter.FachViewHolder
     private final OnFachClickListener listener; // Der Listener für Klick-Events auf Fach-Elemente.
 
     /**
-     * Konstruktor für den FachAdapter.
+     * Konstruktor für den SubjectAdapter.
      *
      * @param faecher  Die Liste der Fächer, die der Adapter anzeigen soll.
      * @param listener Der Listener, der über Klick-Events auf Fach-Elemente benachrichtigt wird.
      */
-    public FachAdapter(List<Fach> faecher, OnFachClickListener listener) {
+    public SubjectAdapter(List<Fach> faecher, OnFachClickListener listener) {
         this.faecher = faecher;    // Speichert die übergebene Liste von Fächern.
         this.listener = listener;  // Speichert den übergebenen Klick-Listener.
     }

@@ -13,7 +13,7 @@ import java.util.List;
 
 // Definiert dieses Interface als DAO
 @Dao
-public interface StundenplanDAO {
+public interface TimetableDAO {
 
     // Fügen einen oder mehrere Stundenplan-Einträge ein.
     // OnConflictStrategy.REPLACE bedeutet, dass ein bestehender Eintrag mit der gleichen Primär-ID ersetzt wird.

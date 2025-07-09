@@ -50,6 +50,8 @@ dependencies {
 // Lifecycle (optional für zukünftige Erweiterungen)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation (libs.room.runtime) // Neueste stabile Version
+    annotationProcessor (libs.room.compiler) // Gleiche Version wie runtime
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

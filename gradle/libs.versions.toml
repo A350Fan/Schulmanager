@@ -11,6 +11,7 @@ appcompat = "1.7.1"
 lifecycleLivedataKtx = "2.9.1"
 material = "1.12.0"
 recyclerview = "1.4.0"
+roomRuntime = "2.7.2"
 viewpager2 = "1.1.0"
 
 [libraries]
@@ -26,6 +27,8 @@ lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx",
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleLivedataKtx" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 
 [plugins]

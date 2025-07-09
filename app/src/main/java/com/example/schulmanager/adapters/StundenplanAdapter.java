@@ -16,10 +16,18 @@ import java.util.List;
 public class StundenplanAdapter extends RecyclerView.Adapter<StundenplanAdapter.StundenplanViewHolder> {
 
     private List<StundenplanEintrag> stundenplanList;
+    private OnItemActionListener listener; // NEU: Listener-Variable
 
-    // Konstruktor
-    public StundenplanAdapter(List<StundenplanEintrag> stundenplanList) {
+    // NEU: Interface für Klick- und Lösch-Aktionen
+    public interface OnItemActionListener {
+        void onDeleteClick(StundenplanEintrag eintrag);
+        // void onItemClick(StundenplanEintrag eintrag); // Für spätere Bearbeitungsfunktion
+    }
+
+    // Angepasster Konstruktor, der den Listener entgegennimmt
+    public StundenplanAdapter(List<StundenplanEintrag> stundenplanList, OnItemActionListener listener) {
         this.stundenplanList = stundenplanList;
+        this.listener = listener; // Initialisiere den Listener
     }
 
     @NonNull
@@ -31,13 +39,8 @@ public class StundenplanAdapter extends RecyclerView.Adapter<StundenplanAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull StundenplanViewHolder holder, int position) {
-        StundenplanEintrag eintrag = stundenplanList.get(position);
-
-        // Zeige die Stunde (z.B. "1. Stunde") und Uhrzeit
-        holder.tvUhrzeit.setText(eintrag.getUhrzeit() + " (" + (eintrag.getStundenIndex() + 1) + ". Stunde)");
-        holder.tvFach.setText(eintrag.getFach());
-        holder.tvRaum.setText(eintrag.getRaum());
-        holder.tvLehrer.setText(eintrag.getLehrer());
+        StundenplanEintrag currentEntry = stundenplanList.get(position);
+        holder.bind(currentEntry);
     }
 
     @Override
@@ -45,22 +48,43 @@ public class StundenplanAdapter extends RecyclerView.Adapter<StundenplanAdapter.
         return stundenplanList.size();
     }
 
+    public void updateData(List<StundenplanEintrag> newStundenplanList) {
+        this.stundenplanList = newStundenplanList;
+        notifyDataSetChanged();
+    }
+
+    // NEU: Methode, um ein Element an einer bestimmten Position zu erhalten
+    // Wird vom ItemTouchHelper benötigt
+    public StundenplanEintrag getItemAtPosition(int position) {
+        return stundenplanList.get(position);
+    }
+
     public static class StundenplanViewHolder extends RecyclerView.ViewHolder {
-        TextView tvUhrzeit, tvFach, tvRaum, tvLehrer;
+        private TextView tvUhrzeit;
+        private TextView tvFach;
+        private TextView tvRaum;
+        private TextView tvLehrer;
 
         public StundenplanViewHolder(@NonNull View itemView) {
             super(itemView);
+            // HIER SIND DIE ANPASSUNGEN: Verwende die IDs aus deiner XML-Datei!
             tvUhrzeit = itemView.findViewById(R.id.tvStundenplanUhrzeit);
             tvFach = itemView.findViewById(R.id.tvStundenplanFach);
             tvRaum = itemView.findViewById(R.id.tvStundenplanRaum);
             tvLehrer = itemView.findViewById(R.id.tvStundenplanLehrer);
         }
-    }
 
-    // Methode zum Aktualisieren der Datenliste und Benachrichtigen des Adapters
-    public void updateData(List<StundenplanEintrag> newList) {
-        this.stundenplanList.clear(); // Alte Daten löschen
-        this.stundenplanList.addAll(newList); // Neue Daten hinzufügen
-        notifyDataSetChanged(); // RecyclerView neu zeichnen
+        public void bind(StundenplanEintrag eintrag) {
+            tvUhrzeit.setText(eintrag.getUhrzeit());
+            tvFach.setText(eintrag.getFach());
+            tvRaum.setText(eintrag.getRaum());
+            // Prüfen, ob Lehrer vorhanden ist, ansonsten ausblenden oder leeren String setzen
+            if (eintrag.getLehrer() != null && !eintrag.getLehrer().isEmpty()) {
+                tvLehrer.setText(eintrag.getLehrer());
+                tvLehrer.setVisibility(View.VISIBLE);
+            } else {
+                tvLehrer.setVisibility(View.GONE); // Oder View.INVISIBLE, je nach Wunsch
+            }
+        }
     }
 }

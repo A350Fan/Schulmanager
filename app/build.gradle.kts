@@ -51,6 +51,13 @@ dependencies {
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation (libs.room.runtime) // Neueste stabile Version
+    // Für Netzwerkoperationen (OkHttp)
+    implementation(libs.okhttp)
+// Optional: Für asynchrone Operationen, falls noch nicht vorhanden
+    implementation(libs.lifecycle.runtime.ktx)
+// Für Coroutines (Kotlin) oder einfachere Async-Executors (Java)
+// Du hast bereits Executors, daher ist dies evtl. nicht nötig,
+// aber gut zu wissen für modernere Ansätze.
     annotationProcessor (libs.room.compiler) // Gleiche Version wie runtime
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

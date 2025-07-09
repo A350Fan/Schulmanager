@@ -11,46 +11,53 @@
         android:id="@+id/toggleButtonGroupDays"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:selectionRequired="true"
-        app:singleSelection="true"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
-        <Button
-            android:id="@+id/btnMo"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_mo"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Mo" />
 
-        <Button
-            android:id="@+id/btnDi"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_di"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Di" />
 
-        <Button
-            android:id="@+id/btnMi"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_mi"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Mi" />
 
-        <Button
-            android:id="@+id/btnDo"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_do"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Do" />
 
-        <Button
-            android:id="@+id/btnFr"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_fr"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Fr" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -60,10 +67,19 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/toggleButtonGroupDays"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_stundenplan_eintrag" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleButtonGroupDays" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_stundenplan_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="Stundenplaneintrag hinzufügen"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

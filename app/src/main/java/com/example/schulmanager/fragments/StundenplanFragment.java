@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast; // Für Toast-Nachrichten
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,35 +14,39 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton; // Import für FAB
 
 import com.example.schulmanager.R;
 import com.example.schulmanager.adapters.StundenplanAdapter;
 import com.example.schulmanager.models.StundenplanEintrag;
-import com.example.schulmanager.database.AppDatabase; // Import der Datenbank
-import com.example.schulmanager.database.StundenplanDAO; // Import des DAO
+import com.example.schulmanager.database.AppDatabase;
+import com.example.schulmanager.database.StundenplanDAO;
+import com.example.schulmanager.dialogs.AddStundenplanEntryDialog; // Import deines Dialogs
+import com.example.schulmanager.dialogs.OnStundenplanEntryAddedListener; // Import deines Listeners
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors; // Für asynchrone Datenbank-Operationen
+import java.util.concurrent.Executors;
 
-public class StundenplanFragment extends Fragment {
+public class StundenplanFragment extends Fragment implements OnStundenplanEntryAddedListener { // Implementiere das Interface
 
     private MaterialButtonToggleGroup toggleButtonGroupDays;
     private RecyclerView recyclerViewStundenplanTag;
     private StundenplanAdapter stundenplanAdapter;
-    private StundenplanDAO stundenplanDao; // Dein DAO
+    private StundenplanDAO stundenplanDao;
+    private FloatingActionButton fabAddEntry; // Referenz auf den FAB
+
     private final String[] tage = {"Mo", "Di", "Mi", "Do", "Fr"};
-    private final String[] stundenzeiten = { // 11 Stunden, anpassbar
+    private final String[] stundenzeiten = {
             "08:00 - 08:45", "08:50 - 09:35", "09:50 - 10:35", "10:40 - 11:25", "11:30 - 12:15",
             "12:20 - 13:05", "13:10 - 13:55", "14:00 - 14:45", "14:50 - 15:35", "15:40 - 16:25", "16:30 - 17:15"
     };
 
-    private String selectedDay = "Mo"; // Standardmäßig Montag auswählen
+    private String selectedDay = "Mo";
 
-    // ExecutorService für asynchrone Datenbankoperationen
     private ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);
 
     public StundenplanFragment() {
@@ -58,48 +63,46 @@ public class StundenplanFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Datenbank-Instanz und DAO holen
         stundenplanDao = AppDatabase.getDatabase(getContext()).stundenplanDao();
 
         toggleButtonGroupDays = view.findViewById(R.id.toggleButtonGroupDays);
         recyclerViewStundenplanTag = view.findViewById(R.id.recyclerViewStundenplanTag);
+        fabAddEntry = view.findViewById(R.id.fab_add_stundenplan_entry); // FAB initialisieren
 
-        // RecyclerView einrichten
         recyclerViewStundenplanTag.setLayoutManager(new LinearLayoutManager(getContext()));
-        stundenplanAdapter = new StundenplanAdapter(new ArrayList<>()); // Adapter mit leerer Liste initialisieren
+        stundenplanAdapter = new StundenplanAdapter(new ArrayList<>());
         recyclerViewStundenplanTag.setAdapter(stundenplanAdapter);
 
-        // Listener für die Tagesauswahl-Buttons
         toggleButtonGroupDays.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
                 MaterialButton checkedButton = view.findViewById(checkedId);
                 selectedDay = checkedButton.getText().toString();
-                loadStundenplanForSelectedDay(); // Stundenplan für den neuen Tag aus DB laden
+                loadStundenplanForSelectedDay();
             }
         });
 
-        // Den Standardtag "Montag" als ausgewählt markieren und den Stundenplan laden
         if (toggleButtonGroupDays.getChildCount() > 0) {
-            // Dies löst den Listener aus und lädt die Daten für den Montag
             ((MaterialButton)toggleButtonGroupDays.getChildAt(0)).setChecked(true);
         } else {
-            // Fallback, falls keine Buttons gefunden wurden
             loadStundenplanForSelectedDay();
         }
 
+        // NEU: Listener für den FAB
+        fabAddEntry.setOnClickListener(v -> {
+            AddStundenplanEntryDialog dialog = new AddStundenplanEntryDialog();
+            dialog.setOnStundenplanEntryAddedListener(this); // Setze dieses Fragment als Listener
+            dialog.show(getParentFragmentManager(), "AddStundenplanEntryDialog");
+        });
+
         // OPTIONAL: Initial Daten in die Datenbank einfügen, wenn sie leer ist (nur für ersten Start)
-        // Du kannst dies später entfernen, wenn du einen "Hinzufügen"-Dialog hast.
         // runOnceAfterDBSetup();
     }
 
-    // Lädt Stundenplan-Daten aus der Datenbank für den aktuell ausgewählten Tag
     private void loadStundenplanForSelectedDay() {
         databaseWriteExecutor.execute(() -> {
             List<StundenplanEintrag> filteredList = stundenplanDao.getStundenplanEintraegeForTag(selectedDay);
-            // Sortiere die gefilterte Liste nach StundenIndex
             Collections.sort(filteredList, Comparator.comparingInt(StundenplanEintrag::getStundenIndex));
 
-            // UI-Update muss auf dem Haupt-Thread erfolgen
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     stundenplanAdapter.updateData(filteredList);
@@ -114,6 +117,11 @@ public class StundenplanFragment extends Fragment {
             stundenplanDao.insert(eintrag);
             // Nach dem Einfügen Daten neu laden, um die UI zu aktualisieren
             loadStundenplanForSelectedDay();
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Eintrag hinzugefügt!", Toast.LENGTH_SHORT).show();
+                });
+            }
         });
     }
 
@@ -122,6 +130,11 @@ public class StundenplanFragment extends Fragment {
         databaseWriteExecutor.execute(() -> {
             stundenplanDao.delete(eintrag);
             loadStundenplanForSelectedDay();
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Eintrag gelöscht!", Toast.LENGTH_SHORT).show();
+                });
+            }
         });
     }
 
@@ -130,15 +143,26 @@ public class StundenplanFragment extends Fragment {
         databaseWriteExecutor.execute(() -> {
             stundenplanDao.update(eintrag);
             loadStundenplanForSelectedDay();
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Eintrag aktualisiert!", Toast.LENGTH_SHORT).show();
+                });
+            }
         });
+    }
+
+    // NEU: Implementierung der Schnittstellenmethode
+    @Override
+    public void onStundenplanEntryAdded(String fach, String uhrzeit, String raum, String lehrer, int stundenIndex) {
+        // Erstelle ein neues StundenplanEintrag-Objekt
+        StundenplanEintrag newEntry = new StundenplanEintrag(selectedDay, uhrzeit, fach, raum, lehrer, stundenIndex);
+        // Füge es der Datenbank hinzu
+        addStundenplanEntryToDb(newEntry);
     }
 
 
     // --- OPTIONAL: Methode zum einmaligen Befüllen der DB mit Dummy-Daten beim ersten Start ---
-    // Diese Methode dient nur dazu, beim ERSTEN Start der App ein paar Daten zu haben.
-    // Entferne sie, sobald du den "Hinzufügen"-Dialog implementiert hast.
     private void runOnceAfterDBSetup() {
-        // Überprüfe, ob bereits Daten vorhanden sind
         databaseWriteExecutor.execute(() -> {
             if (stundenplanDao.getAllStundenplanEintraege().isEmpty()) {
                 List<StundenplanEintrag> initialData = new ArrayList<>();
@@ -159,7 +183,6 @@ public class StundenplanFragment extends Fragment {
 
                 stundenplanDao.insertAll(initialData);
 
-                // Nach dem Einfügen die UI aktualisieren
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         loadStundenplanForSelectedDay();
@@ -172,7 +195,6 @@ public class StundenplanFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Executor Service herunterfahren, wenn das Fragment zerstört wird
         if (databaseWriteExecutor != null && !databaseWriteExecutor.isShutdown()) {
             databaseWriteExecutor.shutdown();
         }

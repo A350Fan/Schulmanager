@@ -61,6 +61,8 @@ public class KalenderFragment extends Fragment {
         calendarView = view.findViewById(R.id.calendarView);
         tvHolidayInfo = view.findViewById(R.id.tvHolidayInfo);
 
+        calendarView.setFirstDayOfWeek(Calendar.MONDAY);
+
         // Optional: Setze einen Listener für Datumsänderungen
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override

@@ -82,12 +82,9 @@ public class StundenplanEintrag {
     }
 
 
-    /**
-     * ---
-     * ## Getter und Setter
-     * Room benötigt Getter und Setter für alle Felder, die in der Datenbank gespeichert werden sollen.
-     * ---
-     */
+
+    // --- Getter und Setter ---
+
 
 
     /**

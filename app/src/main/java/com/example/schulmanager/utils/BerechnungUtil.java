@@ -55,6 +55,7 @@ public class BerechnungUtil {
             {318, 301, 39}, // 3,9
             {300, 300, 40}  // 4,0 (Mindestpunktzahl für Bestehen)
     };
+    private static boolean hatNullPunktePruefung;
 
     /**
      * Eine innere statische Klasse, die die Ergebnisse der Abiturberechnung kapselt.
@@ -85,6 +86,7 @@ public class BerechnungUtil {
          * Eine Nachricht, die den Bestehensstatus detailliert beschreibt (z.B. "Herzlichen Glückwunsch!").
          */
         public String bestandenNachricht;
+        public boolean hatNullPunktePruefung;
     }
 
     /**
@@ -130,6 +132,10 @@ public class BerechnungUtil {
             // Jede Prüfungsnote wird mit 4 multipliziert (entspricht der Umrechnung von 15 Punkten in 60 Punkte).
             // Math.min(60, ...) stellt sicher, dass die maximale Punktzahl pro Prüfung nicht überschritten wird.
             ergebnis.pruefungsPunkte += Math.min(60, note * 4);
+            // Prüft ob eines oder mehrere Abi Prüfungen 0 Punkte haben
+            if (note == 0) { // Prüfen auf 0 Punkte in einer Prüfung
+                hatNullPunktePruefung = true; // Falls 0 Punkte dann true
+            }
         }
         // Math.min(300, ...) stellt sicher, dass die maximale Gesamtpunktzahl der Prüfungen nicht überschritten wird.
         ergebnis.pruefungsPunkte = Math.min(300, ergebnis.pruefungsPunkte);
@@ -146,6 +152,7 @@ public class BerechnungUtil {
 
 
         // Mindestens 200 Punkte in den Halbjahresleistungen, sonst ist das Abitur nicht bestanden.
+        
         if (ergebnis.halbjahresPunkte < 200) {
             ergebnis.bestanden = false;
             ergebnis.bestandenNachricht = String.format(Locale.GERMAN,
@@ -158,6 +165,11 @@ public class BerechnungUtil {
             ergebnis.bestandenNachricht = String.format(Locale.GERMAN,
                     "Leider nicht bestanden. Es gibt %d Unterpunktungen (< 5 Punkte) in den 40 Halbjahresleistungen (erlaubt: max. 8).",
                     unterpunktungenCount);
+        }
+        // Kein Prüfungsfach darf 0 Punkte haben.
+        else if (hatNullPunktePruefung) {
+            ergebnis.bestanden = false;
+            ergebnis.bestandenNachricht = "Leider nicht bestanden. In mindestens einem Prüfungsfach wurden 0 Punkte erreicht.";
         }
         // Gesamtpunktzahl der 5 Prüfungsfächer muss mind. 100 Punkte betragen.
         else if (ergebnis.pruefungsPunkte < 100) {

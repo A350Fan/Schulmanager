@@ -39,19 +39,13 @@ import java.util.concurrent.Executors;
  * Ein Fragment zur Anzeige und Verwaltung des Stundenplans.
  * Es ermöglicht das Hinzufügen, Anzeigen und Löschen von Stundenplaneinträgen
  * sowie das Definieren von Stundenzeiten (z.B. 1. Stunde: 08:00-08:45).
- *
+ * <p>
  * Implementiert mehrere Listener-Interfaces für die Interaktion mit Dialogen und dem Adapter.
  */
 public class TimetableFragment extends Fragment implements
         OnTimetableEntryAddedListener, // Listener für den Dialog zum Hinzufügen von Stundenplaneinträgen
         TimetableAdapter.OnItemActionListener, // Listener für Aktionen auf RecyclerView-Elementen (z.B. Löschen)
         DefineStundenzeitenDialog.OnStundenzeitenDefinedListener { // Listener für den Dialog zum Definieren von Stundenzeiten
-
-    // UI-Elemente
-    private MaterialButtonToggleGroup toggleButtonGroupDays; // Gruppe von Buttons zur Auswahl des Wochentags
-    private RecyclerView recyclerViewStundenplanTag; // RecyclerView zur Anzeige der Stundenplaneinträge für den ausgewählten Tag
-    private FloatingActionButton fabAddEntry; // Floating Action Button zum Hinzufügen eines neuen Eintrags
-    private FloatingActionButton fabDefineStundenzeiten; // Floating Action Button zum Definieren der Stundenzeiten
 
     // Adapter und DAOs (Data Access Objects) für die Datenbankinteraktion
     private TimetableAdapter timetableAdapter;
@@ -100,10 +94,15 @@ public class TimetableFragment extends Fragment implements
         stundenzeitDefinitionDao = AppDatabase.getDatabase(getContext()).stundenzeitDefinitionDao();
 
         // Referenzen zu den UI-Elementen aus dem Layout erhalten
-        toggleButtonGroupDays = view.findViewById(R.id.toggleButtonGroupDays);
-        recyclerViewStundenplanTag = view.findViewById(R.id.recyclerViewStundenplanTag);
-        fabAddEntry = view.findViewById(R.id.fab_add_stundenplan_entry);
-        fabDefineStundenzeiten = view.findViewById(R.id.fabDefineStundenzeiten);
+
+        // Gruppe von Buttons zur Auswahl des Wochentags
+        MaterialButtonToggleGroup toggleButtonGroupDays = view.findViewById(R.id.toggleButtonGroupDays);
+        // RecyclerView zur Anzeige der Stundenplaneinträge für den ausgewählten Tag
+        RecyclerView recyclerViewStundenplanTag = view.findViewById(R.id.recyclerViewStundenplanTag);
+        // Floating Action Button zum Hinzufügen eines neuen Eintrags
+        FloatingActionButton fabAddEntry = view.findViewById(R.id.fab_add_stundenplan_entry);
+        // Floating Action Button zum Definieren der Stundenzeiten
+        FloatingActionButton fabDefineStundenzeiten = view.findViewById(R.id.fabDefineStundenzeiten);
 
         // Konfiguriere den RecyclerView
         recyclerViewStundenplanTag.setLayoutManager(new LinearLayoutManager(getContext()));

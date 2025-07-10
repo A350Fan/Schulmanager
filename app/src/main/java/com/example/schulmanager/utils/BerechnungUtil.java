@@ -166,11 +166,11 @@ public class BerechnungUtil {
                     "Leider nicht bestanden. Es gibt %d Unterpunktungen (< 5 Punkte) in den 40 Halbjahresleistungen (erlaubt: max. 8).",
                     unterpunktungenCount);
         }
-        // Kein Prüfungsfach darf 0 Punkte haben.
-        else if (hatNullPunktePruefung) {
-            ergebnis.bestanden = false;
-            ergebnis.bestandenNachricht = "Leider nicht bestanden. In mindestens einem Prüfungsfach wurden 0 Punkte erreicht.";
-        }
+//        // Kein Prüfungsfach darf 0 Punkte haben.
+//        else if (hatNullPunktePruefung) {
+//            ergebnis.bestanden = false;
+//            ergebnis.bestandenNachricht = "Leider nicht bestanden. In mindestens einem Prüfungsfach wurden 0 Punkte erreicht.";
+//        } BUG
         // Gesamtpunktzahl der 5 Prüfungsfächer muss mind. 100 Punkte betragen.
         else if (ergebnis.pruefungsPunkte < 100) {
             ergebnis.bestanden = false;

@@ -82,19 +82,6 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.Stun
         StundenplanEintrag currentEntry = stundenplanList.get(position);
         // Bindet die Daten des aktuellen Eintrags an die Views des ViewHolders.
         holder.bind(currentEntry);
-
-        // Hier könnte der Lösch-Klick-Listener für jedes Element eingerichtet werden.
-        // Dies setzt voraus, dass dein item_timetable_entry-Layout einen Lösch-Button
-        // oder eine View hat, die das Löschen auslöst.
-        // Wenn das Löschen durch Wischen (z.B. mit ItemTouchHelper) gehandhabt wird,
-        // wird dies hier möglicherweise nicht direkt benötigt, aber der Listener ist
-        // weiterhin entscheidend für die eigentliche Löschlogik.
-        // Beispiel, wenn ein Lösch-Icon im Layout vorhanden wäre:
-        // holder.deleteIcon.setOnClickListener(v -> {
-        //     if (listener != null) {
-        //         listener.onDeleteClick(currentEntry);
-        //     }
-        // });
     }
 
     /**
@@ -176,8 +163,6 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.Stun
                 tvLehrer.setVisibility(View.VISIBLE); // Macht das TextView sichtbar.
             } else {
                 tvLehrer.setVisibility(View.GONE); // Blendet das TextView komplett aus (es nimmt keinen Platz ein).
-                // Alternativ könnte man View.INVISIBLE verwenden, um es auszublenden, aber es nimmt immer noch Platz ein:
-                // tvLehrer.setVisibility(View.INVISIBLE);
             }
         }
     }

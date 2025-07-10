@@ -32,7 +32,6 @@ public class AddTimetableEntryDialog extends DialogFragment {
     // UI-Elemente
     private TextInputEditText etFach, etRaum, etLehrer; // Eingabefelder für Fach, Raum und Lehrer
     private Spinner spinnerUhrzeit; // Spinner zur Auswahl der Stundenzeit
-    private MaterialButton btnCancel, btnAdd; // Buttons zum Abbrechen und Hinzufügen
 
     // Listener, um die eingegebenen Daten an das aufrufende Fragment/die Activity zurückzugeben
     private OnTimetableEntryAddedListener listener;
@@ -125,8 +124,9 @@ public class AddTimetableEntryDialog extends DialogFragment {
         spinnerUhrzeit = view.findViewById(R.id.spinner_uhrzeit); // Initialisiere den Spinner
         etRaum = view.findViewById(R.id.et_raum);
         etLehrer = view.findViewById(R.id.et_lehrer);
-        btnCancel = view.findViewById(R.id.btn_cancel);
-        btnAdd = view.findViewById(R.id.btn_add);
+        MaterialButton btnCancel = view.findViewById(R.id.btn_cancel);
+        // Buttons zum Abbrechen und Hinzufügen
+        MaterialButton btnAdd = view.findViewById(R.id.btn_add);
 
         // Den Spinner mit den verfügbaren Stundenzeiten befüllen
         if (availableStundenzeiten != null && !availableStundenzeiten.isEmpty()) {

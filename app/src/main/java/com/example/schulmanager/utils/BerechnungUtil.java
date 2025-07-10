@@ -160,7 +160,7 @@ public class BerechnungUtil {
                     unterpunktungenCount);
         }
         // Gesamtpunktzahl der 5 Prüfungsfächer muss mind. 100 Punkte betragen.
-        if (ergebnis.pruefungsPunkte < 100) {
+        else if (ergebnis.pruefungsPunkte < 100) {
             ergebnis.bestanden = false;
             ergebnis.bestandenNachricht = String.format(Locale.GERMAN,
                     "Leider nicht bestanden. In den 5 Prüfungsfächern müssen mindestens 100 Punkte erreicht werden (erreicht: %d Punkte).",

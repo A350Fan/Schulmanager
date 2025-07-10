@@ -13,14 +13,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.schulmanager.R;
-import com.example.schulmanager.models.StundenzeitDefinition; // Import des Datenmodells für Stundenzeit-Definitionen
+import com.example.schulmanager.models.StundenzeitDefinition;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList; // Import für ArrayList
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors; // Import für Stream API (Java 8), nützlich zum Transformieren von Listen
+import java.util.stream.Collectors;
 
 /**
  * Ein DialogFragment, das dem Benutzer ermöglicht, einen neuen Stundenplaneintrag hinzuzufügen.
@@ -131,7 +131,6 @@ public class AddTimetableEntryDialog extends DialogFragment {
         // Den Spinner mit den verfügbaren Stundenzeiten befüllen
         if (availableStundenzeiten != null && !availableStundenzeiten.isEmpty()) {
             // Extrahiere nur die Uhrzeit-Strings aus den StundenzeitDefinition-Objekten für den Spinner-Adapter.
-            // Verwendet Java 8 Stream API für eine kompakte Transformation.
             List<String> uhrzeitStrings = availableStundenzeiten.stream()
                     .map(StundenzeitDefinition::getUhrzeitString)
                     .collect(Collectors.toList());

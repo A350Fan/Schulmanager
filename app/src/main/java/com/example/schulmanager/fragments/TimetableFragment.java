@@ -68,7 +68,7 @@ public class TimetableFragment extends Fragment implements
      * Erforderlicher leerer öffentlicher Konstruktor.
      */
     public TimetableFragment() {
-        // Required empty public constructor
+        // Konstruktor muss leer sein.
     }
 
     /**
@@ -163,10 +163,6 @@ public class TimetableFragment extends Fragment implements
                         if (definedStundenzeiten == null || definedStundenzeiten.isEmpty()) {
                             // Wenn keine Stundenzeiten definiert sind, zeige eine Toast-Nachricht an
                             Toast.makeText(getContext(), "Bitte zuerst Stundenzeiten festlegen!", Toast.LENGTH_LONG).show();
-                            // Optional: Könnte hier direkt den DefineStundenzeitenDialog öffnen
-                            // DefineStundenzeitenDialog defineDialog = new DefineStundenzeitenDialog();
-                            // defineDialog.setOnStundenzeitenDefinedListener(this);
-                            // defineDialog.show(getParentFragmentManager(), "define_stundenzeiten_dialog");
                         } else {
                             // Wenn Stundenzeiten definiert sind, öffne den Dialog zum Hinzufügen eines Eintrags
                             // Erstelle den Dialog über die neue newInstance Factory-Methode, die die Stundenzeiten übergibt
@@ -187,7 +183,7 @@ public class TimetableFragment extends Fragment implements
             dialog.show(getParentFragmentManager(), "define_stundenzeiten_dialog");
         });
 
-        // runOnceAfterDBSetup(); // Optional: Methode zum Hinzufügen von Initialdaten für Testzwecke
+        // runOnceAfterDBSetup(); // Aufruf einer Methode zum Hinzufügen von Initialdaten für Testzwecke
     }
 
     /**
@@ -266,7 +262,7 @@ public class TimetableFragment extends Fragment implements
      * Diese Methode ist hier primär als Teil des {@link TimetableAdapter.OnItemActionListener}-Interfaces enthalten.
      * Im aktuellen Setup mit {@link ItemTouchHelper} für Swipe-to-Dismiss wird der Löschvorgang
      * direkt in der `onSwiped`-Methode des ItemTouchHelper behandelt.
-     *
+     * <p>
      * Falls man z.B. einen expliziten Lösch-Button im Listenelement hätte,
      * würde dieser Listener vom Adapter aufgerufen und diese Methode würde die Löschlogik initiieren.
      * Aktuell dient sie eher als Platzhalter oder für zukünftige Erweiterungen (z.B. Bestätigungsdialog vor dem Löschen).
@@ -288,9 +284,6 @@ public class TimetableFragment extends Fragment implements
     public void onStundenzeitenSaved() {
         // Zeigt eine Bestätigungsnachricht an, dass die Stundenzeiten festgelegt wurden.
         Toast.makeText(getContext(), "Stundenzeiten erfolgreich festgelegt!", Toast.LENGTH_SHORT).show();
-        // Da die Uhrzeiten nun im StundenplanEintrag selbst gespeichert werden (nach dem Laden aus Definitionen),
-        // und nicht direkt im Fragment, ist hier keine Neuladung des gesamten Stundenplans erforderlich.
-        // Die FAB zum Hinzufügen eines Eintrags wird die neuesten Definitionen beim nächsten Öffnen des Dialogs laden.
     }
 
     /**

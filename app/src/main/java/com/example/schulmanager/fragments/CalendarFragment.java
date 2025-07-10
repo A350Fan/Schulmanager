@@ -50,7 +50,7 @@ public class CalendarFragment extends Fragment {
      * Erforderlicher leerer öffentlicher Konstruktor.
      */
     public CalendarFragment() {
-        // Required empty public constructor
+        // Konstruktor muss leer sein
     }
 
     /**

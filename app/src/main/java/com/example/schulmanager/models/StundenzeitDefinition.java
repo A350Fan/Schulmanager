@@ -84,7 +84,7 @@ public class StundenzeitDefinition implements Parcelable { // Implementiert Parc
         this.uhrzeitString = uhrzeitString;
     }
 
-    // --- Parcelable Implementierung (Generiert oder manuell implementiert) ---
+    // --- Parcelable Implementierung ---
 
     /**
      * Spezieller Konstruktor, der verwendet wird, um ein Objekt dieser Klasse aus einem Parcel zu rekonstruieren.

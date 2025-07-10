@@ -411,16 +411,7 @@ public class GrademanagerFragment extends Fragment implements GradeAdapter.OnNot
                         }
                     }
 
-                    String typ;
-                    int selectedId = rgNoteTyp.getCheckedRadioButtonId(); // Holt die ID des ausgewählten RadioButtons.
-                    // Bestimmt den Notentyp basierend auf der ausgewählten RadioButton-ID.
-                    if (selectedId == rbSchriftlich.getId()) {
-                        typ = "schriftlich";
-                    } else if (selectedId == rbMuendlich.getId()) {
-                        typ = "muendlich";
-                    } else {
-                        typ = "unbekannt"; // Fallback, sollte bei korrekter UI-Logik nicht erreicht werden.
-                    }
+                    String typ = getString(rgNoteTyp, rbSchriftlich, rbMuendlich);
 
                     // Erstellt ein neues Grade-Objekt mit der Gewichtung.
                     Grade neueGrade = new Grade(wert, typ, gewichtung);
@@ -445,6 +436,21 @@ public class GrademanagerFragment extends Fragment implements GradeAdapter.OnNot
         });
 
         currentDialog.show(); // Zeigt den Dialog an.
+    }
+
+    @NonNull
+    private static String getString(RadioGroup rgNoteTyp, RadioButton rbSchriftlich, RadioButton rbMuendlich) {
+        String typ;
+        int selectedId = rgNoteTyp.getCheckedRadioButtonId(); // Holt die ID des ausgewählten RadioButtons.
+        // Bestimmt den Notentyp basierend auf der ausgewählten RadioButton-ID.
+        if (selectedId == rbSchriftlich.getId()) {
+            typ = "schriftlich";
+        } else if (selectedId == rbMuendlich.getId()) {
+            typ = "muendlich";
+        } else {
+            typ = "unbekannt"; // Fallback, sollte bei korrekter UI-Logik nicht erreicht werden.
+        }
+        return typ;
     }
 
     /**

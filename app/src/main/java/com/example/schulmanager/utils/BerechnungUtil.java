@@ -159,6 +159,13 @@ public class BerechnungUtil {
                     "Leider nicht bestanden. Es gibt %d Unterpunktungen (< 5 Punkte) in den 40 Halbjahresleistungen (erlaubt: max. 8).",
                     unterpunktungenCount);
         }
+        // Gesamtpunktzahl der 5 Prüfungsfächer muss mind. 100 Punkte betragen.
+        if (ergebnis.pruefungsPunkte < 100) {
+            ergebnis.bestanden = false;
+            ergebnis.bestandenNachricht = String.format(Locale.GERMAN,
+                    "Leider nicht bestanden. In den 5 Prüfungsfächern müssen mindestens 100 Punkte erreicht werden (erreicht: %d Punkte).",
+                    ergebnis.pruefungsPunkte);
+        }
         // Dann die Gesamtpunktzahl prüfen. Sind es weniger als 300 Punkte, ist das Abitur nicht bestanden.
         else if (ergebnis.gesamtPunkte < 300) {
             ergebnis.bestanden = false;

@@ -32,10 +32,7 @@ import java.util.concurrent.Executors;
  */
 public class DefineStundenzeitenDialog extends DialogFragment {
 
-    // UI-Elemente
-    private RecyclerView recyclerView; // RecyclerView zur Anzeige der Stundenzeit-Eingabefelder
     private StundenzeitDefinitionAdapter adapter; // Adapter für den RecyclerView
-    private Button buttonSave; // Button zum Speichern der Änderungen
 
     // Datenbank-Komponenten
     private StundenzeitDefinitionDAO stundenzeitDefinitionDao; // DAO für den Zugriff auf Stundenzeit-Definitionen
@@ -84,14 +81,17 @@ public class DefineStundenzeitenDialog extends DialogFragment {
         stundenzeitDefinitionDao = AppDatabase.getDatabase(getContext()).stundenzeitDefinitionDao();
 
         // Referenzen zu den UI-Elementen erhalten
-        recyclerView = view.findViewById(R.id.recyclerViewStundenzeiten);
+        // UI-Elemente
+        // RecyclerView zur Anzeige der Stundenzeit-Eingabefelder
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewStundenzeiten);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Setze einen linearen LayoutManager
 
         // Initialisiere den Adapter mit einer leeren Liste. Die tatsächlichen Daten werden später geladen.
         adapter = new StundenzeitDefinitionAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
-        buttonSave = view.findViewById(R.id.buttonSaveStundenzeiten);
+        // Button zum Speichern der Änderungen
+        Button buttonSave = view.findViewById(R.id.buttonSaveStundenzeiten);
         // Setze den Klick-Listener für den Speichern-Button
         buttonSave.setOnClickListener(v -> saveStundenzeiten());
 

@@ -48,13 +48,13 @@
     <string name="fragment3">Kalender</string>
     <string name="add_new_timetable_entry">Neuen Stundenplaneintrag hinzufügen</string>
     <string name="subject">Fach</string>
-    <string name="uhrzeit">Uhrzeit (z.B. 08:00 - 08:45)</string>
+    <string name="time">Uhrzeit (z.B. 08:00 – 08:45)</string>
     <string name="raum">Raum</string>
     <string name="teacher">Lehrer (optional)</string>
-    <string name="stundenindex">Stundenindex (0-10)</string>
+    <string name="stundenindex">Stundenindex (0–10)</string>
     <string name="cancel">Abbrechen</string>
     <string name="add">Hinzufügen</string>
-    <string name="stunde1">08:00 - 08:45 Uhr (1. Stunde)</string>
+    <string name="stunde1">08:00 – 08:45 Uhr (1. Stunde)</string>
     <string name="subject_math">Mathematik</string>
     <string name="room_a201">Raum A201</string>
     <string name="teacher_mrschmidt">Hr. Schmidt</string>
@@ -68,7 +68,7 @@
     <string name="year_calendar">Jahreskalender</string>
     <string name="choose_date_to_see_holiday_info">Wähle ein Datum, um Ferieninformationen zu sehen.</string>
     <string name="hint_stundeangabe">1. Stunde:</string>
-    <string name="hint_zeitangabe">z.B. 08:00 - 08:45</string>
+    <string name="hint_zeitangabe">z.B. 08:00 – 08:45</string>
     <string name="choose_time">Uhrzeit wählen:</string>
     <string name="room">Raum</string>
 </resources>

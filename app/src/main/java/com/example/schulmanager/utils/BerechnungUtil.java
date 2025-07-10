@@ -144,8 +144,16 @@ public class BerechnungUtil {
         // 6. Bestehensstatus festlegen. Die Reihenfolge der Prüfungen ist hier wichtig,
         // da die Unterpunktungen eine harte Ausschlussregel sein können.
 
-        // Zuerst die Unterpunktungen prüfen. Sind es mehr als 8, ist das Abitur nicht bestanden.
-        if (unterpunktungenCount > 8) {
+
+        // Mindestens 200 Punkte in den Halbjahresleistungen, sonst ist das Abitur nicht bestanden.
+        if (ergebnis.halbjahresPunkte < 200) {
+            ergebnis.bestanden = false;
+            ergebnis.bestandenNachricht = String.format(Locale.GERMAN,
+                    "Leider nicht bestanden. In den Halbjahresleistungen müssen mindestens 200 Punkte erreicht werden (erreicht: %d Punkte).",
+                    ergebnis.halbjahresPunkte);
+        }
+        // Unterpunktungen prüfen. Sind es mehr als 8, ist das Abitur nicht bestanden.
+        else if (unterpunktungenCount > 8) {
             ergebnis.bestanden = false;
             ergebnis.bestandenNachricht = String.format(Locale.GERMAN,
                     "Leider nicht bestanden. Es gibt %d Unterpunktungen (< 5 Punkte) in den 40 Halbjahresleistungen (erlaubt: max. 8).",

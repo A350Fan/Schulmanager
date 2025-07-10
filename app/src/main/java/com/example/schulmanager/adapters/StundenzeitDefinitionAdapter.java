@@ -63,8 +63,8 @@ public class StundenzeitDefinitionAdapter extends RecyclerView.Adapter<Stundenze
         StundenzeitDefinition currentDef = stundenzeitList.get(position);
 
         // Sicherstellen, dass der TextWatcher die korrekte Position des aktuellen Elements kennt.
-        // Dies ist wichtig, da ViewHolde
-        // r wiederverwendet werden und der TextWatcher wissen muss, welches Datenobjekt er aktualisieren soll.
+        // Dies ist wichtig, da ViewHolder
+        // wiederverwendet werden und der TextWatcher wissen muss, welches Datenobjekt er aktualisieren soll.
         holder.textWatcher.updatePosition(position);
 
         // Den Stundenindex im TextView anzeigen (z.B. "1. Stunde:", "2. Stunde:", etc.).

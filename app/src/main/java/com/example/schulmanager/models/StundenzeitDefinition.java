@@ -132,7 +132,7 @@ public class StundenzeitDefinition implements Parcelable { // Implementiert Parc
     public static final Creator<StundenzeitDefinition> CREATOR = new Creator<StundenzeitDefinition>() {
         /**
          * Erstellt eine neue Instanz der Parcelable-Klasse aus einem Parcel,
-         * wobei die zuvor in {@link #writeToParcel} geschriebenen Daten verwendet werden.
+         * wobei die zuvor in writeToParcel geschriebenen Daten verwendet werden.
          *
          * @param in Das Parcel, aus dem das Objekt gelesen werden soll.
          * @return Eine neue Instanz der Parcelable-Klasse.

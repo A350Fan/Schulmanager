@@ -141,8 +141,6 @@ public class OpenHoliday {
     }
 
     // --- Setter-Methoden ---
-    // (Setter für alle Felder sind hier nicht unbedingt nötig, da das Objekt oft nur von JSON deserialisiert wird,
-    // aber sie sind nützlich, wenn das Objekt nachträglich geändert werden soll.)
 
     /**
      * Setzt die ID des Feiertags/der Ferien.
@@ -212,13 +210,13 @@ public class OpenHoliday {
                 "id='" + id + '\'' +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
-                ", name=" + name + // Angepasst, um die Liste der Namen anzuzeigen
+                ", name=" + name +
                 ", type='" + type + '\'' +
                 '}';
     }
 
     /**
-     * NEUE INNERE KLASSE: HolidayName
+     * INNERE KLASSE: HolidayName
      * Repräsentiert ein einzelnes Namens-Objekt innerhalb des "name"-Arrays in der JSON-Antwort.
      * Ermöglicht die Handhabung von mehrsprachigen Namen.
      */

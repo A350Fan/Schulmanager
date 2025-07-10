@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter; // NEU
-import android.widget.Spinner;      // NEU
+import android.widget.ArrayAdapter; // Import für ArrayAdapter, um Daten an den Spinner zu binden
+import android.widget.Spinner;      // Import für Spinner (Dropdown-Auswahl)
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,136 +13,180 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.schulmanager.R;
-import com.example.schulmanager.models.StundenzeitDefinition; // NEU
+import com.example.schulmanager.models.StundenzeitDefinition; // Import des Datenmodells für Stundenzeit-Definitionen
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList; // NEU
+import java.util.ArrayList; // Import für ArrayList
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors; // NEU (benötigt Java 8 oder höher, wenn Target SDK < 24)
+import java.util.stream.Collectors; // Import für Stream API (Java 8), nützlich zum Transformieren von Listen
 
+/**
+ * Ein DialogFragment, das dem Benutzer ermöglicht, einen neuen Stundenplaneintrag hinzuzufügen.
+ * Der Dialog bietet Eingabefelder für Fach, Raum, Lehrer und eine Auswahl für die Uhrzeit/Stunde.
+ * Die verfügbaren Stundenzeiten werden von einem aufrufenden Fragment übergeben.
+ */
 public class AddTimetableEntryDialog extends DialogFragment {
 
-    private TextInputEditText etFach, etRaum, etLehrer; // etUhrzeit und etStundenIndex entfernt
-    private Spinner spinnerUhrzeit; // NEU: Spinner für Uhrzeit-Auswahl
-    private MaterialButton btnCancel, btnAdd;
+    // UI-Elemente
+    private TextInputEditText etFach, etRaum, etLehrer; // Eingabefelder für Fach, Raum und Lehrer
+    private Spinner spinnerUhrzeit; // Spinner zur Auswahl der Stundenzeit
+    private MaterialButton btnCancel, btnAdd; // Buttons zum Abbrechen und Hinzufügen
+
+    // Listener, um die eingegebenen Daten an das aufrufende Fragment/die Activity zurückzugeben
     private OnTimetableEntryAddedListener listener;
 
-    // NEU: Liste der StundenzeitDefinitionen, die an den Dialog übergeben werden
+    // Liste der verfügbaren StundenzeitDefinitionen, die dem Spinner als Optionen dienen
     private List<StundenzeitDefinition> availableStundenzeiten;
 
-    // Methode, um den Listener zu setzen
+    /**
+     * Setzt den Listener, der benachrichtigt wird, wenn ein Stundenplaneintrag hinzugefügt wurde.
+     * @param listener Die Implementierung des OnTimetableEntryAddedListener.
+     */
     public void setOnStundenplanEntryAddedListener(OnTimetableEntryAddedListener listener) {
         this.listener = listener;
     }
 
-    // NEU: Factory-Methode, um den Dialog mit Daten zu instanziieren
+    /**
+     * Factory-Methode, um eine neue Instanz des AddTimetableEntryDialogs zu erstellen
+     * und eine Liste von StundenzeitDefinitionen als Argumente zu übergeben.
+     * Dies ist die empfohlene Methode, um Argumente an ein Fragment zu übergeben.
+     *
+     * @param stundenzeiten Die Liste der verfügbaren StundenzeitDefinitionen, die im Spinner angezeigt werden sollen.
+     * @return Eine neue Instanz von AddTimetableEntryDialog.
+     */
     public static AddTimetableEntryDialog newInstance(List<StundenzeitDefinition> stundenzeiten) {
         AddTimetableEntryDialog dialog = new AddTimetableEntryDialog();
         Bundle args = new Bundle();
-        // Hier muss man vorsichtig sein: Direktes Übergeben einer List<Parcelable> oder Serializable
-        // ist möglich, aber bei großen Listen nicht effizient.
-        // Für eine einfache Liste von StundenzeitDefinitionen könnte man sie als Parcelable machen.
-        // Da es sich um eine relativ kleine, fixe Anzahl (11) handelt, ist es praktikabel.
-        // Füge 'implements Parcelable' zu deiner StundenzeitDefinition-Klasse hinzu
-        // und generiere die Parcelable-Implementierung.
-        // ODER: Vereinfacht, falls die Liste nicht extrem groß wird und man keine Parcelable möchte,
-        // kann man auch nur die Uhrzeit-Strings und Indizes übergeben.
-        // Für diesen Beispielcode, nehmen wir an, dass StundenzeitDefinition Parcelable ist.
-        // Wenn nicht, musst du einen anderen Weg finden (z.B. nur die Strings/Indizes übergeben).
+        // Übergabe der Liste als ParcelableArrayList.
+        // Die Klasse StundenzeitDefinition MUSS das Parcelable-Interface implementieren,
+        // damit dies funktioniert. (Siehe StundenzeitDefinition.java)
         args.putParcelableArrayList("stundenzeiten", new ArrayList<>(stundenzeiten));
         dialog.setArguments(args);
         return dialog;
     }
 
+    /**
+     * Leerer Konstruktor erforderlich für DialogFragment.
+     */
     public AddTimetableEntryDialog() {
         // Leerer Konstruktor erforderlich
     }
 
+    /**
+     * Wird vor onCreateView() aufgerufen. Hier werden die Argumente (Stundenzeiten) abgerufen.
+     * @param savedInstanceState Der zuvor gespeicherte Zustand des Fragments.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Prüfe, ob Argumente übergeben wurden
         if (getArguments() != null) {
+            // Hole die Liste der StundenzeitDefinitionen aus den Argumenten
             availableStundenzeiten = getArguments().getParcelableArrayList("stundenzeiten");
-            // Sortiere die Liste nach StundenIndex, falls sie es noch nicht ist
+            // Sortiere die Liste nach StundenIndex, falls sie noch nicht sortiert ist.
+            // Dies stellt sicher, dass die Stunden im Spinner in der richtigen Reihenfolge erscheinen.
             if (availableStundenzeiten != null) {
                 availableStundenzeiten.sort((def1, def2) -> Integer.compare(def1.getStundenIndex(), def2.getStundenIndex()));
             }
         } else {
-            availableStundenzeiten = new ArrayList<>(); // Leere Liste, falls keine übergeben
+            // Wenn keine Stundenzeiten übergeben wurden, initialisiere eine leere Liste und zeige einen Toast.
+            availableStundenzeiten = new ArrayList<>();
             Toast.makeText(getContext(), "Fehler: Keine Stundenzeiten zum Auswählen verfügbar.", Toast.LENGTH_LONG).show();
-            dismiss(); // Dialog schließen, wenn keine Daten vorhanden sind
+            dismiss(); // Schließe den Dialog, da er ohne Stundenzeiten nicht sinnvoll ist.
         }
     }
 
-
+    /**
+     * Wird aufgerufen, um die View-Hierarchie des DialogFragments zu erstellen und zurückzugeben.
+     * @param inflater Der LayoutInflater, der zum Inflaten von Views verwendet wird.
+     * @param container Die übergeordnete View, an die die UI des Fragments angehängt werden soll.
+     * @param savedInstanceState Der zuvor gespeicherte Zustand des Fragments.
+     * @return Die View für die UI des Fragments.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_add_timetable_entry, container, false);
     }
 
+    /**
+     * Wird direkt nach onCreateView() aufgerufen, um die View-Hierarchie zu initialisieren und Listener zu setzen.
+     * @param view Die von onCreateView() zurückgegebene View.
+     * @param savedInstanceState Der zuvor gespeicherte Zustand des Fragments.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Referenzen zu den UI-Elementen erhalten
         etFach = view.findViewById(R.id.et_fach);
-        // etUhrzeit wurde entfernt -> spinnerUhrzeit
-        spinnerUhrzeit = view.findViewById(R.id.spinner_uhrzeit); // NEU: Initialisiere den Spinner
+        spinnerUhrzeit = view.findViewById(R.id.spinner_uhrzeit); // Initialisiere den Spinner
         etRaum = view.findViewById(R.id.et_raum);
         etLehrer = view.findViewById(R.id.et_lehrer);
-        // etStundenIndex wurde entfernt
         btnCancel = view.findViewById(R.id.btn_cancel);
         btnAdd = view.findViewById(R.id.btn_add);
 
-        // Spinner mit den Stundenzeiten befüllen
+        // Den Spinner mit den verfügbaren Stundenzeiten befüllen
         if (availableStundenzeiten != null && !availableStundenzeiten.isEmpty()) {
-            // Extrahieren der Uhrzeit-Strings für den Spinner
+            // Extrahiere nur die Uhrzeit-Strings aus den StundenzeitDefinition-Objekten für den Spinner-Adapter.
+            // Verwendet Java 8 Stream API für eine kompakte Transformation.
             List<String> uhrzeitStrings = availableStundenzeiten.stream()
                     .map(StundenzeitDefinition::getUhrzeitString)
                     .collect(Collectors.toList());
 
+            // Erstelle einen ArrayAdapter, um die Strings im Spinner anzuzeigen
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_spinner_item, uhrzeitStrings);
+            // Setze das Layout für die Dropdown-Ansicht des Spinners
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerUhrzeit.setAdapter(adapter);
         } else {
+            // Wenn keine Stundenzeiten verfügbar sind, zeige eine Fehlermeldung und schließe den Dialog.
             Toast.makeText(getContext(), "Keine Stundenzeiten zum Auswählen vorhanden. Bitte zuerst festlegen.", Toast.LENGTH_LONG).show();
             dismiss();
-            return;
+            return; // Beende die Methode hier, da der Spinner nicht befüllt werden kann.
         }
 
+        // Klick-Listener für den Abbrechen-Button: Schließt den Dialog
+        btnCancel.setOnClickListener(v -> dismiss());
 
-        btnCancel.setOnClickListener(v -> dismiss()); // Dialog schließen
-
+        // Klick-Listener für den Hinzufügen-Button
         btnAdd.setOnClickListener(v -> {
-            String fach = Objects.requireNonNull(etFach.getText()).toString().trim();
-            // Uhrzeit wird jetzt vom Spinner geholt, aber wir brauchen den Index
+            String fach = Objects.requireNonNull(etFach.getText()).toString().trim(); // Fach-Text holen
+            String raum = Objects.requireNonNull(etRaum.getText()).toString().trim(); // Raum-Text holen
+            String lehrer = Objects.requireNonNull(etLehrer.getText()).toString().trim(); // Lehrer-Text holen
+
+            // Hole die ausgewählte Position im Spinner
             int selectedSpinnerPosition = spinnerUhrzeit.getSelectedItemPosition();
+
+            // Gültigkeitsprüfung für die Spinner-Auswahl und die Liste der Stundenzeiten
             if (selectedSpinnerPosition == Spinner.INVALID_POSITION || availableStundenzeiten == null || selectedSpinnerPosition >= availableStundenzeiten.size()) {
                 Toast.makeText(getContext(), "Bitte eine Uhrzeit auswählen.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            // Holen des StundenIndex aus der ausgewählten StundenzeitDefinition
+
+            // Hole den StundenIndex aus dem ausgewählten StundenzeitDefinition-Objekt.
+            // Die eigentliche Uhrzeit wird nicht direkt hier gebraucht, da das aufrufende Fragment
+            // diese anhand des Indexes aus der Datenbank abrufen kann.
             int stundenIndex = availableStundenzeiten.get(selectedSpinnerPosition).getStundenIndex();
 
-            String raum = Objects.requireNonNull(etRaum.getText()).toString().trim();
-            String lehrer = Objects.requireNonNull(etLehrer.getText()).toString().trim();
-            // Stundenindex wird jetzt direkt vom Spinner-Objekt geholt, nicht von etStundenIndex
-
-            if (fach.isEmpty() || raum.isEmpty()) { // Uhrzeit und Stundenindex sind jetzt immer ausgewählt
-                Toast.makeText(getContext(), "Bitte alle Pflichtfelder ausfüllen (Subject, Raum)", Toast.LENGTH_SHORT).show();
+            // Prüfe, ob die Pflichtfelder (Fach, Raum) ausgefüllt sind
+            if (fach.isEmpty() || raum.isEmpty()) {
+                Toast.makeText(getContext(), "Bitte alle Pflichtfelder ausfüllen (Fach, Raum)", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Daten an das aufrufende Fragment zurückgeben
+            // Daten an das aufrufende Fragment über den Listener zurückgeben
             if (listener != null) {
-                // Die Uhrzeit als String wird NICHT mehr vom Dialog zurückgegeben,
-                // sondern der StundenIndex. Das Fragment wird die Uhrzeit selbst holen.
-                listener.onStundenplanEntryAdded(fach, raum, lehrer, stundenIndex); // Angepasste Signatur
+                // Übergib die relevanten Daten, einschließlich des StundenIndex.
+                // Die Uhrzeit als String wird vom Listener NICHT mehr direkt übergeben,
+                // da sie anhand des StundenIndex im aufrufenden Fragment (oder dessen ViewModel)
+                // aus den StundenzeitDefinitionen abgerufen werden sollte.
+                listener.onStundenplanEntryAdded(fach, raum, lehrer, stundenIndex);
             }
-            dismiss(); // Dialog schließen
+            dismiss(); // Schließe den Dialog nach dem Hinzufügen
         });
     }
 }

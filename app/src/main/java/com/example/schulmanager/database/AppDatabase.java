@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
  * Die Hauptdatenbankklasse für die Anwendung, die Room verwendet.
  * Definiert die Entitäten {@link StundenplanEintrag} und {@link StundenzeitDefinition}
  * und bietet Zugriff auf deren DAOs.
- *
+ * <p>
  * version = 3: Dies ist die Versionsnummer der Datenbank. Muss erhöht werden, wenn sich das Schema ändert.
  * exportSchema = false: Deaktiviert das Exportieren des Schemas in eine Datei, was für
  * kleinere Projekte oder Entwicklung in Ordnung ist. Für Produktions-Apps

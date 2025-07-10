@@ -129,7 +129,7 @@ public class StundenzeitDefinition implements Parcelable { // Implementiert Parc
      * Dies ist ein statisches Feld, das die Parcelable.Creator-Schnittstelle implementiert
      * und zum Erzeugen von Instanzen der Parcelable-Klasse aus einem Parcel verwendet wird.
      */
-    public static final Creator<StundenzeitDefinition> CREATOR = new Creator<StundenzeitDefinition>() {
+    public static final Creator<StundenzeitDefinition> CREATOR = new Creator<>() {
         /**
          * Erstellt eine neue Instanz der Parcelable-Klasse aus einem Parcel,
          * wobei die zuvor in writeToParcel geschriebenen Daten verwendet werden.

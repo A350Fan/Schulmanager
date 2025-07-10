@@ -23,23 +23,23 @@
         android:inputType="numberDecimal"
         android:maxLength="4" />
 
+    <EditText
+        android:id="@+id/et_note_gewichtung"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:autofillHints="no"
+        android:hint="@string/hint_note_gewichtung"
+        android:inputType="numberDecimal"
+        android:maxLength="4"
+        android:text="@string/gewichtung_zahl" />
+
     <RadioGroup
         android:id="@+id/rg_note_typ"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/et_note_gewichtung"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:autofillHints="no"
-            android:hint="@string/hint_note_gewichtung"
-            android:inputType="numberDecimal"
-            android:maxLength="4"
-            android:text="@string/gewichtung_zahl" />
 
         <RadioButton
             android:id="@+id/rb_schriftlich"

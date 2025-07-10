@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schulmanager.R;
-import com.example.schulmanager.adapters.StundenzeitDefinitionAdapter; // Import des Adapters für die Stundenzeit-Definitionen
+import com.example.schulmanager.adapters.StundenzeitDefinitionAdapter;
 import com.example.schulmanager.database.AppDatabase;
 import com.example.schulmanager.database.StundenzeitDefinitionDAO;
 import com.example.schulmanager.models.StundenzeitDefinition;

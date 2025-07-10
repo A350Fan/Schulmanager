@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List; // Import für List
+import java.util.List;
 
 /**
  * Dieses Modell repräsentiert einen einzelnen Eintrag von Feiertagen oder Schulferien,

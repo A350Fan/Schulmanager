@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteDatabase; // Benötigt für RoomDatabase.Callback
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.schulmanager.models.StundenplanEintrag;
 import com.example.schulmanager.models.StundenzeitDefinition;

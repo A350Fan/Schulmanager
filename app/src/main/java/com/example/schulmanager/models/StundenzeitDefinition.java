@@ -3,8 +3,8 @@ package com.example.schulmanager.models;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import android.os.Parcel; // NEU: Import für die Parcel-Klasse
-import android.os.Parcelable; // NEU: Import für das Parcelable-Interface
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Entität zur Definition der Uhrzeiten für einzelne Schulstunden.

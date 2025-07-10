@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.schulmanager.R;
-import com.example.schulmanager.models.OpenHoliday; // Importiert das Datenmodell für Feiertage/Ferien
+import com.example.schulmanager.models.OpenHoliday;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

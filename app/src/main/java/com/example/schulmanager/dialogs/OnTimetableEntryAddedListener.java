@@ -4,7 +4,7 @@ package com.example.schulmanager.dialogs;
  * Schnittstelle (Interface), das definiert, wie ein Dialog (z.B. AddTimetableEntryDialog)
  * Informationen über einen neu hinzugefügten Stundenplaneintrag an ein aufrufendes Fragment
  * oder eine Activity zurückgeben kann.
- *
+ * <p>
  * Das implementierende Fragment/die Activity muss diese Methode implementieren,
  * um die Daten vom Dialog zu empfangen.
  */

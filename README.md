@@ -75,7 +75,6 @@
 ###
 
 <p align="left">- hinzufügen von Stunden per Button in den einzelnen Stunden<br>- Fächer Database um diese einfacher einfügen zu können</p>
-![Galerie01](https://github.com/user-attachments/assets/dd4a7a69-a8a2-481f-9514-0a3e72794a3c)
 
 ###
 

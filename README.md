@@ -50,7 +50,8 @@
 
 ###
 
-![Galerie01 - Kopie](https://github.com/user-attachments/assets/e327085d-d7fd-49d3-af5b-2231c9b778d6)
+![Galerie01 - Kopie](https://github.com/user-attachments/assets/09f635da-9cde-4fb6-8b37-e6cc165c390e)
+
 
 
 

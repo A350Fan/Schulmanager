@@ -50,17 +50,10 @@
 
 ###
 
-<div align="left">
-  <img height="300" src="![Galerie01](https://github.com/user-attachments/assets/5cfbf88d-5db4-4566-8265-cfa0e51d473e)"  />
-</div>
+![Galerie01](https://github.com/user-attachments/assets/6c3b3648-4d9f-472b-9b0b-f66137058a22)![Galerie02](https://github.com/user-attachments/assets/6450dd92-2342-49de-b9f1-cfd01de3e53a)![Galerie03](https://github.com/user-attachments/assets/6640d903-594e-42e6-a8a7-b01211e303a4)
 
-<div align="left">
-  <img height="300" src="![Galerie02](https://github.com/user-attachments/assets/1d5b03f7-8c6e-4a46-be92-6185383c2c8f)"  />
-</div>
 
-<div align="left">
-  <img height="300" src="![Galerie03](https://github.com/user-attachments/assets/1d359c39-c9b4-4125-bc11-499031acb43b)"  />
-</div>
+
 
 ###
 

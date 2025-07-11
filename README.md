@@ -52,16 +52,16 @@
 
 <p align="left">Bilder folgen noch</p>
 
-<div align="center">
-  <img height="200" src="![Galerie01](https://github.com/user-attachments/assets/5cfbf88d-5db4-4566-8265-cfa0e51d473e)"  />
+<div align="left">
+  <img height="300" src="![Galerie01](https://github.com/user-attachments/assets/5cfbf88d-5db4-4566-8265-cfa0e51d473e)"  />
 </div>
 
-<div align="center">
-  <img height="200" src="![Galerie02](https://github.com/user-attachments/assets/1d5b03f7-8c6e-4a46-be92-6185383c2c8f)"  />
+<div align="left">
+  <img height="300" src="![Galerie02](https://github.com/user-attachments/assets/1d5b03f7-8c6e-4a46-be92-6185383c2c8f)"  />
 </div>
 
-<div align="center">
-  <img height="200" src="![Galerie03](https://github.com/user-attachments/assets/1d359c39-c9b4-4125-bc11-499031acb43b)"  />
+<div align="left">
+  <img height="300" src="![Galerie03](https://github.com/user-attachments/assets/1d359c39-c9b4-4125-bc11-499031acb43b)"  />
 </div>
 
 ###

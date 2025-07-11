@@ -50,12 +50,7 @@
 
 ###
 
-<p align="left">
-
-![Galerie01](https://github.com/user-attachments/assets/3daaa329-8529-4431-845b-22982e4b4edf)
-![Galerie02](https://github.com/user-attachments/assets/e094e295-65a6-43f7-9643-1f16b6ef657f)
-![Galerie03](https://github.com/user-attachments/assets/0d306852-2912-4c84-b188-24a1f6341138)
-</p>
+<p align="left">Bilder folgen noch</p>
 
 ###
 
@@ -96,6 +91,14 @@
 ###
 
 <p align="left">Dieses Programm ist gerade noch in einer Alpha Phase und wird gelegentlich geupdated.</p>
+
+###
+
+<h4 align="left">Known Issues:</h4>
+
+###
+
+<p align="left">- Auf kleineren Displays kann es passieren, dass die Schrift von STUNDENPLAN, PRÜFUNGEN, ABI-SCHNITT und HJ-SCHNITT umgebrochen wird, weil nicht genug Platz ist<br>- Auf kleinen Displays kann es passieren, dass beim Kalender der Status der Ferien nicht sichtbar ist, weil es zu tief hängt – kein Fix geplant, weil kaum jemand solche Handys nutzt</p>
 
 ###
 

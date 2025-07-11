@@ -50,11 +50,7 @@
 
 ###
 
-<p align="left">
-<div align="center">
-  <img height="200" src="![Galerie01](https://github.com/user-attachments/assets/2ec9cfd2-bbec-47d4-bb7c-ab3e6166a80d)"  />
-</div>
-</p>
+<p align="left">Bilder folgen noch</p>
 
 ###
 
@@ -108,12 +104,6 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" height="40" alt="java logo"  />
   <img width="12" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gradle/gradle-original.svg" height="40" alt="gradle logo"  />
-</div>
-
-###
-
-<div align="center">
-  <img height="200" src="![Galerie01](https://github.com/user-attachments/assets/2ec9cfd2-bbec-47d4-bb7c-ab3e6166a80d)"  />
 </div>
 
 ###

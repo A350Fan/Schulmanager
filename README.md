@@ -52,6 +52,9 @@
 
 <p align="left">Bilder folgen noch</p>
 
+![Galerie01](https://github.com/user-attachments/assets/3daaa329-8529-4431-845b-22982e4b4edf)
+
+
 ###
 
 <h2 align="left">mögliche Features in Zukunftupdates:</h2>

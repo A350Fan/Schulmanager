@@ -50,7 +50,7 @@
 
 ###
 
-<p align="left">![Galerie01](https://github.com/user-attachments/assets/2ec9cfd2-bbec-47d4-bb7c-ab3e6166a80d)</p>
+<p align="left">Bilder folgen noch</p>
 
 ###
 
@@ -75,6 +75,7 @@
 ###
 
 <p align="left">- hinzufügen von Stunden per Button in den einzelnen Stunden<br>- Fächer Database um diese einfacher einfügen zu können</p>
+![Galerie01](https://github.com/user-attachments/assets/dd4a7a69-a8a2-481f-9514-0a3e72794a3c)
 
 ###
 

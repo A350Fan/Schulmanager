@@ -73,24 +73,25 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabDefineStundenzeiten"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/set_lesson_times"
         android:src="@drawable/ic_settings_white_24dp"
         app:layout_constraintBottom_toTopOf="@+id/fab_add_stundenplan_entry"
         app:layout_constraintEnd_toEndOf="@+id/recyclerViewStundenplanTag"
-        tools:ignore="MissingConstraints"  android:layout_width="wrap_content"/>
+        tools:ignore="MissingConstraints" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_stundenplan_entry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="0dp"
+        android:layout_margin="16dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/add_timetable_entry"
         android:src="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/fabDefineStundenzeiten" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

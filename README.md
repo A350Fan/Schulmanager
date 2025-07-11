@@ -50,8 +50,6 @@
 
 ###
 
-<p align="left">Bilder folgen noch</p>
-
 <div align="left">
   <img height="300" src="![Galerie01](https://github.com/user-attachments/assets/5cfbf88d-5db4-4566-8265-cfa0e51d473e)"  />
 </div>

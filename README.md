@@ -10,6 +10,14 @@
 
 ###
 
+<h4 align="left">Downloadlink:</h4>
+
+###
+
+<p align="left">https://github.com/A350Fan/Schulmanager/releases</p>
+
+###
+
 <h2 align="left">Features:</h2>
 
 ###
@@ -30,7 +38,63 @@
 
 ###
 
-<h2 align="left">Programmiersprachen</h2>
+<h4 align="left">Kalender</h4>
+
+###
+
+<p align="left">- Standard Kalender<br>- Anzeige der Ferientermine bei Klick auf die Tage</p>
+
+###
+
+<h2 align="left">Galerie:</h2>
+
+###
+
+<p align="left">Bilder folgen noch</p>
+
+###
+
+<h2 align="left">mögliche Features in Zukunftupdates:</h2>
+
+###
+
+<p align="left">- Einstellungen<br>- Dark Mode<br>- mehrere Sprachen</p>
+
+###
+
+<h4 align="left">Notenmanager</h4>
+
+###
+
+<p align="left">- Automatische Studien- und Ausbildungsvorschläge anhand des Abitur-Schnittes<br>- Fächer Database um diese einfacher einfügen zu können</p>
+
+###
+
+<h4 align="left">Stundenplan</h4>
+
+###
+
+<p align="left">- hinzufügen von Stunden per Button in den einzelnen Stunden<br>- Fächer Database um diese einfacher einfügen zu können</p>
+
+###
+
+<h4 align="left">Kalender</h4>
+
+###
+
+<p align="left">- Visuelle Anzeige der Ferien und Feiertage<br>- hinzufügen eigener Termine (z. B. Tests)</p>
+
+###
+
+<h2 align="left">Sonstiges</h2>
+
+###
+
+<p align="left">Dieses Programm ist gerade noch in einer Alpha Phase und wird gelegentlich geupdated.</p>
+
+###
+
+<h2 align="left">Programmiersprachen:</h2>
 
 ###
 
